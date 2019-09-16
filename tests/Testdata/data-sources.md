@@ -3,7 +3,7 @@
 | Data Source         | Dataset name                      | Format    | License                            |
 |---------------------|-----------------------------------|-----------|------------------------------------|
 | [sf]                | nc                                | gpkg      | COPYRIGHT HOLDER: Edzer Pebesma    |
-| [sf]                | overpass                          | osm       | COPYRIGHT HOLDER: Edzer Pebesma    |
+| [sf]                | overpass                          | osm       | ODbL                               |
 | [Geosoftware2]      | clc_1000_PT                       | gml       | MIT                                |
 | [Geosoftware2]      | wf_100m_klas                      | geotif    | MIT                                |
 | [Geosoftware2]      | cities_NL                         | csv       | MIT                                |
