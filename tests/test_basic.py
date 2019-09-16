@@ -1,7 +1,7 @@
 import os           # used to get the location of the testdata
+import pytest
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-
 
 def test_geojson_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -17,6 +17,8 @@ def test_geojson_bbox_invalid_coordinates(script_runner):
         '--detail', 'bbox')
     assert ret.success, "process should return success"
     assert ret.stderr == 'invalid coordinates', "stderr should not be empty"
+    assert len(ret.stderr) != 0
+
 
 def test_geojson_time(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -34,6 +36,7 @@ def test_geojson_time_invalid(script_runner):
         '--time')
     assert ret.success, "process should return success"
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
+    assert len(ret.stderr) != 0
 
 def test_netcdf_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -59,6 +62,7 @@ def test_netcdf_time_invalid(script_runner):
         '--time')
     assert ret.success, "process should return success"
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
+    assert len(ret.stderr) != 0
 
 def test_kml_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -84,6 +88,7 @@ def test_kml_time_invalid(script_runner):
         '--time')
     assert ret.success, "process should return success"
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
+    assert len(ret.stderr) != 0
 
 def test_geotiff_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -125,6 +130,7 @@ def test_csv_time_invalid(script_runner, tmpdir):
         '--time')
     assert not ret.success, "process should return success"
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
+    assert len(ret.stderr) != 0
 
 def test_gml_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -150,6 +156,7 @@ def test_gml_time_invalid(script_runner):
         '--time')
     assert ret.success, "process should return success"
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
+    assert len(ret.stderr) != 0
 
 def test_shp_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -183,6 +190,7 @@ def test_json_time_invalid(script_runner):
         '--time')
     assert ret.success, "process should return success"
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
+    assert len(ret.stderr) != 0
 
 def test_folder_multiple_files(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -193,3 +201,15 @@ def test_folder_multiple_files(script_runner):
     assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout, "bboxes and time values of all files inside folder, are printed to console"
     assert "[6.574722, 51.434444, 4.3175, 53.217222]" in ret.stdout, "bboxes and time values of all files inside folder, are printed to console"
     assert "[292063.81225905, 5618144.09259115, 302531.3161606, 5631223.82854667]" in ret.stdout, "bboxes and time values of all files inside folder, are printed to console"
+
+@pytest.mark.parametrize("test_input,expected", [(True, "param1")])
+def test_string_parameter(test_input, expected):
+    assert isinstance(test_input, str)
+
+@pytest.mark.parametrize("test_input,expected", [("param1", True)])
+def test_bool_parameter(test_input, expected):
+    assert isinstance(test_input, bool)
+
+@pytest.mark.parametrize("test_input,expected", [("param1", 1)])
+def test_numeric_parameter(test_input, expected):
+    assert isinstance(test_input, int)
