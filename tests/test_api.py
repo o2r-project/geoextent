@@ -36,7 +36,7 @@ def test_geotiff_extract_bbox():
     assert geoextent.getMetadata(filepath, 'bbox' , True) == [[5.9153007564753155, 50.31025197410836, 9.468398712484145, 52.5307755328733],[None]]
 
 def test_gpkg_extract_bbox():
-    filepath=__location__+"/Testdata/census2016_cca_qld_short.gpkg"
+    filepath=__location__+"/Testdata/nc.gpkg"
     assert geoextent.getMetadata(filepath, 'bbox' , True) == [[-43.7405, 96.8169, -9.14218, 167.998],[None]]
 
 def test_csv_extract_bbox():

@@ -66,7 +66,7 @@ def test_kml_bbox(script_runner):
         '--detail', 'bbox')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "(7.594213, 51.942466) - (7.618246, 51.957278)" in ret.stdout, "bbox is printed to console"
+    assert "[7.594213, 51.942466, 7.618246, 51.957278]" in ret.stdout, "bbox is printed to console"
 
 def test_kml_time(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -95,7 +95,7 @@ def test_geotiff_bbox(script_runner):
 
 def test_gpkg_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
-        '--path', 'Testdata/census2016_cca_qld_short.gpkg', 
+        '--path', 'Testdata/nc.gpkg', 
         '--detail', 'bbox')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
