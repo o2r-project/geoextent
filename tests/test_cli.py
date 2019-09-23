@@ -28,7 +28,7 @@ def test_geojson_time(script_runner):
         '--time')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "['2018-11-14']" in ret.stdout,  "time value is printed to console"
+    assert "['2018-11-14', '2018-11-14']" in ret.stdout,  "time value is printed to console"
 
 def test_geojson_time_invalid(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -54,7 +54,7 @@ def test_netcdf_time(script_runner):
         '--time')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "['2002-07-31']" in ret.stdout,  "time value is printed to console"
+    assert "['2002-07-01','2002-07-31']" in ret.stdout,  "time value is printed to console"
 
 def test_netcdf_time_invalid(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -105,7 +105,7 @@ def test_gpkg_bbox(script_runner):
         '--detail', 'bbox')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "[-43.7405, 96.8169, -9.14218, 167.998]" in ret.stdout, "bbox is printed to console"
+    assert "[33.882, -84.3239, 36.5896, -75.457]" in ret.stdout, "bbox is printed to console"
 
 def test_csv_bbox(script_runner, tmpdir):
     ret = script_runner.run('python', 'geoextent',
@@ -122,7 +122,7 @@ def test_csv_time(script_runner, tmpdir):
         '--time')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "[2018-09-30]" in ret.stdout, "time value is printed to console"
+    assert "['2018-09-30', '2018-09-30']" in ret.stdout, "time value is printed to console"
 
 def test_csv_time_invalid(script_runner, tmpdir):
     ret = script_runner.run('python', 'geoextent',
@@ -148,7 +148,7 @@ def test_gml_time(script_runner):
         '--time')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "['2013-11-30T23:00:00Z']" in ret.stdout,  "time value is printed to console"
+    assert "['2013-11-30T23:00:00Z', '2013-11-30T23:00:00Z']" in ret.stdout,  "time value is printed to console"
 
 def test_gml_time_invalid(script_runner):
     ret = script_runner.run('python', 'geoextent',
@@ -173,7 +173,7 @@ def test_json_bbox(script_runner):
         '--detail', 'bbox')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout, "bbox is printed to console"
+    assert "[292063.81225905, 5618144.09259115, 302531.3161606, 5631223.82854667]" in ret.stdout, "bbox is printed to console"
 
 def test_json_time(script_runner):
     ret = script_runner.run('python', 'geoextent',
