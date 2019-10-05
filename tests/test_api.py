@@ -1,4 +1,5 @@
-import os           # used to get the location of the testdata
+import os         # used to get the location of the testdata
+import sys
 import geoextent
 
 
