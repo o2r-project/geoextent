@@ -14,7 +14,7 @@ def printObject(object):
     Input: object \n
     Output: print("/n")
     '''
-    print("\n")
+    print("\n\n")
     for a,b in object.items():
         print(str(a) + ": " + str(b))
     print("\n")

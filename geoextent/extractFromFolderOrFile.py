@@ -52,21 +52,27 @@ def extractMetadataFromFile(filePath, whatMetadata):
     except Exception as e:
         print("Error for " + filePath + ": " + str(e))
         valid = False 
-    ##print("E.F.Folder->2>", "222222")#
+    print("E.F.Folder->2>", "222222")#
     #get Bbox, Temporal Extent, Vector representation and crs parallel with threads
     class thread(threading.Thread): 
+        print("E.F.Folder->3>", "33333")
         def __init__(self, thread_ID): 
             threading.Thread.__init__(self) 
             self.thread_ID = thread_ID
         def run(self):
             metadata["format"] = usedModule.DATATYPE
-            #print("Thread with Thread_ID " +  str(self.thread_ID) + " now running...")
+            print("Thread with Thread_ID " +  str(self.thread_ID) + " now running...")
             #metadata[self.thread_ID] = self.thread_ID
             if self.thread_ID == 100:
                 try:
                     metadata["bbox"] = computeBboxInWGS84(usedModule, filePath)
                 except Exception as e:
                     print("Warning for " + filePath + ": " + str(e)) 
+            elif self.thread_ID == 101:
+                try:
+                    metadata["temporal_extent"] = usedModule.getTemporalExtent(filePath)
+                except Exception as e:
+                    print("Warning for " + filePath + ": " + str(e))
             elif self.thread_ID == 103:
                 try:
                     # the CRS is not neccessarily required
@@ -84,16 +90,16 @@ def extractMetadataFromFile(filePath, whatMetadata):
     #thread id 100+ -> metadata extraction with exceptions from methods (raise Exception)
     #thread id 200+ -> metadata extraction without exceptions from methods ( only standard exceptions are raised (e.g. ValueError, AttributeError))
     thread_bbox_except = thread(100) 
-    #thread_temp_except = thread(101) 
+    thread_temp_except = thread(101) 
     thread_crs_except = thread(103)
     
     if valid:
         if whatMetadata == "b":
             # none of the metadata field is required 
             # so the system does not crash even if it does not find anything
-            barrier = threading.Barrier(3)
+            barrier = threading.Barrier(4)
             thread_bbox_except.start() 
-            #thread_temp_except.start() 
+            thread_temp_except.start() 
             thread_crs_except.start()
             barrier.wait() 
             barrier.reset() 

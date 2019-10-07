@@ -181,6 +181,7 @@ def getCRS(filePath):
 
 
 
+def getTemporalExtent (filePath):
     ''' extract time extent from json string \n
     input "filePath": type string, file path to geojson File \n
     returns the temporal extent of the file: type list, length = 2, both entries have the type dateTime, temporalExtent[0] <= temporalExtent[1]
