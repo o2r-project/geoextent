@@ -17,7 +17,6 @@
 | [geoextent]         | invalid_coordinate                | geojson   | PDDL                               |
 | [geoextent]         | onePoint                          | geojson   | PDDL                               |
 
-
 [sf]: https://github.com/r-spatial/sf
 [geoextent]: https://github.com/o2r-project/geoextent
 [Geosoftware2]: https://github.com/carobro/Geosoftware2
