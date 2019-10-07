@@ -52,16 +52,14 @@ def extractMetadataFromFile(filePath, whatMetadata):
     except Exception as e:
         print("Error for " + filePath + ": " + str(e))
         valid = False 
-    print("E.F.Folder->2>", "222222")#
     #get Bbox, Temporal Extent, Vector representation and crs parallel with threads
     class thread(threading.Thread): 
-        print("E.F.Folder->3>", "33333")
         def __init__(self, thread_ID): 
             threading.Thread.__init__(self) 
             self.thread_ID = thread_ID
         def run(self):
             metadata["format"] = usedModule.DATATYPE
-            print("Thread with Thread_ID " +  str(self.thread_ID) + " now running...")
+            #print("Thread with Thread_ID " +  str(self.thread_ID) + " now running...")
             #metadata[self.thread_ID] = self.thread_ID
             if self.thread_ID == 100:
                 try:
