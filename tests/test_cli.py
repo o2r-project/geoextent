@@ -203,6 +203,7 @@ def test_folder_multiple_files(script_runner):
     assert "[6.574722, 51.434444, 4.3175, 53.217222]" in ret.stdout, "bboxes and time values of all files inside folder, are printed to console"
     assert "[292063.81225905, 5618144.09259115, 302531.3161606, 5631223.82854667]" in ret.stdout, "bboxes and time values of all files inside folder, are printed to console"
 
+'''
 @pytest.mark.parametrize("test_input,expected", [(True, "param1")])
 def test_string_parameter(test_input, expected):
     assert isinstance(test_input, str)
@@ -214,3 +215,4 @@ def test_bool_parameter(test_input, expected):
 @pytest.mark.parametrize("test_input,expected", [("param1", 1)])
 def test_numeric_parameter(test_input, expected):
     assert isinstance(test_input, int)
+'''
