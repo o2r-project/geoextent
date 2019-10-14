@@ -14,9 +14,7 @@ def computeBboxInWGS84(module, path):
     except:
         pass
     if 'crs' in locals() and crs and bbox_in_orig_crs:
-        ##print("\n\nbefore", bbox_in_orig_crs)#
         bbox_transformed = hf.transformingArrayIntoWGS84(crs, bbox_in_orig_crs)
-        ##print("\n\nafter", bbox_transformed)#
         return bbox_transformed
     else:
         raise Exception("The bounding box could not be related to a CRS")

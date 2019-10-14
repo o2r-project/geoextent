@@ -2,11 +2,8 @@
 import helpfunctions as hf
 import json
 import sys
-from datetime import datetime
 import datetime
 from django.utils.dateparse import parse_datetime
-import django, pytz
-import unicodedata
 import pygeoj
 import iso8601
 
@@ -29,11 +26,8 @@ def isValid(filePath):
     '''
     #TODO: make the function less complex using the function above
     try :
-        ##print("H_gjson->->", "////////////////////")#
         gjson = open(filePath, "rb")
-        ##print("gjson->->", gjson)#
         gjsonContent = json.load(gjson)
-        ##print("gjsonContent->->", gjsonContent)#
         gjson.close()
         if not gjsonContent: #TODO: this exception dose not raised
             raise Exception('The geojson file from is empty')
@@ -63,7 +57,6 @@ def convert3dto2d(filePath):
                 if keyContent == searchParam:   
                     valueContent = extractCoordinates(valueContent)
                 if type(valueContent) == dict or type(valueContent) == list:
-                    ##print("\n\n\ntest12",valueContent)#
                     extractAfterKeyword(searchParam, valueContent)
         if type(content) == list:
             for element in content:
@@ -77,16 +70,13 @@ def convert3dto2d(filePath):
         '''
         if type(coordsList) == list and len(coordsList) == 3 and (type(coordsList[0]) == float or type(coordsList[0]) == int) and (type(coordsList[1]) == float or type(coordsList[1]) == int) and (type(coordsList[2]) == float or type(coordsList[2]) == int):
             coordsList = coordsList.pop()
-            ##print("\n\n\ntest1",coordsList)#
         elif type(coordsList) == list and len(coordsList) != 0:
-            ##print("\n\n\ntest1",coordsList)#
             for value in coordsList:
                 extractCoordinates(value)
         return coordsList
 
     #TODO:It works the same even when this line is Commented out
     extractAfterKeyword("coordinates", gjsonContent) 
-    #print("\n\n\n1>>?22222",gjsonContent)#
     return gjsonContent
 
 
@@ -100,7 +90,6 @@ def getBoundingBox (filePath):
     #gjsonContent is a FeatureCollection
     try:
         gjsonContent = pygeoj.load(data = convert3dto2d(filePath))
-        #print("\n\n\n1>>?33333",convert3dto2d(filePath))#
         bbox = gjsonContent.bbox
     #gjsonContent is a single geometrie and has to be converted to a FeatureCollection
     except ValueError:
@@ -142,9 +131,7 @@ def getCRS(filePath):
 
     try:
         gjsonContent = pygeoj.load(filePath)
-        #print("\n\n\n1>>?4444",gjsonContent)#
         crsCode = gjsonContent.crs 
-        ##print("\n\n\n1>>?5555",crsCode)#
         if not crsCode:
             return hf.WGS84_EPSG_ID
         else: 
