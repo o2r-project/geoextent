@@ -46,10 +46,9 @@ def extractMetadataFromFile(filePath, whatMetadata):
     #only extracts metadata if the file content is valid
     try:
         valid = usedModule.isValid(filePath)
-        #print("E.F.Folder->1>", valid)#
     except Exception as e:
         print("Error for " + filePath + ": " + str(e))
-        valid = False 
+        valid = 'fail' 
     #get Bbox, Temporal Extent, Vector representation and crs parallel with threads
     class thread(threading.Thread): 
         def __init__(self, thread_ID): 
@@ -89,7 +88,7 @@ def extractMetadataFromFile(filePath, whatMetadata):
     thread_temp_except = thread(101) 
     thread_crs_except = thread(103)
     
-    if valid:
+    if valid == 'Pass':
         if whatMetadata == "b":
             # none of the metadata field is required 
             # so the system does not crash even if it does not find anything
@@ -100,7 +99,12 @@ def extractMetadataFromFile(filePath, whatMetadata):
             barrier.wait() 
             barrier.reset() 
             barrier.abort() 
+    elif valid == 'Empty':
+        metadata["format"] = usedModule.DATATYPE
+        metadata["bbox"] = None
+        metadata["temporal_extent"] = None
+        metadata["crs"] = None
     else:
-                raise Exception("The file " + str(filePath) + " could not be validated")
+        raise Exception("The file " + str(filePath) + " could not be validated")
         
     return metadata

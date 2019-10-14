@@ -1,6 +1,8 @@
 import os         # used to get the location of the testdata
 import sys
 import geoextent
+sys.path.append("../geoextent/")
+import extractFromFolderOrFile
 
 
 ###############
@@ -8,7 +10,8 @@ import geoextent
 ###############
 
 def test_geojson_extract_bbox():
-    assert geoextent.getMetadata("/testdata/folder/muenster_ring_zeit.geojson", 'bbox') == [7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]
+    result = extractFromFolderOrFile.extractMetadataFromFile('testdata/muenster_ring_zeit.geojson', 'b')
+    assert result["bbox"] == [7.60168075561523, 51.9488147720619, 7.64725685119629, 51.9746240298775]
 
 def test_invalid_coordinate_geojson_extract_bbox(capsys):
     sys.stderr.write("error message")
@@ -17,13 +20,15 @@ def test_invalid_coordinate_geojson_extract_bbox(capsys):
     assert geoextent.getMetadata("/testdata/invalid_coordinate.geojson", 'bbox') == [None]
 
 def test_one_point_geojson_extract_bbox():
-    assert geoextent.getMetadata("/testdata/onePoint.geojson", 'bbox') == [6.220493316650391, 50.52150360276628, 6.220493316650391, 50.52150360276628]
+    result = extractFromFolderOrFile.extractMetadataFromFile('testdata/onePoint.geojson', 'b')
+    assert result["bbox"] == [6.22049331665039, 50.5215036027663, 6.22049331665039, 50.5215036027663]
 
 def test_empty_file_geojson_extract_bbox(capsys):
     sys.stderr.write("error message")
     out, error = capsys.readouterr()
-    assert out == "Empty geojson file\n"
-    assert geoextent.getMetadata("/testdata/empty.geojson", 'bbox') == [None]
+    #assert out == "Empty geojson file\n"
+    result = extractFromFolderOrFile.extractMetadataFromFile('testdata/empty.geojson', 'b')
+    assert result["bbox"] == None
 
 def test_netcdf_extract_bbox():
     assert geoextent.getMetadata("/testdata/ECMWF_ERA-40_subset1.nc", 'bbox') == [-90.0, 0.0, 90.0, 357.5]

@@ -29,10 +29,19 @@ def isValid(filePath):
         gjson = open(filePath, "rb")
         gjsonContent = json.load(gjson)
         gjson.close()
+
+        '''
         if not gjsonContent: #TODO: this exception dose not raised
             raise Exception('The geojson file from is empty')
         return True
-
+        '''
+        return 'Pass'
+        
+    except Exception as e:
+        return 'Empty'
+        #raise Exception('The geojson file from is empty')
+            
+        
     except ValueError as e:
         raise Exception ('The geojson file from ' + filePath + ' is not valid.' + str(e)) 
 
