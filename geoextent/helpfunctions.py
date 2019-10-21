@@ -1,5 +1,5 @@
 
-import sys, os, platform, datetime, math, shapefile, fiona 
+import sys, os, platform, datetime, math 
 
 import getopt
 from osgeo import ogr
