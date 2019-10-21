@@ -4,7 +4,8 @@ import helpfunctions as hf
 import threading 
 
 def computeBboxInWGS84(module, path):
-    ''' input "module": type module, module from which methods shall be used \n
+    ''' 
+    input "module": type module, module from which methods shall be used \n
     input "path": type string, path to file \n
     returns a bounding box, type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)], the boudning box has either its original crs or WGS84 (transformed).
     '''
@@ -20,16 +21,14 @@ def computeBboxInWGS84(module, path):
         raise Exception("The bounding box could not be related to a CRS")
 
 
-
 def extractMetadataFromFile(filePath, whatMetadata):
-    ''' function is called when filePath is included in commanline (with tag 'b', 't' or 's')
+    ''' function is called when filePath is included in commandline (with tag 'b')
     how this is done depends on the file format - the function calls the extractMetadataFrom<format>()-function \n
     input "filePath": type string, path to file from which the metadata shall be extracted \n
     input "whatMetadata": type string, specifices which metadata should be extracted  \n
     returns None if the format is not supported, else returns the metadata of the file as a dict 
     (possible) keys of the dict: 'temporal_extent', 'bbox', 'vector_reps', 'crs'
     '''
-    
     fileFormat = filePath[filePath.rfind('.')+1:]
     usedModule = None
 
@@ -40,22 +39,25 @@ def extractMetadataFromFile(filePath, whatMetadata):
     if fileFormat == 'geojson' or fileFormat == 'json':
         import handleGeojson
         usedModule = handleGeojson
+    elif fileFormat == 'csv':
+        import handleCSV
+        usedModule = handleCSV
     else: 
         # file format is not supported
         return None
     #only extracts metadata if the file content is valid
     try:
-        valid = usedModule.isValid(filePath)
+        fileValidity = usedModule.checkFileValidity(filePath)
     except Exception as e:
         print("Error for " + filePath + ": " + str(e))
-        valid = 'fail' 
+        fileValidity = 'notValid' 
     #get Bbox, Temporal Extent, Vector representation and crs parallel with threads
     class thread(threading.Thread): 
         def __init__(self, thread_ID): 
             threading.Thread.__init__(self) 
             self.thread_ID = thread_ID
         def run(self):
-            metadata["format"] = usedModule.DATATYPE
+            metadata["format"] = usedModule.fileType
             #print("Thread with Thread_ID " +  str(self.thread_ID) + " now running...")
             #metadata[self.thread_ID] = self.thread_ID
             if self.thread_ID == 100:
@@ -81,14 +83,11 @@ def extractMetadataFromFile(filePath, whatMetadata):
             except Exception as e:
                 barrier.abort()
 
-            
-    #thread id 100+ -> metadata extraction with exceptions from methods (raise Exception)
-    #thread id 200+ -> metadata extraction without exceptions from methods ( only standard exceptions are raised (e.g. ValueError, AttributeError))
     thread_bbox_except = thread(100) 
     thread_temp_except = thread(101) 
     thread_crs_except = thread(103)
     
-    if valid == 'Pass':
+    if fileValidity == 'valid':
         if whatMetadata == "b":
             # none of the metadata field is required 
             # so the system does not crash even if it does not find anything
@@ -99,8 +98,8 @@ def extractMetadataFromFile(filePath, whatMetadata):
             barrier.wait() 
             barrier.reset() 
             barrier.abort() 
-    elif valid == 'Empty':
-        metadata["format"] = usedModule.DATATYPE
+    elif fileValidity == 'empty':
+        metadata["format"] = usedModule.fileType
         metadata["bbox"] = None
         metadata["temporal_extent"] = None
         metadata["crs"] = None

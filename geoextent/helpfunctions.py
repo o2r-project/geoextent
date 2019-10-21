@@ -20,7 +20,32 @@ def printObject(object):
     print("\n")
 
 
+def getAllRowElements(rowname,elements):
+    '''
+    Function purpose: help-function to get all row elements for a specific string \n
+    Input: rowname, elements \n
+    Output: array values
+    '''
+    for idx, val in enumerate(elements[0]):
+        if  rowname in val:
+            indexOf = idx
+            values = []
+            for x in elements:
+                if x[indexOf] != rowname:
+                    values.append(x[indexOf])
+            return values
 
+
+def searchForParameters(elements, paramArray):
+    '''
+    Function purpose: return all attributes of a elements in the first row of a file \n
+    Input: paramArray, elements \n
+    Output: getAllRowElements(x,elements)
+    '''
+    for x in paramArray:
+        for row in elements[0]:
+            if x in row:
+                return getAllRowElements(x,elements)
 
 def transformingIntoWGS84 (crs, coordinate):
     '''
@@ -44,9 +69,6 @@ def transformingIntoWGS84 (crs, coordinate):
   
     point.Transform(transform)
     return [point.GetX(), point.GetY()]
-
-
-
 
 
 def transformingArrayIntoWGS84(crs, pointArray):

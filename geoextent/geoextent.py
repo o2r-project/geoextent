@@ -23,13 +23,16 @@ def usage():
             -b    Extract bounding box
 '''
 
+
 def errorFunction():
     print("Error: A tag is required for a command")
     print(usage())
 
+
 if len(sys.argv) == 1:
     print(usage())
     sys.exit(1)
+
 
 try:
     #opts contains tag and path, args contains other args
@@ -39,13 +42,16 @@ except getopt.GetoptError as err:
     print(usage())
     #sys.exit(2)
 
+
 if 'OPTS' in globals(): 
     if len(OPTS) == 0:
         errorFunction()
 
+
 #process arguemnts from command line
 if 'OPTS' not in globals():
     raise Exception("An Argument is required")
+
 
 #o contains the tag and a contains path
 for o, a in OPTS:
