@@ -8,11 +8,13 @@ python:
   - "3.8-dev"  # 3.8 development branch
   - "nightly"  # nightly build
 before_install:
-  - sudo add-apt-repository --yes ppa:ubuntugis/ppa
-  - sudo apt-get --quiet update
-  - sudo apt-get install --yes libgdal-dev gdal-bin
+  - sudo apt-get install python3.6-dev
+  - sudo add-apt-repository ppa:ubuntugis/ppa && sudo apt-get update
+  - sudo apt-get update
+  - sudo apt-get install gdal-bin
+  - sudo apt-get install libgdal-dev
 install:
-  - pip install gdal==`gdal-config --version`
+  - pip install GDAL==2.4.0
   - pip install -r requirements.txt
 script:
   - pytest
