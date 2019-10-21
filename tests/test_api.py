@@ -1,7 +1,6 @@
 import os         # used to get the location of the testdata
 import sys
 import geoextent
-sys.path.append("../geoextent/")
 import extractFromFolderOrFile
 
 
