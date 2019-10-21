@@ -7,7 +7,7 @@ from django.utils.dateparse import parse_datetime
 import pygeoj
 import iso8601
 
-DATATYPE = "application/geojson"
+fileType = "application/geojson"
 
 def extractContentFromPath(filePath):
     ''' method to extract geojson content from a file by using its filepath \n
@@ -19,10 +19,11 @@ def extractContentFromPath(filePath):
     gjson.close()
     return gjsonContent
 
-def isValid(filePath):
+
+def checkFileValidity(filePath):
     '''Checks whether it is gjson->->valid geojson or not. \n
     input "filepath": type string, path to file which shall be extracted \n
-    output true if file is valid, false if not
+    output valid if file is valid and not empty, empty if file is empty, raise exception if not valid
     '''
     #TODO: make the function less complex using the function above
     try :
@@ -35,13 +36,11 @@ def isValid(filePath):
             raise Exception('The geojson file from is empty')
         return True
         '''
-        return 'Pass'
+        return 'valid'
         
     except Exception as e:
-        return 'Empty'
-        #raise Exception('The geojson file from is empty')
-            
-        
+        return 'empty'
+
     except ValueError as e:
         raise Exception ('The geojson file from ' + filePath + ' is not valid.' + str(e)) 
 
@@ -90,7 +89,8 @@ def convert3dto2d(filePath):
 
 
 def getBoundingBox (filePath):
-    ''' extract bounding box from geojson content \n
+    '''
+    Function purpose: extracts the bounding box from geojson content \n
     input "filePath": type string, file path to geojson File \n
     returns bounding box: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)] 
     '''
@@ -112,8 +112,6 @@ def getBoundingBox (filePath):
     if not bbox:
         raise Exception("Bounding box could not be extracted")
     return bbox
-
-
 
 
 def getCRS(filePath):
@@ -211,7 +209,6 @@ def getTemporalExtent (filePath):
                     pass
             if type(datetime_object) == datetime.datetime:
                 dateArray.append(gjsonContent)
-
 
 
     gjsonContent = extractContentFromPath(filePath)
