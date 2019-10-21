@@ -59,6 +59,27 @@ def getBoundingBox(filePath):
         return spatialExtent
 
 
+def getTemporalExtent(filePath):
+    ''' extract time extent from csv string \n
+    input "filePath": type string, file path to csv File \n
+    returns temporal extent of the file: type list, length = 2, both entries have the type dateTime, temporalExtent[0] <= temporalExtent[1]
+    '''
+    with open(filePath) as csv_file:
+        daten = csv.reader(csv_file.readlines())
+        elements = []
+        for x in daten:
+            elements.append(x)
+        allspatialExtent= []
+        allspatialExtent.append(hf.searchForParameters(elements, ["time", "timestamp"]))
+        if hf.searchForParameters(elements, ["time", "timestamp"] ) is None:
+            raise Exception('The csv file from ' + filePath + ' has no TemporalExtent')
+        else:
+            time=[]
+            time.append(min(allspatialExtent))
+            time.append(max(allspatialExtent))
+            return time
+
+
 def getCRS(filePath):
     '''extracts coordinatesystem from csv File \n
     input "filepath": type string, file path to csv file \n
