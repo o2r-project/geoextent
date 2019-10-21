@@ -7,9 +7,10 @@ python:
   - "3.7-dev"  # 3.7 development branch
   - "3.8-dev"  # 3.8 development branch
   - "nightly"  # nightly build
+virtualenv:
+  system_site_packages: true
 before_install:
-  - sudo apt-get update -y
-  - sudo apt-get install -y gdal-bin
+  - sudo apt-get install -qq libgdal1h
 install:
   - pip install -r requirements.txt
 script:
