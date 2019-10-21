@@ -99,11 +99,8 @@ def extractMetadataFromFile(filePath, whatMetadata):
             barrier.reset() 
             barrier.abort() 
     elif fileValidity == 'empty':
-        metadata["format"] = usedModule.fileType
-        metadata["bbox"] = None
-        metadata["temporal_extent"] = None
-        metadata["crs"] = None
+        raise Exception("The file is empty, file path:( " +str(filePath)+" )")
     else:
-        raise Exception("The file " + str(filePath) + " could not be validated")
+        raise Exception("The file is not valid, file path:( " +str(filePath)+" )")
         
     return metadata

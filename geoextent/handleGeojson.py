@@ -6,6 +6,7 @@ import datetime
 from django.utils.dateparse import parse_datetime
 import pygeoj
 import iso8601
+import os
 
 fileType = "application/geojson"
 
@@ -23,23 +24,21 @@ def extractContentFromPath(filePath):
 def checkFileValidity(filePath):
     '''Checks whether it is gjson->->valid geojson or not. \n
     input "filepath": type string, path to file which shall be extracted \n
-    output valid if file is valid and not empty, empty if file is empty, raise exception if not valid
+    output 'valid' if file is valid and not empty, 'empty' if file is empty, 'notvalid' if not valid
     '''
     #TODO: make the function less complex using the function above
     try :
-        gjson = open(filePath, "rb")
-        gjsonContent = json.load(gjson)
-        gjson.close()
-
-        '''
-        if not gjsonContent: #TODO: this exception dose not raised
-            raise Exception('The geojson file from is empty')
-        return True
-        '''
-        return 'valid'
-        
-    except Exception as e:
-        return 'empty'
+        #print(extractAfterKeyword("coordinates", gjsonContent) )
+        if(os.stat(filePath).st_size == 0):
+            return 'empty'
+        else:
+            gjson = open(filePath, "rb")
+            gjsonContent = json.load(gjson)
+            if 'coordinates' in gjsonContent['features'][0]['geometry']:
+                gjson.close()
+                return 'valid'
+            else:
+                return 'notValid'
 
     except ValueError as e:
         raise Exception ('The geojson file from ' + filePath + ' is not valid.' + str(e)) 
@@ -103,7 +102,7 @@ def getBoundingBox (filePath):
     #gjsonContent is a single geometrie and has to be converted to a FeatureCollection
     except ValueError:
         gjsonContent = convert3dto2d(filePath)
-
+        
         gjsonFeatureColl = {"type": "FeatureCollection", "features": []}
         gjsonFeatureColl["features"].append(gjsonContent)
         gjsonContent_FeatureColl = pygeoj.load(data=gjsonFeatureColl)
