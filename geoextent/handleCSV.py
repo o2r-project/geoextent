@@ -35,7 +35,7 @@ def getBoundingBox(filePath):
         spatialLatExtent=[]
         spatialLonExtent=[]
 
-        spatialLatExtent= hf.searchForParameters(elements, ["lat", "latitude","Latitude"])
+        spatialLatExtent= hf.searchForParameters(elements, ["lat", "latitude","Latitude", "Lat", "y"])
         minlat= None
         maxlat= None
         if hf.searchForParameters(elements, ["lat", "latitude","Latitude"]) is None:
@@ -44,10 +44,10 @@ def getBoundingBox(filePath):
             minlat= (min(spatialLatExtent))
             maxlat= (max(spatialLatExtent))
 
-        spatialLonExtent= hf.searchForParameters(elements, ["lon", "longitude","Longitude"])
+        spatialLonExtent= hf.searchForParameters(elements, ["lon", "Longitude", "longitude", "Lon", "lng", "Lng","long", "Long", "x"])
         minlon= None
         maxlon= None
-        if hf.searchForParameters(elements, ["lon", "longitude","Longitude"]) is None:
+        if hf.searchForParameters(elements, ["lon", "Lon", "long", "Long", "longitude", "Longitude", "x"]) is None:
             raise Exception('The csv file from ' + filePath + ' has no BoundingBox')
         else:
             minlon= (min(spatialLonExtent))
