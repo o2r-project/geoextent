@@ -1,7 +1,7 @@
 
 import sys, os, getopt, datetime
-import helpfunctions as hf
-import extractFromFolderOrFile as extract
+import geoextent.helpfunctions as hf
+import geoextent.extent as extent
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -69,7 +69,7 @@ for o, a in OPTS:
         print("Extract bounding box:")
         if '.' in ending:
             # handle it as a file
-            output = extract.extractMetadataFromFile(a, 'b')
+            output = extent.fromFile(a, 'b')
             if output is None:
                 raise Exception("This file format is not supported")
 

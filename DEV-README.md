@@ -27,6 +27,38 @@ deactivate
 #rmvirtualenv
 ```
 
+## Required packages
+
+In the environment created above, run
+
+```bash
+pip install -r requirements.txt
+```
+
+Install a matching version of gdal-python into the virtual environment:
+
+```bash
+gdal-config --version
+
+CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal pip install gdal==`gdal-config --version`
+```
+
+For the installation to suceed you need the following system packages (on Debian/Ubuntu):
+
+- `libproj-dev`
+- `libgdal-dev`
+- `libgeos-dev`
+- `gdal-bin`
+
+### Run tests
+
+Either install the lib and run `pytest`, or run `python -m pytest`.
+You can also run individual files:
+
+```
+python -m pytest tests/test_api.py
+```
+
 ## Release
 
 ### [Generate distibution archive](https://packaging.python.org/tutorials/packaging-projects/)
