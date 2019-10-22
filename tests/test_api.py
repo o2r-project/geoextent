@@ -23,9 +23,19 @@ def test_one_point_geojson_extract_bbox():
     result = extractFromFolderOrFile.extractMetadataFromFile('testdata/onePoint.geojson', 'b')
     assert result["bbox"] == [6.22049331665039, 50.5215036027663, 6.22049331665039, 50.5215036027663]
 
-def test_empty_file_geojson_extract_bbox(capsys):
+def test_empty_file_geojson_extract_bbox():
     with pytest.raises(Exception) as excinfo:
         extractFromFolderOrFile.extractMetadataFromFile('testdata/empty.geojson', 'b')
+    assert "The file is empty" in str(excinfo.value)
+
+def test_csv_extract_bbox():
+    #assert geoextent.getMetadata("/testdata/folder/cities_NL.csv", 'bbox') == [6.574722, 51.434444, 4.3175, 53.217222]
+    result = extractFromFolderOrFile.extractMetadataFromFile('testdata/cities_NL_lat&long.csv', 'b')
+    assert result["bbox"] == [4.3175, 51.434444, 6.574722, 53.217222]
+
+def test_empty_csv_file_extract_bbox():
+    with pytest.raises(Exception) as excinfo:
+        extractFromFolderOrFile.extractMetadataFromFile('testdata/empty_csv.csv', 'b')
     assert "The file is empty" in str(excinfo.value)
 
 def test_netcdf_extract_bbox():
@@ -39,9 +49,6 @@ def test_geotiff_extract_bbox():
 
 def test_gpkg_extract_bbox():
     assert geoextent.getMetadata("/testdata/nc.gpkg", 'bbox') == [33.882, -84.3239, 36.5896, -75.457]
-
-def test_csv_extract_bbox():
-    assert geoextent.getMetadata("/testdata/folder/cities_NL.csv", 'bbox') == [6.574722, 51.434444, 4.3175, 53.217222]
 
 def test_gml_extract_bbox():
     assert geoextent.getMetadata("/testdata/clc_1000_PT.gml", 'bbox') == [-17.5420724159224, 32.3966928193202, -6.95938792923511, 39.3011352746141]

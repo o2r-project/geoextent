@@ -28,7 +28,6 @@ def checkFileValidity(filePath):
     '''
     #TODO: make the function less complex using the function above
     try :
-        #print(extractAfterKeyword("coordinates", gjsonContent) )
         if(os.stat(filePath).st_size == 0):
             return 'empty'
         else:

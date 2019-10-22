@@ -75,7 +75,8 @@ def extractMetadataFromFile(filePath, whatMetadata):
                     # the CRS is not neccessarily required
                     if hasattr(usedModule, 'getCRS'):
                         metadata["crs"] = usedModule.getCRS(filePath)
-                    else: print ("Warning: The CRS cannot be extracted from the file")
+                    else: 
+                        print ("Warning: The CRS cannot be extracted from the file")
                 except Exception as e:
                     print("Warning for " + filePath + ": " + str(e))      
             try:

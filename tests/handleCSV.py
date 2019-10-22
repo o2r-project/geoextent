@@ -10,12 +10,15 @@ def checkFileValidity(filePath):
     output "valid" if file is valid, raise exception if not valid
     '''
     try:
-        with open(filePath) as csv_file:
-            daten = csv.reader(csv_file.readlines())
-            if daten is None:
-                raise Exception('The csv file from ' + filePath + ' has no valid csv Attributes')
-            else:
-                return "valid"
+        if(os.stat(filePath).st_size <= 1):
+            return 'empty'
+        else:
+            with open(filePath) as csv_file:
+                daten = csv.reader(csv_file.readlines())
+                if daten is None:
+                    raise Exception('The csv file from ' + filePath + ' has no valid csv Attributes')
+                else:
+                    return "valid"
     except:
         raise Exception('The csv file from ' + filePath + ' has no valid csv Attributes')
         
