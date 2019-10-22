@@ -1,8 +1,8 @@
 
-import helpfunctions as hf
 import json
 import sys
 import datetime
+import logging
 from django.utils.dateparse import parse_datetime
 import pygeoj
 import iso8601
@@ -14,18 +14,20 @@ def extractContentFromPath(filePath):
     ''' method to extract geojson content from a file by using its filepath \n
     input "filepath": type string, path to file which shall be extracted \n
     returns geojson content of the filePath: type string,  returns  geojson content of filepath 
-    '''  
-    gjson = open(filePath, "rb")
-    gjsonContent = json.load(gjson)
-    gjson.close()
-    return gjsonContent
+    '''
+    logging.info("Extracting content from path {}", filePath)
 
+    with open(filePath, "rb") as gjson:
+        gjsonContent = json.load(gjson)
+        return gjsonContent
 
 def checkFileValidity(filePath):
     '''Checks whether it is gjson->->valid geojson or not. \n
     input "filepath": type string, path to file which shall be extracted \n
     output 'valid' if file is valid and not empty, 'empty' if file is empty, 'notvalid' if not valid
     '''
+    logging.debug("Checking validity of {}", filePath)
+
     #TODO: make the function less complex using the function above
     try :
         if(os.stat(filePath).st_size == 0):

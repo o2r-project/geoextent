@@ -1,7 +1,14 @@
 
-import sys, os, getopt, datetime
-import helpfunctions as hf
-import threading 
+import sys
+import os
+import getopt
+import datetime
+import threading
+import logging
+
+import geoextent.lib.handleCSV as handleCSV
+import geoextent.lib.handleGeojson as handleGeojson
+import geoextent.lib.helpfunctions as hf
 
 def computeBboxInWGS84(module, path):
     ''' 
@@ -21,7 +28,7 @@ def computeBboxInWGS84(module, path):
         raise Exception("The bounding box could not be related to a CRS")
 
 
-def extractMetadataFromFile(filePath, whatMetadata):
+def fromFile(filePath, whatMetadata):
     ''' function is called when filePath is included in commandline (with tag 'b')
     how this is done depends on the file format - the function calls the extractMetadataFrom<format>()-function \n
     input "filePath": type string, path to file from which the metadata shall be extracted \n
@@ -29,6 +36,8 @@ def extractMetadataFromFile(filePath, whatMetadata):
     returns None if the format is not supported, else returns the metadata of the file as a dict 
     (possible) keys of the dict: 'temporal_extent', 'bbox', 'vector_reps', 'crs'
     '''
+    logging.info('Extracting {} from file {}', whatMetadata, filePath)
+    
     fileFormat = filePath[filePath.rfind('.')+1:]
     usedModule = None
 
@@ -37,10 +46,8 @@ def extractMetadataFromFile(filePath, whatMetadata):
 
     # first get the module that will be called (depending on the format of the file)
     if fileFormat == 'geojson' or fileFormat == 'json':
-        import handleGeojson
         usedModule = handleGeojson
     elif fileFormat == 'csv':
-        import handleCSV
         usedModule = handleCSV
     else: 
         # file format is not supported
@@ -50,7 +57,8 @@ def extractMetadataFromFile(filePath, whatMetadata):
         fileValidity = usedModule.checkFileValidity(filePath)
     except Exception as e:
         print("Error for " + filePath + ": " + str(e))
-        fileValidity = 'notValid' 
+        fileValidity = 'notValid'
+
     #get Bbox, Temporal Extent, Vector representation and crs parallel with threads
     class thread(threading.Thread): 
         def __init__(self, thread_ID): 

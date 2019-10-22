@@ -1,8 +1,6 @@
 import os           # used to get the location of the testdata
 import pytest
 
-__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-
 def test_geojson_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
         '--path', 'Testdata/folder/muenster_ring_zeit.geojs', 
@@ -19,8 +17,6 @@ def test_geojson_bbox_invalid_coordinates(script_runner):
     assert ret.stderr is not None
     assert ret.stderr == 'invalid coordinates', "stderr should not be empty"
     
-
-
 def test_geojson_time(script_runner):
     ret = script_runner.run('python', 'geoextent',
         '--path', 'Testdata/folder/muenster_ring_zeit.geojs', 

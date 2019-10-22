@@ -8,6 +8,10 @@ This project is developed as part of the [DFG-funded](https://o2r.info/about/#fu
 
 TODO
 
+**System requirements**
+
+- see `travis.yml`
+
 ## Use
 
 TODO
