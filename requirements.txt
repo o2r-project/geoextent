@@ -1,0 +1,6 @@
+pyproj
+pytest>=5
+geojson>=2.4.1
+pygeoj
+iso8601
+django
