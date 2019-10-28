@@ -36,7 +36,7 @@ def fromFile(filePath, whatMetadata):
     returns None if the format is not supported, else returns the metadata of the file as a dict 
     (possible) keys of the dict: 'temporal_extent', 'bbox', 'vector_reps', 'crs'
     '''
-    logging.info('Extracting {} from file {}', whatMetadata, filePath)
+    logging.info('Extracting { ' +whatMetadata+ ' } from file { ' +filePath+ ' }' )
     
     fileFormat = filePath[filePath.rfind('.')+1:]
     usedModule = None

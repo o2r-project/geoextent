@@ -1,11 +1,8 @@
 
 import sys, os, getopt, datetime
-import geoextent.helpfunctions as hf
-import geoextent.extent as extent
+import geoextent.lib.helpfunctions as hf
+import geoextent.lib.extent as extent
 import logging
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 COMMAND = None
 

@@ -1,5 +1,7 @@
 import csv
 import os
+import logging
+import geoextent.lib.helpfunctions as hf
 
 fileType = "text/csv"
 
@@ -8,6 +10,8 @@ def checkFileValidity(filePath):
     input "path": type string, path to file which shall be extracted \n
     output "valid" if file is valid, raise exception if not valid
     '''
+    logging.debug('Checking validity of { ' +filePath+ ' }' )
+    
     try:
         if(os.stat(filePath).st_size <= 1):
             return 'empty'
