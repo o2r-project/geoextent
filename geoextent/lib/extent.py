@@ -8,7 +8,11 @@ import logging
 
 import geoextent.lib.handleCSV as handleCSV
 import geoextent.lib.handleGeojson as handleGeojson
+import geoextent.lib.handleShapefile as handleShapefile
 import geoextent.lib.helpfunctions as hf
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def computeBboxInWGS84(module, path):
     ''' 
@@ -18,7 +22,12 @@ def computeBboxInWGS84(module, path):
     '''
     bbox_in_orig_crs = module.getBoundingBox(path)
     try:
-        crs = module.getCRS(path)
+        #TODO: Add function using to reproject coordinates system
+        if module.fileType == "application/shp":
+            crs = 'None'
+            return bbox_in_orig_crs
+        else:
+            crs = module.getCRS(path)
     except:
         pass
     if 'crs' in locals() and crs and bbox_in_orig_crs:
@@ -36,7 +45,7 @@ def fromFile(filePath, whatMetadata):
     returns None if the format is not supported, else returns the metadata of the file as a dict 
     (possible) keys of the dict: 'temporal_extent', 'bbox', 'vector_reps', 'crs'
     '''
-    logging.info('Extracting { ' +whatMetadata+ ' } from file { ' +filePath+ ' }' )
+    logging.info("Extracting {} from file {}\n".format(whatMetadata, filePath))
     
     fileFormat = filePath[filePath.rfind('.')+1:]
     usedModule = None
@@ -49,6 +58,8 @@ def fromFile(filePath, whatMetadata):
         usedModule = handleGeojson
     elif fileFormat == 'csv':
         usedModule = handleCSV
+    elif fileFormat == 'shp' or fileFormat == 'dbf':
+        usedModule = handleShapefile
     else: 
         # file format is not supported
         return None
