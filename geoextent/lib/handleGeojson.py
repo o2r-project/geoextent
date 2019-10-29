@@ -9,9 +9,6 @@ import iso8601
 import os
 import geoextent.lib.helpfunctions as hf
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-
 fileType = "application/geojson"
 
 def extractContentFromPath(filePath):
@@ -19,7 +16,7 @@ def extractContentFromPath(filePath):
     input "filepath": type string, path to file which shall be extracted \n
     returns geojson content of the filePath: type string,  returns  geojson content of filepath 
     '''
-    logging.info('Extracting content from path { ' +filePath+ ' }' )
+    logging.info("Extracting content from path {} \n".format(filePath))
 
     with open(filePath, "rb") as gjson:
         gjsonContent = json.load(gjson)
@@ -30,7 +27,7 @@ def checkFileValidity(filePath):
     input "filepath": type string, path to file which shall be extracted \n
     output 'valid' if file is valid and not empty, 'empty' if file is empty, 'notvalid' if not valid
     '''
-    logging.debug('Checking validity of { ' +filePath+ ' }' )
+    logging.info("Checking validity of {} \n".format(filePath))
 
     #TODO: make the function less complex using the function above
     try :

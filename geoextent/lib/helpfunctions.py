@@ -1,6 +1,5 @@
 
 import sys, os, platform, datetime, math 
-
 import getopt
 from osgeo import ogr
 from osgeo import osr

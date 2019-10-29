@@ -8,9 +8,9 @@ fileType = "text/csv"
 def checkFileValidity(filePath):
     '''Checks whether it is valid CSV or not. \n
     input "path": type string, path to file which shall be extracted \n
-    output "valid" if file is valid, raise exception if not valid
+    output 'valid' if file is valid, 'empty' if file is empty, raise exception if not valid
     '''
-    logging.debug('Checking validity of { ' +filePath+ ' }' )
+    logging.info("Checking validity of {} \n".format(filePath))
     
     try:
         if(os.stat(filePath).st_size <= 1):
