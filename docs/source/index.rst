@@ -10,7 +10,7 @@ Welcome to geoextent's documentation!
 
 ``geoextent`` is developed as part of the `DFG-funded <https://o2r.info/about/#funding>`_ research project Opening Reproducible Research `o2r <https://o2r.info>`_.
 
-Please report `Bugs <https://github.com/jupyter/repo2docker/issues>`_,
+Please report `Bugs <https://github.com/o2r-project/geoextent/issues>`_.
 
 .. toctree::
    :maxdepth: 2
