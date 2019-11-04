@@ -46,11 +46,16 @@ def getBoundingBox(filePath):
     returns bounding box of the file: type list, length = 4
     '''
     bbox = None
-
+    
     sf = shapefile.Reader(filePath)
     bbox = sf.bbox
+    bbox_list =[]
+    
+    # To get list of bbox instead of shapefile type 
+    for x in bbox:
+        bbox_list.append(x)
 
-    if not bbox:
+    if not bbox_list:
         raise Exception("Bounding box could not be extracted")
 
-    return bbox
+    return bbox_list
