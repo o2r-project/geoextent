@@ -32,6 +32,13 @@ def errorFunction():
     print(usage())
 
 
+def getOutput(filePath, typeOfData):
+    output = extent.fromFile(filePath, typeOfData)
+    if output is None:
+        raise Exception("This file format is not supported")
+    return output
+
+
 if len(sys.argv) == 1:
     print(usage())
     sys.exit(1)
@@ -66,15 +73,13 @@ for o, a in OPTS:
     if "/" in a:
         ending = a[a.rfind("/")+1:]    
 
-    #extracts spatial and temporal metadata and also the vector representation
+    #extracts spatial and temporal metadata
     if o == '-b':
         COMMAND = a
         print("Extract bounding box:")
         if '.' in ending:
             # handle it as a file
-            output = extent.fromFile(a, 'b')
-            if output is None:
-                raise Exception("This file format is not supported")
+            output = getOutput(a, 'b')
 
     elif o == '-h':  # dump help and exit
         print(usage())
