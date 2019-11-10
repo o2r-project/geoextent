@@ -9,6 +9,7 @@ import logging
 import geoextent.lib.handleCSV as handleCSV
 import geoextent.lib.handleGeojson as handleGeojson
 import geoextent.lib.handleShapefile as handleShapefile
+import geoextent.lib.handleGeotiff as handleGeotiff
 import geoextent.lib.helpfunctions as hf
 
 logging.basicConfig(level=logging.INFO)
@@ -60,6 +61,8 @@ def fromFile(filePath, whatMetadata):
         usedModule = handleCSV
     elif fileFormat == 'shp' or fileFormat == 'dbf':
         usedModule = handleShapefile
+    elif fileFormat == 'geotiff' or fileFormat == 'tif':
+        usedModule = handleGeotiff
     else: 
         # file format is not supported
         return None

@@ -16,6 +16,12 @@ def usage():
         Usage example
             extract_metadata.py -b </absoulte/path/to/directory>
 
+        Supported formats:
+            - (.geojson)
+            - (.csv)
+            - (.shp)
+            - (.geotiff)
+
         Available options:
             -b    Extract bounding box
 '''
