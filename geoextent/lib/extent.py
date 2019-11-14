@@ -36,7 +36,8 @@ def computeBboxInWGS84(module, path):
 
 def fromFile(filePath, whatMetadata):
     ''' function is called when filePath is included in commandline (with tag 'b')
-    how this is done depends on the file format - the function calls the extractMetadataFrom<format>()-function \n
+    how this is done depends on the file format - the function calls the handler for each supported format \n
+    extracted data are bounding box, temporal extent and crs, a seperate thread is dedicated to each extraction process \n
     input "filePath": type string, path to file from which the metadata shall be extracted \n
     input "whatMetadata": type string, specifices which metadata should be extracted  \n
     returns None if the format is not supported, else returns the metadata of the file as a dict 
@@ -45,7 +46,7 @@ def fromFile(filePath, whatMetadata):
     logging.info("Extracting {} from file {}\n".format(whatMetadata, filePath))
     
     fileFormat = os.path.splitext(filePath)[1][1:]
-    
+
     usedModule = None
 
     # initialization of later output dict
