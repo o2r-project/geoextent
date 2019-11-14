@@ -1,9 +1,5 @@
 
-import sys
-import os
-import getopt
-import datetime
-import threading
+import sys, os, threading
 import logging
 
 import geoextent.lib.handleCSV as handleCSV
@@ -48,7 +44,8 @@ def fromFile(filePath, whatMetadata):
     '''
     logging.info("Extracting {} from file {}\n".format(whatMetadata, filePath))
     
-    fileFormat = filePath[filePath.rfind('.')+1:]
+    fileFormat = os.path.splitext(filePath)[1][1:]
+    
     usedModule = None
 
     # initialization of later output dict
