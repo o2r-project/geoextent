@@ -1,35 +1,7 @@
-
-import sys, os, getopt, datetime
+import sys, datetime, argparse
 import geoextent.lib.helpfunctions as hf
 import geoextent.lib.extent as extent
 import logging
-
-COMMAND = None
-
-# the capabilities of our CLI
-def usage():
-    """Provide usage instructions"""
-    return '''
-        NAME
-            geoextent.py 
-
-        Usage example
-            extract_metadata.py -b </absoulte/path/to/directory>
-
-        Supported formats:
-            - (.geojson)
-            - (.csv)
-            - (.shp)
-            - (.geotiff)
-
-        Available options:
-            -b    Extract bounding box
-'''
-
-
-def errorFunction():
-    print("Error: A tag is required for a command")
-    print(usage())
 
 
 def getOutput(filePath, typeOfData):
@@ -39,54 +11,56 @@ def getOutput(filePath, typeOfData):
     return output
 
 
-if len(sys.argv) == 1:
-    print(usage())
-    sys.exit(1)
+
+def get_argparser():
+    """Get arguments to extract geoextent """
+    parser = argparse.ArgumentParser(
+        prog='geoextent',
+        usage='\n  __main__.py -b </absoulte/path/to/directory>',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=
+        '''Supported formats:\n  - (.geojson)\n  - (.csv)\n  - (.shp)\n  - (.geotiff)'''
+    )
+
+    parser.add_argument(
+        '--b', 
+        nargs=1, 
+        type=str,
+        help='Extract bounding box'
+    )
+
+    return parser
 
 
-try:
-    #opts contains tag and path, args contains other args
-    OPTS, ARGS = getopt.getopt(sys.argv[1:], 'b:h')
-except getopt.GetoptError as err:
-    print('\nERROR: %s' % err)
-    print(usage())
-    #sys.exit(2)
+argparser = get_argparser()
 
+# Check if there is no arguments
+if len(sys.argv[1:])==0:
+    argparser.print_help()
+    argparser.exit()
 
-if 'OPTS' in globals(): 
-    if len(OPTS) == 0:
-        errorFunction()
+args = vars(argparser.parse_args())
 
+path = args['b'][0]
+op = args.popitem()[0]
 
-#process arguemnts from command line
-if 'OPTS' not in globals():
-    raise Exception("An Argument is required")
+'''
+tells the program what to do with certain tags and their attributes that are
+inserted over the command line
+'''
+ending = path
+if "/" in path:
+    ending = path[path.rfind("/")+1:]    
 
-
-#o contains the tag and a contains path
-for o, a in OPTS:
-    '''
-    tells the program what to do with certain tags and their attributes that are
-    inserted over the command line
-    '''
-    ending = a
-    if "/" in a:
-        ending = a[a.rfind("/")+1:]    
-
-    #extracts spatial and temporal metadata
-    if o == '-b':
-        COMMAND = a
-        print("Extract bounding box:")
-        if '.' in ending:
-            # handle it as a file
-            output = getOutput(a, 'b')
-
-    elif o == '-h':  # dump help and exit
-        print(usage())
-        sys.exit(3)
-        
-    # print output differently depending on the outputs type
-    if 'output' in globals():
-        if type(output) == list or type(output) == dict:
-            hf.printObject(output)
-        else: print(output)
+#extracts spatial
+if op == 'b':
+    print("Extract bounding box:")
+    if '.' in ending:
+        # handle it as a file
+        output = getOutput(path, 'b')
+    
+# print output differently depending on the outputs type
+if 'output' in globals():
+    if type(output) == list or type(output) == dict:
+        hf.printObject(output)
+    else: print(output)
