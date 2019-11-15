@@ -21,8 +21,11 @@ project = 'geoextent'
 copyright = '2019, o2r-project'
 author = 'o2r-project'
 
+import geoextent
+
+version = geoextent.__version__
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+release = version
 
 
 # -- General configuration ---------------------------------------------------
