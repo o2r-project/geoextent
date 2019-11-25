@@ -11,6 +11,10 @@ import geoextent.lib.helpfunctions as hf
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
+modulesSupported = {'geojson':handleGeojson, 'json':handleGeojson,'csv':handleCSV,
+    'shp':handleShapefile, 'dbf':handleShapefile, 'geotiff':handleGeotiff, 'tif':handleGeotiff}
+
 def computeBboxInWGS84(module, path):
     ''' 
     input "module": type module, module from which methods shall be used \n
@@ -51,19 +55,17 @@ def fromFile(filePath, whatMetadata):
 
     # initialization of later output dict
     metadata = {}
+    
+    # get the module that will be called (depending on the format of the file)
+    for key in modulesSupported.keys():
+        if key == fileFormat:
+            print(key)
+            usedModule = modulesSupported.get(key)
 
-    # first get the module that will be called (depending on the format of the file)
-    if fileFormat == 'geojson' or fileFormat == 'json':
-        usedModule = handleGeojson
-    elif fileFormat == 'csv':
-        usedModule = handleCSV
-    elif fileFormat == 'shp' or fileFormat == 'dbf':
-        usedModule = handleShapefile
-    elif fileFormat == 'geotiff' or fileFormat == 'tif':
-        usedModule = handleGeotiff
-    else: 
-        # file format is not supported
+    # If file format is not supported
+    if not usedModule:
         return None
+ 
     #only extracts metadata if the file content is valid
     try:
         fileValidity = usedModule.checkFileValidity(filePath)
