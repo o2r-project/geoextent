@@ -1,4 +1,4 @@
-import sys, datetime, argparse
+import sys, os, datetime, argparse
 import geoextent.lib.helpfunctions as hf
 import geoextent.lib.extent as extent
 import logging
@@ -41,14 +41,19 @@ if len(sys.argv[1:])==0:
 
 args = vars(argparser.parse_args())
 
-path = args['b'][0]
+path = args['b'][0]     #TODO: add a loop in case there is more than one input
 op = args.popitem()[0]
 
 '''
 tells the program what to do with certain tags and their attributes that are
 inserted over the command line
 '''
-ending = path
+# Check whether path is absolute or realtive 
+if os.path.isabs(path):
+    ending = path
+else:
+    ending = os.getcwd()+'/'+path
+
 if "/" in path:
     ending = path[path.rfind("/")+1:]    
 
