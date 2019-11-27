@@ -59,7 +59,7 @@ def fromFile(filePath, whatMetadata):
     # get the module that will be called (depending on the format of the file)
     for key in modulesSupported.keys():
         if key == fileFormat:
-            print(key)
+            logging.info("Module used: {}\n".format(key))
             usedModule = modulesSupported.get(key)
 
     # If file format is not supported
