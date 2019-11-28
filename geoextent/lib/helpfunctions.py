@@ -88,3 +88,10 @@ def transformingArrayIntoWGS84(crs, pointArray):
         bbox = [[pointArray[0], pointArray[1]],[pointArray[2], pointArray[3]]]
         transf_bbox = transformingArrayIntoWGS84(crs, bbox)
         return [transf_bbox[0][0],transf_bbox[0][1], transf_bbox[1][0], transf_bbox[1][1]]
+
+
+def checkPath(path):
+    if os.path.isfile(os.getcwd()+'/'+path) :
+        return os.getcwd()+'/'+path
+    else:
+        raise Exception("No such file or directory")
