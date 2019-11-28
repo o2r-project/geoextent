@@ -42,6 +42,7 @@ def get_argparser():
         epilog=help_epilog,
     )
 
+    '''
     parser.add_argument(
         'inputs',
         metavar='input',
@@ -50,19 +51,22 @@ def get_argparser():
         nargs=1, # later: '+' (one or more)
         help="input file or path"
     )
+    '''
 
     parser.add_argument(
-        '-b', '--bounding-box',
-        action='store_true',
+        '-b',
+        type=str,
+        nargs=1,
         help='extract spatial extent (bounding box)'
     )
 
     parser.add_argument(
-        '-t', '--time-box',
-        action='store_true',
+        '-t',
+        type=str,
+        nargs=1,
         help='extract temporal extent'
     )
-
+    
     return parser
 
 
@@ -75,30 +79,38 @@ def main():
         argparser.exit()
 
     args = vars(argparser.parse_args())
+    logger.debug('Extracting from inputs %s', args['b'])
 
-    logger.debug('Extracting from inputs %s', args['inputs'])
+    if args['b']:
+        path = args['b'][0]
+    elif args['t']:
+        path = args['t'][0]
 
-    path = args['inputs'][0]
+    # Check whether file is excisted
+    hf.checkPath(path)
 
     # handle the boolean parameters as boolean, the following would me much more explicit:
     # output = getOutput(path, bbox = args['bounding_box'], time = args['time_box'])    
 
+    '''
     if args['bounding_box'] and args['time_box']:
         logger.info("Extract bounding box and time box from %s", path.name)
         # since we already have parse the input, it would be better to 
         output = getOutput(path.name, 'bt')
-    elif args['bounding_box']:
+    '''
+    if args['b']:
         logger.info("Extract bounding box from %s", path)
-        output = getOutput(path.name, 'b')
-    elif args['time_box']:
+        output = getOutput(path, 'b')
+    else:
         logger.info("Extract time box from %s", path)
-        output = getOutput(path.name, 't')
+        output = getOutput(path, 't')
 
     # print output differently depending on the outputs type
-    if 'output' in globals():
+    if output:
         if type(output) == list or type(output) == dict:
             hf.printObject(output)
-        else: print(output)
+        else: 
+            print(output)
 
 if __name__ == '__main__':
     main()
