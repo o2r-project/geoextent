@@ -25,12 +25,14 @@ Supported formats:
 - GeoTIFF (.geotiff, .tif)
 '''
 
+
 def getOutput(filePath, typeOfData):
     output = extent.fromFile(filePath, typeOfData)
     if output is None:
         raise Exception("This file format is not supported")
     return output
 
+ 
 def get_argparser():
     """Get arguments to extract geoextent """
     parser = argparse.ArgumentParser(
