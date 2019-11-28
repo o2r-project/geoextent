@@ -52,6 +52,12 @@ For the installation to suceed you need the following system packages (on Debian
 
 ### Run tests
 
+To install development requirements, run
+
+```bash
+pip install -r requirements-dev.txt
+```
+
 Either install the lib and run `pytest`, or run `python -m pytest`.
 You can also run individual files:
 

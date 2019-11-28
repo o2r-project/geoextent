@@ -1,4 +1,5 @@
-import gdal, gdalconst
+import osgeo.gdal as gdal
+import osgeo.gdalconst as gdalconst
 import osgeo.osr as osr
 import logging
 import geoextent.lib.helpfunctions as hf
