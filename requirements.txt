@@ -4,7 +4,4 @@ geojson>=2.4.1
 pygeoj
 iso8601
 django
-<<<<<<< HEAD
 pyshp
-=======
->>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159

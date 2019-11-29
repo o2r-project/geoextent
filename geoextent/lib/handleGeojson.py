@@ -7,10 +7,7 @@ from django.utils.dateparse import parse_datetime
 import pygeoj
 import iso8601
 import os
-<<<<<<< HEAD
 import geoextent.lib.helpfunctions as hf
-=======
->>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
 
 fileType = "application/geojson"
 
@@ -19,11 +16,7 @@ def extractContentFromPath(filePath):
     input "filepath": type string, path to file which shall be extracted \n
     returns geojson content of the filePath: type string,  returns  geojson content of filepath 
     '''
-<<<<<<< HEAD
     logging.info("Extracting content from path {} \n".format(filePath))
-=======
-    logging.info("Extracting content from path {}", filePath)
->>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
 
     with open(filePath, "rb") as gjson:
         gjsonContent = json.load(gjson)
@@ -34,11 +27,7 @@ def checkFileValidity(filePath):
     input "filepath": type string, path to file which shall be extracted \n
     output 'valid' if file is valid and not empty, 'empty' if file is empty, 'notvalid' if not valid
     '''
-<<<<<<< HEAD
     logging.info("Checking validity of {} \n".format(filePath))
-=======
-    logging.debug("Checking validity of {}", filePath)
->>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
 
     #TODO: make the function less complex using the function above
     try :
