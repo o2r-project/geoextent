@@ -1,17 +1,25 @@
 import csv
 import os
+<<<<<<< HEAD
 import logging
 import geoextent.lib.helpfunctions as hf
+=======
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
 
 fileType = "text/csv"
 
 def checkFileValidity(filePath):
     '''Checks whether it is valid CSV or not. \n
     input "path": type string, path to file which shall be extracted \n
+<<<<<<< HEAD
     output 'valid' if file is valid, 'empty' if file is empty, raise exception if not valid
     '''
     logging.info("Checking validity of {} \n".format(filePath))
     
+=======
+    output "valid" if file is valid, raise exception if not valid
+    '''
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     try:
         if(os.stat(filePath).st_size <= 1):
             return 'empty'

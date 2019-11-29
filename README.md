@@ -31,6 +31,10 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
+**System requirements**
+
+- see `travis.yml`
+
 ## Use
 
 Run

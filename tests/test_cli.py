@@ -1,6 +1,7 @@
 import os           # used to get the location of the testdata
 import pytest
 
+<<<<<<< HEAD
 
 def test_helptext_direct(script_runner):
     ret = script_runner.run('geoextent', '--help')
@@ -43,13 +44,41 @@ def test_geojson_bbox_invalid_coordinates(script_runner):
 def test_geojson_time(script_runner):
     ret = script_runner.run('geoextent',
         '-t', 'tests/testdata/folder/muenster_ring_zeit.geojson')
+=======
+def test_geojson_bbox(script_runner):
+    ret = script_runner.run('python', 'geoextent',
+        '--path', 'Testdata/folder/muenster_ring_zeit.geojs', 
+        '--detail', 'bbox')
+    assert ret.success, "process should return success"
+    assert ret.stderr == '', "stderr should be empty"
+    assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout, "bbox is printed to console"
+
+def test_geojson_bbox_invalid_coordinates(script_runner):
+    ret = script_runner.run('python', 'geoextent',
+        '--path', 'Testdata/folder/muenster_ring_zeit.geojs', 
+        '--detail', 'bbox')
+    assert ret.success, "process should return success"
+    assert ret.stderr is not None
+    assert ret.stderr == 'invalid coordinates', "stderr should not be empty"
+    
+def test_geojson_time(script_runner):
+    ret = script_runner.run('python', 'geoextent',
+        '--path', 'Testdata/folder/muenster_ring_zeit.geojs', 
+        '--detail', 'bbox',
+        '--time')
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "['2018-11-14', '2018-11-14']" in ret.stdout,  "time value is printed to console"
 
 def test_geojson_time_invalid(script_runner):
+<<<<<<< HEAD
     ret = script_runner.run('geoextent',
         '--path', 'tests/testdata/folder/muenster_ring_zeit.geojson', 
+=======
+    ret = script_runner.run('python', 'geoextent',
+        '--path', 'Testdata/folder/muenster_ring_zeit.geojs', 
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox',
         '--time')
     assert ret.success, "process should return success"
@@ -57,43 +86,78 @@ def test_geojson_time_invalid(script_runner):
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
 
 def test_netcdf_bbox(script_runner):
+<<<<<<< HEAD
     ret = script_runner.run('geoextent',
         '-b', 'tests/testdata/ECMWF_ERA-40_subset1.nc')
+=======
+    ret = script_runner.run('python', 'geoextent',
+        '--path', 'Testdata/ECMWF_ERA-40_subset1.nc', 
+        '--detail', 'bbox')
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "[-90.0, 0.0, 90.0, 357.5]" in ret.stdout, "bbox is printed to console"
 
 def test_netcdf_time(script_runner):
+<<<<<<< HEAD
     ret = script_runner.run('geoextent',
         '-t', 'tests/testdata/ECMWF_ERA-40_subset1.nc')
+=======
+    ret = script_runner.run('python', 'geoextent',
+        '--path', 'Testdata/ECMWF_ERA-40_subset1.nc', 
+        '--detail', 'bbox',
+        '--time')
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "['2002-07-01','2002-07-31']" in ret.stdout,  "time value is printed to console"
 
 def test_netcdf_time_invalid(script_runner):
+<<<<<<< HEAD
     ret = script_runner.run('geoextent',
         '-b', 'tests/testdata/ECMWF_ERA-40_subset1.nc')
+=======
+    ret = script_runner.run('python', 'geoextent',
+        '--path', 'Testdata/ECMWF_ERA-40_subset1.nc', 
+        '--detail', 'bbox',
+        '--time')
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     assert ret.success, "process should return success"
     assert ret.stderr is not None
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
 
 def test_kml_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '-b', 'tests/testdata/aasee.kml')
+=======
+        '--path', 'Testdata/aasee.kml', 
+        '--detail', 'bbox')
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "[7.594213, 51.942466, 7.618246, 51.957278]" in ret.stdout, "bbox is printed to console"
 
 def test_kml_time(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '-t', 'tests/testdata/aasee.kml')
+=======
+        '--path', 'Testdata/aasee.kml', 
+        '--detail', 'bbox',
+        '--time')
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "[None]" in ret.stdout,  "time value is printed to console"
 
 def test_kml_time_invalid(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '--path', 'tests/testdata/aasee_invalid-time.kml', 
+=======
+        '--path', 'Testdata/aasee.kml', 
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox',
         '--time')
     assert ret.success, "process should return success"
@@ -102,28 +166,47 @@ def test_kml_time_invalid(script_runner):
 
 def test_geotiff_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '-b', 'tests/testdata/wf_100m_klas.tif')
+=======
+        '--path', 'Testdata/wf_100m_klas.tif', 
+        '--detail', 'bbox')
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "[5.9153007564753155, 50.31025197410836, 9.468398712484145, 52.5307755328733]" in ret.stdout, "bbox is printed to console"
 
 def test_gpkg_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '-b', 'tests/testdata/nc.gpkg')
+=======
+        '--path', 'Testdata/nc.gpkg', 
+        '--detail', 'bbox')
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "[33.882, -84.3239, 36.5896, -75.457]" in ret.stdout, "bbox is printed to console"
 
 def test_csv_bbox(script_runner, tmpdir):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '-b', 'tests/testdata/folder/cities_NL.csv')
+=======
+        '--path', 'Testdata/folder/cities_NL.csv', 
+        '--detail', 'bbox')
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "[6.574722, 51.434444, 4.3175, 53.217222]" in ret.stdout, "bbox is printed to console"
 
 def test_csv_time(script_runner, tmpdir):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '--path', 'tests/testdata/folder/cities_NL.csv', 
+=======
+        '--path', 'Testdata/folder/cities_NL.csv', 
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox',
         '--time')
     assert ret.success, "process should return success"
@@ -132,7 +215,11 @@ def test_csv_time(script_runner, tmpdir):
 
 def test_csv_time_invalid(script_runner, tmpdir):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '--path', 'tests/testdata/folder/cities_NL.csv', 
+=======
+        '--path', 'Testdata/folder/cities_NL.csv', 
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox',
         '--time')
     assert not ret.success, "process should return success"
@@ -141,7 +228,11 @@ def test_csv_time_invalid(script_runner, tmpdir):
 
 def test_gml_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '--path', 'tests/testdata/clc_1000_PT.gml', 
+=======
+        '--path', 'Testdata/clc_1000_PT.gml', 
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
@@ -149,7 +240,11 @@ def test_gml_bbox(script_runner):
 
 def test_gml_time(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '--path', 'tests/testdata/clc_1000_PT.gml', 
+=======
+        '--path', 'Testdata/clc_1000_PT.gml', 
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox',
         '--time')
     assert ret.success, "process should return success"
@@ -158,7 +253,11 @@ def test_gml_time(script_runner):
 
 def test_gml_time_invalid(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '--path', 'tests/testdata/clc_1000_PT.gml', 
+=======
+        '--path', 'Testdata/clc_1000_PT.gml', 
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox',
         '--time')
     assert ret.success, "process should return success"
@@ -167,7 +266,11 @@ def test_gml_time_invalid(script_runner):
 
 def test_shp_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '--path', 'tests/testdata/Abgrabungen_Kreis_Kleve_Shape.shp', 
+=======
+        '--path', 'Testdata/Abgrabungen_Kreis_Kleve_Shape.shp', 
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
@@ -175,7 +278,11 @@ def test_shp_bbox(script_runner):
 
 def test_json_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '--path', 'tests/testdata/folder/schutzhuetten_aachen.json', 
+=======
+        '--path', 'Testdata/folder/schutzhuetten_aachen.json', 
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
@@ -183,7 +290,11 @@ def test_json_bbox(script_runner):
 
 def test_json_time(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '--path', 'tests/testdata/folder/schutzhuetten_aachen.json', 
+=======
+        '--path', 'Testdata/folder/schutzhuetten_aachen.json', 
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox',
         '--time')
     assert ret.success, "process should return success"
@@ -192,7 +303,11 @@ def test_json_time(script_runner):
 
 def test_json_time_invalid(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '--path', 'tests/testdata/folder/schutzhuetten_aachen.json', 
+=======
+        '--path', 'Testdata/folder/schutzhuetten_aachen.json', 
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox',
         '--time')
     assert ret.success, "process should return success"
@@ -201,7 +316,11 @@ def test_json_time_invalid(script_runner):
 
 def test_folder_multiple_files(script_runner):
     ret = script_runner.run('python', 'geoextent',
+<<<<<<< HEAD
         '--path', 'tests/testdata/folder',
+=======
+        '--path', 'Testdata/folder',
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
         '--detail', 'bbox')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"

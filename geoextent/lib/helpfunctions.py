@@ -1,5 +1,9 @@
 
 import sys, os, platform, datetime, math 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
 import getopt
 from osgeo import ogr
 from osgeo import osr
@@ -87,6 +91,7 @@ def transformingArrayIntoWGS84(crs, pointArray):
     elif len(pointArray) == 4:
         bbox = [[pointArray[0], pointArray[1]],[pointArray[2], pointArray[3]]]
         transf_bbox = transformingArrayIntoWGS84(crs, bbox)
+<<<<<<< HEAD
         return [transf_bbox[0][0],transf_bbox[0][1], transf_bbox[1][0], transf_bbox[1][1]]
 
 
@@ -95,3 +100,6 @@ def checkPath(path):
         return os.getcwd()+'/'+path
     else:
         raise Exception("No such file or directory")
+=======
+        return [transf_bbox[0][0],transf_bbox[0][1], transf_bbox[1][0], transf_bbox[1][1]]
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159

@@ -1,9 +1,18 @@
 
+<<<<<<< HEAD
 import sys, os, threading
+=======
+import sys
+import os
+import getopt
+import datetime
+import threading
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
 import logging
 
 import geoextent.lib.handleCSV as handleCSV
 import geoextent.lib.handleGeojson as handleGeojson
+<<<<<<< HEAD
 import geoextent.lib.handleShapefile as handleShapefile
 import geoextent.lib.handleGeotiff as handleGeotiff
 import geoextent.lib.helpfunctions as hf
@@ -15,6 +24,10 @@ logger = logging.getLogger(__name__)
 modulesSupported = {'geojson':handleGeojson, 'json':handleGeojson,'csv':handleCSV,
     'shp':handleShapefile, 'dbf':handleShapefile, 'geotiff':handleGeotiff, 'tif':handleGeotiff}
 
+=======
+import geoextent.lib.helpfunctions as hf
+
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
 def computeBboxInWGS84(module, path):
     ''' 
     input "module": type module, module from which methods shall be used \n
@@ -23,12 +36,16 @@ def computeBboxInWGS84(module, path):
     '''
     bbox_in_orig_crs = module.getBoundingBox(path)
     try:
+<<<<<<< HEAD
         #TODO: Add function using to reproject coordinates system
         if module.fileType == "application/shp":
             crs = 'None'
             return bbox_in_orig_crs
         else:
             crs = module.getCRS(path)
+=======
+        crs = module.getCRS(path)
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     except:
         pass
     if 'crs' in locals() and crs and bbox_in_orig_crs:
@@ -40,21 +57,32 @@ def computeBboxInWGS84(module, path):
 
 def fromFile(filePath, whatMetadata):
     ''' function is called when filePath is included in commandline (with tag 'b')
+<<<<<<< HEAD
     how this is done depends on the file format - the function calls the handler for each supported format \n
     extracted data are bounding box, temporal extent and crs, a seperate thread is dedicated to each extraction process \n
+=======
+    how this is done depends on the file format - the function calls the extractMetadataFrom<format>()-function \n
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     input "filePath": type string, path to file from which the metadata shall be extracted \n
     input "whatMetadata": type string, specifices which metadata should be extracted  \n
     returns None if the format is not supported, else returns the metadata of the file as a dict 
     (possible) keys of the dict: 'temporal_extent', 'bbox', 'vector_reps', 'crs'
     '''
+<<<<<<< HEAD
     logging.info("Extracting {} from file {}\n".format(whatMetadata, filePath))
     
     fileFormat = os.path.splitext(filePath)[1][1:]
 
+=======
+    logging.info('Extracting {} from file {}', whatMetadata, filePath)
+    
+    fileFormat = filePath[filePath.rfind('.')+1:]
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     usedModule = None
 
     # initialization of later output dict
     metadata = {}
+<<<<<<< HEAD
     
     # get the module that will be called (depending on the format of the file)
     for key in modulesSupported.keys():
@@ -66,6 +94,17 @@ def fromFile(filePath, whatMetadata):
     if not usedModule:
         return None
  
+=======
+
+    # first get the module that will be called (depending on the format of the file)
+    if fileFormat == 'geojson' or fileFormat == 'json':
+        usedModule = handleGeojson
+    elif fileFormat == 'csv':
+        usedModule = handleCSV
+    else: 
+        # file format is not supported
+        return None
+>>>>>>> 3a5f99d0a44035230fff7cd40075ba16e3298159
     #only extracts metadata if the file content is valid
     try:
         fileValidity = usedModule.checkFileValidity(filePath)
