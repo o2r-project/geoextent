@@ -20,7 +20,7 @@
 [geoextent]: https://github.com/o2r-project/geoextent
 [Geosoftware2]: https://github.com/carobro/Geosoftware2
 [zenodo]: https://sandbox.zenodo.org/record/256820#.XeGcJJko85k
-[INSPIRE]: https://inspire.ec.europa.eu/forum/discussion/view/106164/from-source-data-to-inspire-conformant-gml-datasets-provided-by-means-of-view-and-download-services-eea-feasibility-study
+[INSPIRE]:      https://themes.jrc.ec.europa.eu/file/view/107486/example-of-gml-file-conformant-to-inspire-land-cover-vector-application-schema
 [unidata]: https://www.unidata.ucar.edu/software/netcdf/examples/files.html
 [geojson.io]: http://geojson.io 
 [govdata]: https://www.govdata.de/web/guest/daten/-/details/abgrabungen
