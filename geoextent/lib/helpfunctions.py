@@ -7,17 +7,6 @@ from pyproj import Proj, transform
 
 WGS84_EPSG_ID = 4326
 
-def printObject(object):
-    '''
-    Function purpose: output of metadata object \n
-    Input: object \n
-    Output: print("/n")
-    '''
-    print("\n")
-    for a,b in object.items():
-        print(str(a) + ": " + str(b))
-    print("\n")
-
 
 def getAllRowElements(rowname,elements):
     '''

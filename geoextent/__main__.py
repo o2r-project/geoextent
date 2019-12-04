@@ -26,6 +26,14 @@ Supported formats:
 '''
 
 
+class OutputTest:
+    def __init__(self, output):
+        self.output = output
+
+    def __str__(self):
+        return 'The output is: ' + str(self.output)
+
+
 def getOutput(filePath, typeOfData):
     output = extent.fromFile(filePath, typeOfData)
     if output is None:
@@ -108,9 +116,11 @@ def main():
     # print output differently depending on the outputs type
     if output:
         if type(output) == list or type(output) == dict:
-            hf.printObject(output)
+            oTest = OutputTest(output)
+            print(oTest)
         else: 
             print(output)
+
 
 if __name__ == '__main__':
     main()
