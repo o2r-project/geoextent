@@ -3,9 +3,8 @@ import json
 import sys
 import datetime
 import logging
-from django.utils.dateparse import parse_datetime
+from dateutil.parser import *
 import pygeoj
-import iso8601
 import os
 import geoextent.lib.helpfunctions as hf
 
@@ -202,12 +201,12 @@ def getTemporalExtent (filePath):
                 searchForTimeElements(element)
         elif type(gjsonContent) == str:
             datetime_object = None
-            datetime_object = parse_datetime(gjsonContent)
-            if datetime_object == None:
-                try:
-                    datetime_object = iso8601.parse_date(gjsonContent)
-                except:
-                    pass
+            try:
+                if hf.validate(gjsonContent):
+                    datetime_object = parse(gjsonContent)
+            except:
+                pass
+
             if type(datetime_object) == datetime.datetime:
                 dateArray.append(gjsonContent)
 

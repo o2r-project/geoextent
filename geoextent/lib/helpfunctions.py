@@ -95,3 +95,11 @@ def checkPath(path):
         return os.getcwd()+'/'+path
     else:
         raise Exception("No such file or directory")
+
+
+def validate(date_text):
+    try:
+        if datetime.datetime.strptime(date_text, '%Y-%m-%d'):
+            return True
+    except :
+        return False
