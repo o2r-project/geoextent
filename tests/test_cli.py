@@ -21,15 +21,23 @@ def test_error_no_file(script_runner):
     assert 'doesntexist' in ret.stderr, "wrong input is printed to console"
     assert ret.stdout == ''
 
+def test_geojson_invalid_second_input(script_runner):
+    ret = script_runner.run('geoextent', 'tests/testdata/geojson/muenster_ring_zeit.geojson', 'tests/testdata/not_existing.geojson')
+    assert not ret.success, "process should return failue"
+    assert ret.stderr != '', "stderr should not be empty"
+    assert 'doesntexist' in ret.stderr, "wrong input is printed to console"
+    assert ret.stdout == ''
+
 def test_geojson_bbox(script_runner):
     ret = script_runner.run('geoextent',
-        '-b', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
+        '-b',
+        'tests/testdata/geojson/muenster_ring_zeit.geojson')
     assert ret.success, "process should return success"
     assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout, "bbox is printed to console"
 
 def test_geojson_bbox_long_name(script_runner):
     ret = script_runner.run('geoextent',
-        '--bbox', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
+        '--bounding-box', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
     assert ret.success, "process should return success"
     assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout, "bbox is printed to console"
 
@@ -49,13 +57,12 @@ def test_geojson_time(script_runner):
 
 def test_geojson_time_invalid(script_runner):
     ret = script_runner.run('geoextent',
-        '--path', 'tests/testdata/geojson/muenster_ring_zeit.geojson', 
-        '--detail', 'bbox',
-        '--time')
+        '-t', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
     assert ret.success, "process should return success"
     ret.stderr is not None
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
 
+@pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_bbox(script_runner):
     ret = script_runner.run('geoextent',
         '-b', 'tests/testdata/nc/ECMWF_ERA-40_subset.nc')
@@ -63,6 +70,7 @@ def test_netcdf_bbox(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     assert "[-90.0, 0.0, 90.0, 357.5]" in ret.stdout, "bbox is printed to console"
 
+@pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_time(script_runner):
     ret = script_runner.run('geoextent',
         '-t', 'tests/testdata/nc/ECMWF_ERA-40_subset.nc')
@@ -70,6 +78,7 @@ def test_netcdf_time(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     assert "['2002-07-01','2002-07-31']" in ret.stdout,  "time value is printed to console"
 
+@pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_time_invalid(script_runner):
     ret = script_runner.run('geoextent',
         '-b', 'tests/testdata/nc/ECMWF_ERA-40_subset.nc')
@@ -77,6 +86,7 @@ def test_netcdf_time_invalid(script_runner):
     assert ret.stderr is not None
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
 
+@pytest.mark.skip(reason="file format not implemented yet")
 def test_kml_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
         '-b', 'tests/testdata/kml/aasee.kml')
@@ -84,6 +94,7 @@ def test_kml_bbox(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     assert "[7.594213, 51.942466, 7.618246, 51.957278]" in ret.stdout, "bbox is printed to console"
 
+@pytest.mark.skip(reason="file format not implemented yet")
 def test_kml_time(script_runner):
     ret = script_runner.run('python', 'geoextent',
         '-t', 'tests/testdata/kml/aasee.kml')
@@ -91,11 +102,10 @@ def test_kml_time(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     assert "[None]" in ret.stdout,  "time value is printed to console"
 
+@pytest.mark.skip(reason="file format not implemented yet")
 def test_kml_time_invalid(script_runner):
     ret = script_runner.run('python', 'geoextent',
-        '--path', 'tests/testdata/aasee_invalid-time.kml', 
-        '--detail', 'bbox',
-        '--time')
+        '-t', 'tests/testdata/aasee_invalid-time.kml')
     assert ret.success, "process should return success"
     assert ret.stderr is not None
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
@@ -107,6 +117,7 @@ def test_geotiff_bbox(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     assert "[5.9153007564753155, 50.31025197410836, 9.468398712484145, 52.5307755328733]" in ret.stdout, "bbox is printed to console"
 
+@pytest.mark.skip(reason="file format not implemented yet")
 def test_gpkg_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
         '-b', 'tests/testdata/nc/nc.gpkg')
@@ -123,102 +134,71 @@ def test_csv_bbox(script_runner, tmpdir):
 
 def test_csv_time(script_runner, tmpdir):
     ret = script_runner.run('python', 'geoextent',
-        '--path', 'tests/testdata/csv/cities_NL.csv', 
-        '--detail', 'bbox',
-        '--time')
+        '-t', 'tests/testdata/csv/cities_NL.csv')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "['2018-09-30', '2018-09-30']" in ret.stdout, "time value is printed to console"
 
 def test_csv_time_invalid(script_runner, tmpdir):
     ret = script_runner.run('python', 'geoextent',
-        '--path', 'tests/testdata/csv/cities_NL.csv', 
-        '--detail', 'bbox',
-        '--time')
+        '-t', 'tests/testdata/csv/cities_NL.csv')
     assert not ret.success, "process should return success"
     assert ret.stderr is not None
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
 
+@pytest.mark.skip(reason="file format not implemented yet")
 def test_gml_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
-        '--path', 'tests/testdata/gml/clc_1000_PT.gml', 
-        '--detail', 'bbox')
+        '-b', 'tests/testdata/gml/clc_1000_PT.gml')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "[-17.5420724159224, 32.3966928193202, -6.95938792923511, 39.3011352746141]" in ret.stdout, "bbox is printed to console"
 
+@pytest.mark.skip(reason="file format not implemented yet")
 def test_gml_time(script_runner):
     ret = script_runner.run('python', 'geoextent',
-        '--path', 'tests/testdata/gml/clc_1000_PT.gml', 
-        '--detail', 'bbox',
-        '--time')
+        '-t', 'tests/testdata/gml/clc_1000_PT.gml')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "['2013-11-30T23:00:00Z', '2013-11-30T23:00:00Z']" in ret.stdout,  "time value is printed to console"
 
+@pytest.mark.skip(reason="file format not implemented yet")
 def test_gml_time_invalid(script_runner):
     ret = script_runner.run('python', 'geoextent',
-        '--path', 'tests/testdata/gml/clc_1000_PT.gml', 
-        '--detail', 'bbox',
-        '--time')
+        '-t', 'tests/testdata/gml/clc_1000_PT.gml')
     assert ret.success, "process should return success"
     assert ret.stderr is not None
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
 
 def test_shp_bbox(script_runner):
     ret = script_runner.run('python', 'geoextent',
-        '--path', 'tests/testdata/Abgrabungen_Kreis_Kleve_Shape.shp', 
-        '--detail', 'bbox')
+        '-b', 'tests/testdata/Abgrabungen_Kreis_Kleve_Shape.shp')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "[295896.274870878, 5694747.64703736, 325999.79578122497, 5747140.98659967]" in ret.stdout, "bbox is printed to console"
 
-def test_json_bbox(script_runner):
+@pytest.mark.skip(reason="multiple input files not implemented yet")
+def test_multiple_files(script_runner):
     ret = script_runner.run('python', 'geoextent',
-        '--path', 'tests/testdata/folder/schutzhuetten_aachen.json', 
-        '--detail', 'bbox')
-    assert ret.success, "process should return success"
-    assert ret.stderr == '', "stderr should be empty"
-    assert "[292063.81225905, 5618144.09259115, 302531.3161606, 5631223.82854667]" in ret.stdout, "bbox is printed to console"
-
-def test_json_time(script_runner):
-    ret = script_runner.run('python', 'geoextent',
-        '--path', 'tests/testdata/folder/schutzhuetten_aachen.json', 
-        '--detail', 'bbox',
-        '--time')
-    assert ret.success, "process should return success"
-    assert ret.stderr == '', "stderr should be empty"
-    assert "[None]" in ret.stdout,  "time value is printed to console"
-
-def test_json_time_invalid(script_runner):
-    ret = script_runner.run('python', 'geoextent',
-        '--path', 'tests/testdata/folder/schutzhuetten_aachen.json', 
-        '--detail', 'bbox',
-        '--time')
-    assert ret.success, "process should return success"
-    assert ret.stderr is not None
-    assert ret.stderr == 'invalid time format', "stderr should not be empty"
-
-def test_folder_multiple_files(script_runner):
-    ret = script_runner.run('python', 'geoextent',
-        '--path', 'tests/testdata/folder',
-        '--detail', 'bbox')
+        '-b', 'tests/testdata/shapefile/Abgrabungen_Kreis_Kleve_Shape.shp', 'tests/testdata/geojson/ausgleichsflaechen_moers.geojson')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout, "bboxes and time values of all files inside folder, are printed to console"
     assert "[6.574722, 51.434444, 4.3175, 53.217222]" in ret.stdout, "bboxes and time values of all files inside folder, are printed to console"
     assert "[292063.81225905, 5618144.09259115, 302531.3161606, 5631223.82854667]" in ret.stdout, "bboxes and time values of all files inside folder, are printed to console"
 
-'''
-@pytest.mark.parametrize("test_input,expected", [(True, "param1")])
-def test_string_parameter(test_input, expected):
-    assert isinstance(test_input, str)
-
-@pytest.mark.parametrize("test_input,expected", [("param1", True)])
-def test_bool_parameter(test_input, expected):
-    assert isinstance(test_input, bool)
-
-@pytest.mark.parametrize("test_input,expected", [("param1", 1)])
-def test_numeric_parameter(test_input, expected):
-    assert isinstance(test_input, int)
-'''
+@pytest.mark.skip(reason="director input not implemented yet")
+def test_folder(script_runner):
+    ret = script_runner.run('python', 'geoextent',
+        '-b', 'tests/testdata/folder')
+    assert ret.success, "process should return success"
+    assert ret.stderr == '', "stderr should be empty"
+    assert "full bbox" in ret.stdout, "joined bboxes of all files inside folder are printed to console"
+    
+@pytest.mark.skip(reason="director input not implemented yet")
+def test_multiple_folders(script_runner):
+    ret = script_runner.run('python', 'geoextent',
+        '-b', 'tests/testdata/shapefile', 'tests/testdata/geojson', 'tests/testdata/nc')
+    assert ret.success, "process should return success"
+    assert ret.stderr == '', "stderr should be empty"
+    assert "full bbox" in ret.stdout, "joined bboxes of all files inside folder are printed to console"
