@@ -8,23 +8,15 @@ fileType = "text/csv"
 def checkFileValidity(filePath):
     '''Checks whether it is valid CSV or not. \n
     input "path": type string, path to file which shall be extracted \n
-    output 'valid' if file is valid, 'empty' if file is empty, raise exception if not valid
+    raise exception if not valid
     '''
     logging.info("Checking validity of {} \n".format(filePath))
     
-    try:
-        if(os.stat(filePath).st_size <= 1):
-            return 'empty'
-        else:
-            with open(filePath) as csv_file:
-                daten = csv.reader(csv_file.readlines())
-                if daten is None:
-                    raise Exception('The csv file from ' + filePath + ' has no valid csv Attributes')
-                else:
-                    return "valid"
-    except:
-        raise Exception('The csv file from ' + filePath + ' has no valid csv Attributes')
-        
+    with open(filePath) as csv_file:
+        daten = csv.reader(csv_file.readlines())
+        if daten is None:
+            raise Exception("The file {} has no valid csv Attributes".format(filePath))
+
 
 def getBoundingBox(filePath):
     '''
