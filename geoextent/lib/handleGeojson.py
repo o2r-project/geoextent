@@ -3,10 +3,10 @@ import json
 import sys
 import datetime
 import logging
-from django.utils.dateparse import parse_datetime
+from dateutil.parser import *
 import pygeoj
-import iso8601
 import os
+import geoextent.lib.helpfunctions as hf
 
 fileType = "application/geojson"
 
@@ -15,7 +15,7 @@ def extractContentFromPath(filePath):
     input "filepath": type string, path to file which shall be extracted \n
     returns geojson content of the filePath: type string,  returns  geojson content of filepath 
     '''
-    logging.info("Extracting content from path {}", filePath)
+    logging.info("Extracting content from path {} \n".format(filePath))
 
     with open(filePath, "rb") as gjson:
         gjsonContent = json.load(gjson)
@@ -26,7 +26,7 @@ def checkFileValidity(filePath):
     input "filepath": type string, path to file which shall be extracted \n
     output 'valid' if file is valid and not empty, 'empty' if file is empty, 'notvalid' if not valid
     '''
-    logging.debug("Checking validity of {}", filePath)
+    logging.info("Checking validity of {} \n".format(filePath))
 
     #TODO: make the function less complex using the function above
     try :
@@ -201,12 +201,12 @@ def getTemporalExtent (filePath):
                 searchForTimeElements(element)
         elif type(gjsonContent) == str:
             datetime_object = None
-            datetime_object = parse_datetime(gjsonContent)
-            if datetime_object == None:
-                try:
-                    datetime_object = iso8601.parse_date(gjsonContent)
-                except:
-                    pass
+            try:
+                if hf.validate(gjsonContent):
+                    datetime_object = parse(gjsonContent)
+            except:
+                pass
+
             if type(datetime_object) == datetime.datetime:
                 dateArray.append(gjsonContent)
 

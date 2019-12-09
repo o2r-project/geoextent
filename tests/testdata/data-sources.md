@@ -4,14 +4,13 @@
 |---------------------|-----------------------------------|-----------|------------------------------------|
 | [sf]                | nc                                | gpkg      | COPYRIGHT HOLDER: Edzer Pebesma    |
 | [sf]                | overpass                          | osm       | ODbL                               |
-| [Geosoftware2]      | clc_1000_PT                       | gml       | MIT                                |
+| [INSPIRE]           | clc_1000_PT                       | gml       |                                    |
 | [Geosoftware2]      | wf_100m_klas                      | geotif    | MIT                                |
-| [Geosoftware2]      | cities_NL                         | csv       | MIT                                |
+| [zenodo]            | cities_NL                         | csv       | CC-BY                              |
 | [Geosoftware2]      | muenster_ring_zeit                | geojson   | MIT                                |
-| [Geosoftware2]      | schutzhuetten_aachen              | json      | MIT                                |
-| [Geosoftware2]      | ECMWF_ERA-40_subset1              | netcdf    | MIT                                |
-| [Geosoftware2]      | aasee                             | kml       | MIT                                |
-| [Geosoftware2]      | Abgrabungen_Kreis_Kleve_Shape     | shp       | MIT                                |
+| [unidata]           | ECMWF_ERA-40_subset1              | netcdf    |                                    |
+| [geojson.io]        | aasee                             | kml       |                                    |
+| [govdata]           | Abgrabungen_Kreis_Kleve_Shape     | shp       | free license                       |
 | [Geosoftware2]      | wf_100m_klas                      | geotif    | MIT                                |
 | [geoextent]         | onePoint                          | geojson   | PDDL                               |
 | [geoextent]         | invalid_coordinate                | geojson   | PDDL                               |
@@ -20,3 +19,8 @@
 [sf]: https://github.com/r-spatial/sf
 [geoextent]: https://github.com/o2r-project/geoextent
 [Geosoftware2]: https://github.com/carobro/Geosoftware2
+[zenodo]: https://sandbox.zenodo.org/record/256820#.XeGcJJko85k
+[INSPIRE]:      https://themes.jrc.ec.europa.eu/file/view/107486/example-of-gml-file-conformant-to-inspire-land-cover-vector-application-schema
+[unidata]: https://www.unidata.ucar.edu/software/netcdf/examples/files.html
+[geojson.io]: http://geojson.io 
+[govdata]: https://www.govdata.de/web/guest/daten/-/details/abgrabungen

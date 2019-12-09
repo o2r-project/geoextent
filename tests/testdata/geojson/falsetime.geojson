@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "location": "kalterherberg",
+        "date": "201"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            7.645540237426757,
+            51.96780294552556
+          ],
+          
+          [
+            7.620048522949219,
+            51.954951105932835
+          ],
+          [
+            7.6169586181640625
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,23 +1,11 @@
 
 import sys, os, platform, datetime, math 
-
 import getopt
 from osgeo import ogr
 from osgeo import osr
 from pyproj import Proj, transform
 
 WGS84_EPSG_ID = 4326
-
-def printObject(object):
-    '''
-    Function purpose: output of metadata object \n
-    Input: object \n
-    Output: print("/n")
-    '''
-    print("\n")
-    for a,b in object.items():
-        print(str(a) + ": " + str(b))
-    print("\n")
 
 
 def getAllRowElements(rowname,elements):
@@ -89,3 +77,18 @@ def transformingArrayIntoWGS84(crs, pointArray):
         bbox = [[pointArray[0], pointArray[1]],[pointArray[2], pointArray[3]]]
         transf_bbox = transformingArrayIntoWGS84(crs, bbox)
         return [transf_bbox[0][0],transf_bbox[0][1], transf_bbox[1][0], transf_bbox[1][1]]
+
+
+def checkPath(path):
+    if os.path.isfile(os.getcwd()+'/'+path) :
+        return os.getcwd()+'/'+path
+    else:
+        raise Exception("No such file or directory")
+
+
+def validate(date_text):
+    try:
+        if datetime.datetime.strptime(date_text, '%Y-%m-%d'):
+            return True
+    except :
+        return False
