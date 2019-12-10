@@ -110,7 +110,7 @@ def fromFile(filePath, bbox=True, tbox=True):
             try:
                 barrier.wait()
             except Exception as e:
-                logger.error(str(e))
+                logger.error(e)
                 barrier.abort()
 
     thread_bbox_except = thread(100) 
