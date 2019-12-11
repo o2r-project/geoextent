@@ -10,18 +10,14 @@ fileType = "application/shp"
 def checkFileValidity(filePath):
     '''Checks whether it is valid shapefile or not. \n
     input "path": type string, path to file which shall be extracted \n
-    output 'valid' if file is valid, 'empty' if file is empty, 'notValid' if not valid
+    raise exception if not valid
     '''
     logging.info("Checking validity of {} \n".format(filePath))
     
     try:
-        if(os.stat(filePath).st_size == 0):
-            return 'empty'
-        else:
-            sf = shapefile.Reader(filePath)
-            return 'valid'
-    except:
-        return 'notValid'
+        sf = shapefile.Reader(filePath)
+    except Exception as e:
+        raise Exception("The Shapefile {} is not valid:\n{}".format(filePath, str(e)))
 
 
 def getCRS(path):

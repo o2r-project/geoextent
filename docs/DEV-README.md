@@ -61,7 +61,7 @@ pip install -r requirements-dev.txt
 Either install the lib and run `pytest`, or run `python -m pytest`.
 You can also run individual files:
 
-```
+```bash
 python -m pytest tests/test_api.py
 ```
 

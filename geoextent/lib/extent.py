@@ -37,9 +37,14 @@ def computeBboxInWGS84(module, path):
     else:
         raise Exception("The bounding box could not be related to a CRS")
 
+def fromDirectory(path, bbox=False, tbox=False):
+    ''' TODO: implement
+    '''
 
-def fromFile(filePath, whatMetadata):
-    ''' function is called when filePath is included in commandline (with tag 'b')
+def fromFile(filePath, bbox=True, tbox=True):
+    ''' TODO: update these docs
+    
+    function is called when filePath is included in commandline (with tag 'b')
     how this is done depends on the file format - the function calls the handler for each supported format \n
     extracted data are bounding box, temporal extent and crs, a seperate thread is dedicated to each extraction process \n
     input "filePath": type string, path to file from which the metadata shall be extracted \n
@@ -47,7 +52,7 @@ def fromFile(filePath, whatMetadata):
     returns None if the format is not supported, else returns the metadata of the file as a dict 
     (possible) keys of the dict: 'temporal_extent', 'bbox', 'vector_reps', 'crs'
     '''
-    logging.info("Extracting {} from file {}\n".format(whatMetadata, filePath))
+    logging.info("Extracting bbox={} tbox={} from file {}".format(bbox, tbox, filePath))
     
     fileFormat = os.path.splitext(filePath)[1][1:]
 
@@ -59,20 +64,20 @@ def fromFile(filePath, whatMetadata):
     # get the module that will be called (depending on the format of the file)
     for key in modulesSupported.keys():
         if key == fileFormat:
-            logging.info("Module used: {}\n".format(key))
+            logging.info("Module used: {}".format(key))
             usedModule = modulesSupported.get(key)
 
     # If file format is not supported
     if not usedModule:
+        logger.info("Did not find a compatible module for file format {} of file {}".format(fileFormat, filePath))
         return None
  
-    #only extracts metadata if the file content is valid
+    # Only extract metadata if the file content is valid
     try:
-        fileValidity = usedModule.checkFileValidity(filePath)
+        usedModule.checkFileValidity(filePath)
     except Exception as e:
-        print("Error for " + filePath + ": " + str(e))
-        fileValidity = 'notValid'
-
+        raise Exception("The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
+        
     #get Bbox, Temporal Extent, Vector representation and crs parallel with threads
     class thread(threading.Thread): 
         def __init__(self, thread_ID): 
@@ -80,50 +85,45 @@ def fromFile(filePath, whatMetadata):
             self.thread_ID = thread_ID
         def run(self):
             metadata["format"] = usedModule.fileType
-            #print("Thread with Thread_ID " +  str(self.thread_ID) + " now running...")
-            #metadata[self.thread_ID] = self.thread_ID
+
             if self.thread_ID == 100:
                 try:
-                    metadata["bbox"] = computeBboxInWGS84(usedModule, filePath)
+                    if bbox:
+                        metadata["bbox"] = computeBboxInWGS84(usedModule, filePath)
                 except Exception as e:
-                    print("Warning for " + filePath + ": " + str(e)) 
+                    logger.warning("Warning for {} extracting bbox:\n{}".format(filePath, str(e)))
             elif self.thread_ID == 101:
                 try:
-                    metadata["temporal_extent"] = usedModule.getTemporalExtent(filePath)
+                    if tbox:
+                        metadata["tbox"] = usedModule.getTemporalExtent(filePath)
                 except Exception as e:
-                    print("Warning for " + filePath + ": " + str(e))
+                    logger.warning("Warning for {} extracting tbox:\n{}".format(filePath, str(e)))
             elif self.thread_ID == 103:
                 try:
                     # the CRS is not neccessarily required
-                    if hasattr(usedModule, 'getCRS'):
+                    if bbox and hasattr(usedModule, 'getCRS'):
                         metadata["crs"] = usedModule.getCRS(filePath)
                     else: 
-                        print ("Warning: The CRS cannot be extracted from the file")
+                        logger.warning("Warning: The CRS cannot be extracted from the file {}".format(filePath))
                 except Exception as e:
-                    print("Warning for " + filePath + ": " + str(e))      
+                    logger.warning("Warning for {} extracting CRS:\n{}".format(filePath, str(e)))
             try:
                 barrier.wait()
             except Exception as e:
+                logger.error(e)
                 barrier.abort()
 
     thread_bbox_except = thread(100) 
     thread_temp_except = thread(101) 
     thread_crs_except = thread(103)
     
-    if fileValidity == 'valid':
-        if whatMetadata == "b":
-            # none of the metadata field is required 
-            # so the system does not crash even if it does not find anything
-            barrier = threading.Barrier(4)
-            thread_bbox_except.start() 
-            thread_temp_except.start() 
-            thread_crs_except.start()
-            barrier.wait() 
-            barrier.reset() 
-            barrier.abort() 
-    elif fileValidity == 'empty':
-        raise Exception("The file is empty, file path:( " +str(filePath)+" )")
-    else:
-        raise Exception("The file is not valid, file path:( " +str(filePath)+" )")
-        
+    barrier = threading.Barrier(4)
+    thread_bbox_except.start() 
+    thread_temp_except.start() 
+    thread_crs_except.start()
+    barrier.wait() 
+    barrier.reset() 
+    barrier.abort()
+
+    logger.debug("Extraction finished: {}".format(str(metadata)))
     return metadata

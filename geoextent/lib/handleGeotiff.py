@@ -9,7 +9,7 @@ fileType = "image/tiff"
 def checkFileValidity(filePath):
     '''Checks whether it is valid geotiff or not.
     input filepath: type string, path to file which shall be extracted
-    output 'valid' if file is valid, 'empty' if file is empty, raise exception if not valid
+    raise exception if not valid
     '''
     logging.info("Checking validity of {} \n".format(filePath))
 
@@ -21,15 +21,8 @@ def checkFileValidity(filePath):
         
         width = gtiffContent.RasterXSize
         height = gtiffContent.RasterYSize
-        if(False):
-            #TODO: Add checking empty or blank geotiff file 
-            #return "empty"
-            pass
-        else:
-            return "valid"
-    except:
-        raise Exception('The geotiff file from ' + filePath + ' is not valid')
-
+    except Exception as e:
+        raise Exception("The GeoTIFF file {} is not valid:\n{}".format(filePath, str(e)))
 
 
 def getBoundingBox(filePath):

@@ -28,24 +28,17 @@ def checkFileValidity(filePath):
     '''
     logging.info("Checking validity of {} \n".format(filePath))
 
-    #TODO: make the function less complex using the function above
     try :
-        if(os.stat(filePath).st_size == 0):
-            return 'empty'
+        gjson = open(filePath, "rb")
+        gjsonContent = json.load(gjson)
+        if 'coordinates' in gjsonContent['features'][0]['geometry']:
+            gjson.close()
         else:
-            gjson = open(filePath, "rb")
-            gjsonContent = json.load(gjson)
-            if 'coordinates' in gjsonContent['features'][0]['geometry']:
-                gjson.close()
-                return 'valid'
-            else:
-                return 'notValid'
-
+            raise Exception("GeoJSON file {} is not valid.".format(filePath))
     except ValueError as e:
-        raise Exception ('The geojson file from ' + filePath + ' is not valid.' + str(e)) 
-
+        raise Exception("GeoJSON file {} is not valid:\n{}".format(filePath, str(e)))
     except RuntimeError as e:
-        raise Exception ('(geo)json file cannot be opened or read.' + str(e))
+        raise Exception("GeoJSON file cannot be opened:{}.".format(str(e)))
  
    
 def convert3dto2d(filePath):
