@@ -40,14 +40,26 @@ pip install -e .
 Run
 
 ```bash
-geoxtent --help
+geoextent --help
 ```
 
 to see usage instructions.
 
 ## Supported data formats
 
-TODO
+- GeoJSON (.geojson)
+- Tabular data (.csv)
+- Shapefile (.shp)
+- GeoTIFF (.geotiff, .tif)
+
+## Contribute
+
+All help is welcome: asking questions, providing documentation, testing, or even development.
+
+Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md).
+By participating in this project you agree to abide by its terms.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 

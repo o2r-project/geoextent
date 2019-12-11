@@ -79,13 +79,6 @@ def transformingArrayIntoWGS84(crs, pointArray):
         return [transf_bbox[0][0],transf_bbox[0][1], transf_bbox[1][0], transf_bbox[1][1]]
 
 
-def checkPath(path):
-    if os.path.isfile(os.getcwd()+'/'+path) :
-        return os.getcwd()+'/'+path
-    else:
-        raise Exception("No such file or directory")
-
-
 def validate(date_text):
     try:
         if datetime.datetime.strptime(date_text, '%Y-%m-%d'):
