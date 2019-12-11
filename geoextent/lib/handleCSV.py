@@ -68,8 +68,8 @@ def getTemporalExtent(filePath):
         for x in daten:
             elements.append(x)
         allspatialExtent= []
-        allspatialExtent.append(hf.searchForParameters(elements, ["time", "timestamp"]))
-        if hf.searchForParameters(elements, ["time", "timestamp"] ) is None:
+        allspatialExtent=hf.searchForParameters(elements, ["time", "timestamp", "date"])
+        if hf.searchForParameters(elements, ["time", "timestamp", "date"] ) is None:
             raise Exception('The csv file from ' + filePath + ' has no TemporalExtent')
         else:
             time=[]
