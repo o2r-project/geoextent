@@ -25,10 +25,17 @@ def getBoundingBox(filePath):
     returns spatialExtent: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)] 
     '''
     with open(filePath) as csv_file:
-        daten = csv.reader(csv_file.readlines())
+        # To get delimiter either comma or simecolon
+        dialect = csv.Sniffer().sniff(csv_file.readline(1024)) 
+        # To reset back positin to beginning of the file
+        csv_file.seek(0)
+
+        daten = csv.reader(csv_file.readlines(), delimiter=dialect.delimiter)
+
         elements = []
         for x in daten:
             elements.append(x)
+           
         spatialExtent= []
         spatialLatExtent=[]
         spatialLonExtent=[]
@@ -63,10 +70,17 @@ def getTemporalExtent(filePath):
     returns temporal extent of the file: type list, length = 2, both entries have the type dateTime, temporalExtent[0] <= temporalExtent[1]
     '''
     with open(filePath) as csv_file:
-        daten = csv.reader(csv_file.readlines())
+        # To get delimiter either comma or simecolon
+        dialect = csv.Sniffer().sniff(csv_file.readline(1024)) 
+        # To reset back positin to beginning of the file
+        csv_file.seek(0)
+
+        daten = csv.reader(csv_file.readlines(), delimiter=dialect.delimiter)
+
         elements = []
         for x in daten:
             elements.append(x)
+            
         allspatialExtent= []
         allspatialExtent=hf.searchForParameters(elements, ["time", "timestamp", "date"])
         if hf.searchForParameters(elements, ["time", "timestamp", "date"] ) is None:
