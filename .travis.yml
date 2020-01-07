@@ -29,6 +29,7 @@ before_install:
 install:
   - pip install -r requirements.txt
   - pip install -e .
+  - pip install pytest-console-scripts
 script:
   - pytest
 #after_script:
