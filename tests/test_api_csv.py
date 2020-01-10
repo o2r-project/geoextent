@@ -1,3 +1,5 @@
+import os       
+import sys
 import pytest
 import geoextent.lib.extent as geoextent
 
