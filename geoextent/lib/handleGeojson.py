@@ -213,5 +213,5 @@ def getTemporalExtent (filePath):
         temporalExtent.append(dateArray[0])
         temporalExtent.append(dateArray[len(dateArray)-1])
     else:
-        raise Exception("Could not extract timestamp.")
+        raise Exception("Invalid time format.")
     return temporalExtent

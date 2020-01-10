@@ -25,7 +25,8 @@ def test_geojson_invalid_second_input(script_runner):
     ret = script_runner.run('geoextent', 'testdata/geojson/muenster_ring_zeit.geojson', 'testdata/geojson/not_existing.geojson')
     assert not ret.success, "process should return failue"
     assert ret.stderr != '', "stderr should not be empty"
-    assert 'doesntexist' in ret.stderr, "wrong input is printed to console"
+    assert 'not a valid directory or file' in ret.stderr, "wrong input is printed to console"
+    assert 'testdata/geojson/not_existing.geojson' in ret.stderr, "wrong input is printed to console"
     assert ret.stdout == ''
 
 def test_geojson_bbox(script_runner):
@@ -57,10 +58,10 @@ def test_geojson_time(script_runner):
 
 def test_geojson_time_invalid(script_runner):
     ret = script_runner.run('geoextent',
-        '-t', 'testdata/geojson/muenster_ring_zeit.geojson')
+        '-t', 'testdata/geojson/invalid_time.geojson')
     assert ret.success, "process should return success"
     ret.stderr is not None
-    assert ret.stderr == 'invalid time format', "stderr should not be empty"
+    assert 'Invalid time format' in ret.stderr, "stderr should not be empty"
 
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_bbox(script_runner):
@@ -111,11 +112,11 @@ def test_kml_time_invalid(script_runner):
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
 
 def test_geotiff_bbox(script_runner):
-    ret = script_runner.run('python', 'geoextent',
-        '-b', 'tests/testdata/tif/wf_100m_klas.tif')
+    ret = script_runner.run('geoextent',
+        '-b', 'testdata/tif/wf_100m_klas.tif')
     assert ret.success, "process should return success"
-    assert ret.stderr == '', "stderr should be empty"
-    assert "[5.9153007564753155, 50.31025197410836, 9.468398712484145, 52.5307755328733]" in ret.stdout, "bbox is printed to console"
+    #assert ret.stderr == '', "stderr should be empty"
+    assert "[5.91530075647532, 50.3102519741084, 9.46839871248415, 52.5307755328733]" in ret.stdout, "bbox is printed to console"
 
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_gpkg_bbox(script_runner):
@@ -126,25 +127,26 @@ def test_gpkg_bbox(script_runner):
     assert "[33.882, -84.3239, 36.5896, -75.457]" in ret.stdout, "bbox is printed to console"
 
 def test_csv_bbox(script_runner, tmpdir):
-    ret = script_runner.run('python', 'geoextent',
-        '-b', 'tests/testdata/csv/cities_NL.csv')
+    ret = script_runner.run('geoextent', 
+        '-b', 'testdata/csv/cities_NL.csv')
     assert ret.success, "process should return success"
-    assert ret.stderr == '', "stderr should be empty"
-    assert "[6.574722, 51.434444, 4.3175, 53.217222]" in ret.stdout, "bbox is printed to console"
+    #assert ret.stderr == '', "stderr should be empty"
+    assert "[4.3175, 51.434444, 6.574722, 53.217222]" in ret.stdout, "bbox is printed to console"
 
 def test_csv_time(script_runner, tmpdir):
-    ret = script_runner.run('python', 'geoextent',
-        '-t', 'tests/testdata/csv/cities_NL.csv')
+    ret = script_runner.run('geoextent',
+        '-t', 'testdata/csv/cities_NL.csv')
     assert ret.success, "process should return success"
-    assert ret.stderr == '', "stderr should be empty"
-    assert "['2018-09-30', '2018-09-30']" in ret.stdout, "time value is printed to console"
+    #assert ret.stderr == '', "stderr should be empty"
+    assert "['01.08.2017', '30.09.2019']" in ret.stdout, "time value is printed to console"
+
 
 def test_csv_time_invalid(script_runner, tmpdir):
-    ret = script_runner.run('python', 'geoextent',
-        '-t', 'tests/testdata/csv/cities_NL.csv')
-    assert not ret.success, "process should return success"
+    ret = script_runner.run('geoextent',
+        '-t', 'testdata/csv/cities_NL_lat&long.csv')
+    assert ret.success, "process should return success"
     assert ret.stderr is not None
-    assert ret.stderr == 'invalid time format', "stderr should not be empty"
+    assert "no TemporalExtent" in ret.stderr , "stderr should not be empty"
 
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_gml_bbox(script_runner):
@@ -171,10 +173,10 @@ def test_gml_time_invalid(script_runner):
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
 
 def test_shp_bbox(script_runner):
-    ret = script_runner.run('python', 'geoextent',
-        '-b', 'tests/testdata/Abgrabungen_Kreis_Kleve_Shape.shp')
+    ret = script_runner.run('geoextent',
+        '-b', 'testdata/shapefile/Abgrabungen_Kreis_Kleve_Shape.shp')
     assert ret.success, "process should return success"
-    assert ret.stderr == '', "stderr should be empty"
+    #assert ret.stderr == '', "stderr should be empty"
     assert "[295896.274870878, 5694747.64703736, 325999.79578122497, 5747140.98659967]" in ret.stdout, "bbox is printed to console"
 
 @pytest.mark.skip(reason="multiple input files not implemented yet")
