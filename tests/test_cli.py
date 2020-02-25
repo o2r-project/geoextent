@@ -116,7 +116,11 @@ def test_geotiff_bbox(script_runner):
         '-b', 'testdata/tif/wf_100m_klas.tif')
     assert ret.success, "process should return success"
     #assert ret.stderr == '', "stderr should be empty"
-    assert "[5.91530075647532, 50.3102519741084, 9.46839871248415, 52.5307755328733]" in ret.stdout, "bbox is printed to console"
+    result = ret.stdout
+    bboxStr =result[result.find("[")+1:result.find("]")]
+    bboxList = bboxStr.split(',')
+    bbox = [round(float(bboxList[0]),7), round(float(bboxList[1]),7), round(float(bboxList[2]),7), round(float(bboxList[3]),7)]
+    assert bbox == [5.9153008, 50.310252, 9.4683987, 52.5307755]
 
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_gpkg_bbox(script_runner):
