@@ -76,7 +76,7 @@ def fromFile(filePath, bbox=True, tbox=True):
     try:
         usedModule.checkFileValidity(filePath)
     except Exception as e:
-        raise Exception("The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
+        raise Exception(os.getcwd()+" The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
         
     #get Bbox, Temporal Extent, Vector representation and crs parallel with threads
     class thread(threading.Thread): 
