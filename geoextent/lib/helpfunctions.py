@@ -32,8 +32,9 @@ def searchForParameters(elements, paramArray):
     '''
     for x in paramArray:
         for row in elements[0]:
-            if x in row:
+            if x == row:
                 return getAllRowElements(x,elements)
+
 
 def transformingIntoWGS84 (crs, coordinate):
     '''
