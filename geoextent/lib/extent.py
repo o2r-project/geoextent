@@ -53,6 +53,9 @@ def fromFile(filePath, bbox=True, tbox=True):
     (possible) keys of the dict: 'temporal_extent', 'bbox', 'vector_reps', 'crs'
     '''
     logging.info("Extracting bbox={} tbox={} from file {}".format(bbox, tbox, filePath))
+
+    if bbox == False and tbox == False:
+        raise Exception("Please enter correct arguments")
     
     fileFormat = os.path.splitext(filePath)[1][1:]
 

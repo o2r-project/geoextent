@@ -90,3 +90,8 @@ def test_csv_extract_bbox_and_tbox_with_TIME_DATE():
     assert "tbox" in result
     assert result["bbox"] == [4.3175, 51.434444, 6.574722, 53.217222]
     assert result["tbox"] == ['01.08.2017', '30.09.2019']
+
+def test_csv_extract_bbox_and_tbox_when_both_false():
+    with pytest.raises(Exception) as excinfo:
+        geoextent.fromFile('testdata/csv/cities_NL.csv', bbox=False, tbox=False)
+    assert "Please enter correct arguments" in str(excinfo.value)
