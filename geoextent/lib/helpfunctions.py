@@ -15,11 +15,11 @@ def getAllRowElements(rowname,elements):
     Output: array values
     '''
     for idx, val in enumerate(elements[0]):
-        if  rowname in val:
+        if rowname in val.lower():
             indexOf = idx
             values = []
             for x in elements:
-                if x[indexOf] != rowname:
+                if x[indexOf].lower() != rowname:
                     values.append(x[indexOf])
             return values
 
@@ -32,9 +32,8 @@ def searchForParameters(elements, paramArray):
     '''
     for x in paramArray:
         for row in elements[0]:
-            if x == row:
+            if x in row.lower():
                 return getAllRowElements(x,elements)
-
 
 def transformingIntoWGS84 (crs, coordinate):
     '''

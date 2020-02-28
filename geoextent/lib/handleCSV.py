@@ -40,7 +40,7 @@ def getBoundingBox(filePath):
         spatialLatExtent=[]
         spatialLonExtent=[]
 
-        spatialLatExtent= hf.searchForParameters(elements, ["latitude","Latitude", "lat","Lat", "y"])
+        spatialLatExtent= hf.searchForParameters(elements, ["latitude", "lat", "y"])
         minlat= None
         maxlat= None
         if spatialLatExtent is None:
@@ -49,7 +49,7 @@ def getBoundingBox(filePath):
             minlat= (min(spatialLatExtent))
             maxlat= (max(spatialLatExtent))
 
-        spatialLonExtent= hf.searchForParameters(elements, ["longitude", "Longitude", "lon","Lon", "lng", "Lng","long", "Long", "x"])
+        spatialLonExtent= hf.searchForParameters(elements, ["longitude", "lon", "lng","long", "x"])
         minlon= None
         maxlon= None
         if spatialLonExtent is None:
