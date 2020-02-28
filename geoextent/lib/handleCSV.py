@@ -49,7 +49,7 @@ def getBoundingBox(filePath):
             minlat= (min(spatialLatExtent))
             maxlat= (max(spatialLatExtent))
 
-        spatialLonExtent= hf.searchForParameters(elements, ["longitude", "lon", "lng","long", "x"])
+        spatialLonExtent= hf.searchForParameters(elements, ["longitude", "long", "lon", "lng", "x"])
         minlon= None
         maxlon= None
         if spatialLonExtent is None:
@@ -82,7 +82,7 @@ def getTemporalExtent(filePath):
             elements.append(x)
             
         allspatialExtent= []
-        allspatialExtent=hf.searchForParameters(elements, ["timestamp", "time", "date", "datetime"])
+        allspatialExtent=hf.searchForParameters(elements, ["timestamp", "datetime", "time", "date"])
         if allspatialExtent is None:
             raise Exception('The csv file from ' + filePath + ' has no TemporalExtent')
         else:
@@ -102,7 +102,7 @@ def getCRS(filePath):
         elements = []
         for x in daten:
             elements.append(x)
-        if hf.searchForParameters(elements,["longitude","Latitude","latitude","Latitude"]) is None:
+        if hf.searchForParameters(elements,["longitude","latitude","long", "lat", "lon", "lng", "x", "y"]) is None:
             if hf.searchForParameters(elements, ["crs","srsID"]) is None:
                 raise Exception('The csv file from ' + filePath + ' has no CRS')
             if hf.searchForParameters(elements, ["crs","srsID"]) == "WGS84":

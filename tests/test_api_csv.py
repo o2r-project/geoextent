@@ -41,3 +41,45 @@ def test_csv_extract_bbox_and_tbox_comma_delimiter():
     assert "tbox" in result
     assert result["bbox"] == [4.3175, 51.434444, 6.574722, 53.217222]
     assert result["tbox"] == ['01.08.2017', '30.09.2019']
+
+def test_csv_extract_bbox_and_tbox_with_Time():
+    result = geoextent.fromFile('testdata/csv/cities_NL_Time.csv', bbox=True, tbox=True)
+    assert "bbox" in result
+    assert "tbox" in result
+    assert result["bbox"] == [4.3175, 51.434444, 6.574722, 53.217222]
+    assert result["tbox"] == ['01.08.2017', '30.09.2019']
+
+def test_csv_extract_bbox_and_tbox_with_TimeStamp():
+    result = geoextent.fromFile('testdata/csv/cities_NL_TimeStamp.csv', bbox=True, tbox=True)
+    assert "bbox" in result
+    assert "tbox" in result
+    assert result["bbox"] == [4.3175, 51.434444, 6.574722, 53.217222]
+    assert result["tbox"] == ['01.08.2017', '30.09.2019']
+
+def test_csv_extract_bbox_and_tbox_with_TIME():
+    result = geoextent.fromFile('testdata/csv/cities_NL_TIME.csv', bbox=True, tbox=True)
+    assert "bbox" in result
+    assert "tbox" in result
+    assert result["bbox"] == [4.3175, 51.434444, 6.574722, 53.217222]
+    assert result["tbox"] == ['01.08.2017', '30.09.2019']
+
+def test_csv_extract_bbox_and_tbox_with_Datetime():
+    result = geoextent.fromFile('testdata/csv/cities_NL_Datetime.csv', bbox=True, tbox=True)
+    assert "bbox" in result
+    assert "tbox" in result
+    assert result["bbox"] == [4.3175, 51.434444, 6.574722, 53.217222]
+    assert result["tbox"] == ['01.08.2017', '30.09.2019']
+
+def test_csv_extract_bbox_and_tbox_with_LATITUDE_LONGITUDE():
+    result = geoextent.fromFile('testdata/csv/cities_NL_LATITUDE.csv', bbox=True, tbox=True)
+    assert "bbox" in result
+    assert "tbox" in result
+    assert result["bbox"] == [4.3175, 51.434444, 6.574722, 53.217222]
+    assert result["tbox"] == ['01.08.2017', '30.09.2019']
+
+def test_csv_extract_bbox_and_tbox_with_LAT_LONG():
+    result = geoextent.fromFile('testdata/csv/cities_NL_LAT.csv', bbox=True, tbox=True)
+    assert "bbox" in result
+    assert "tbox" in result
+    assert result["bbox"] == [4.3175, 51.434444, 6.574722, 53.217222]
+    assert result["tbox"] == ['01.08.2017', '30.09.2019']
