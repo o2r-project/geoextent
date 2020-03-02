@@ -4,6 +4,7 @@ import getopt
 from osgeo import ogr
 from osgeo import osr
 from pyproj import Proj, transform
+import csv
 
 WGS84_EPSG_ID = 4326
 
@@ -85,3 +86,10 @@ def validate(date_text):
             return True
     except :
         return False
+
+
+def getDelimiter(csv_file):
+    dialect = csv.Sniffer().sniff(csv_file.readline(1024)) 
+    # To reset back positin to beginning of the file
+    csv_file.seek(0)
+    return csv.reader(csv_file.readlines(), delimiter=dialect.delimiter)

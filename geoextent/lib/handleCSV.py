@@ -26,11 +26,7 @@ def getBoundingBox(filePath):
     '''
     with open(filePath) as csv_file:
         # To get delimiter either comma or simecolon
-        dialect = csv.Sniffer().sniff(csv_file.readline(1024)) 
-        # To reset back positin to beginning of the file
-        csv_file.seek(0)
-
-        daten = csv.reader(csv_file.readlines(), delimiter=dialect.delimiter)
+        daten = hf.getDelimiter(csv_file)
 
         elements = []
         for x in daten:
@@ -71,11 +67,7 @@ def getTemporalExtent(filePath):
     '''
     with open(filePath) as csv_file:
         # To get delimiter either comma or simecolon
-        dialect = csv.Sniffer().sniff(csv_file.readline(1024)) 
-        # To reset back positin to beginning of the file
-        csv_file.seek(0)
-
-        daten = csv.reader(csv_file.readlines(), delimiter=dialect.delimiter)
+        daten = hf.getDelimiter(csv_file)
 
         elements = []
         for x in daten:
