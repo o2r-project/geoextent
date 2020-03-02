@@ -90,6 +90,6 @@ def validate(date_text):
 
 def getDelimiter(csv_file):
     dialect = csv.Sniffer().sniff(csv_file.readline(1024)) 
-    # To reset back positin to beginning of the file
+    # To reset back position to beginning of the file
     csv_file.seek(0)
     return csv.reader(csv_file.readlines(), delimiter=dialect.delimiter)
