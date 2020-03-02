@@ -53,6 +53,9 @@ def fromFile(filePath, bbox=True, tbox=True):
     (possible) keys of the dict: 'temporal_extent', 'bbox', 'vector_reps', 'crs'
     '''
     logging.info("Extracting bbox={} tbox={} from file {}".format(bbox, tbox, filePath))
+
+    if bbox == False and tbox == False:
+        raise Exception("Please enter correct arguments")
     
     fileFormat = os.path.splitext(filePath)[1][1:]
 
@@ -76,7 +79,7 @@ def fromFile(filePath, bbox=True, tbox=True):
     try:
         usedModule.checkFileValidity(filePath)
     except Exception as e:
-        raise Exception("The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
+        raise Exception(os.getcwd()+" The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
         
     #get Bbox, Temporal Extent, Vector representation and crs parallel with threads
     class thread(threading.Thread): 

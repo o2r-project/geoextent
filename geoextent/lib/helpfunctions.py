@@ -4,6 +4,7 @@ import getopt
 from osgeo import ogr
 from osgeo import osr
 from pyproj import Proj, transform
+import csv
 
 WGS84_EPSG_ID = 4326
 
@@ -15,11 +16,11 @@ def getAllRowElements(rowname,elements):
     Output: array values
     '''
     for idx, val in enumerate(elements[0]):
-        if  rowname in val:
+        if rowname in val.lower():
             indexOf = idx
             values = []
             for x in elements:
-                if x[indexOf] != rowname:
+                if x[indexOf].lower() != rowname:
                     values.append(x[indexOf])
             return values
 
@@ -32,7 +33,7 @@ def searchForParameters(elements, paramArray):
     '''
     for x in paramArray:
         for row in elements[0]:
-            if x in row:
+            if x in row.lower():
                 return getAllRowElements(x,elements)
 
 def transformingIntoWGS84 (crs, coordinate):
@@ -85,3 +86,10 @@ def validate(date_text):
             return True
     except :
         return False
+
+
+def getDelimiter(csv_file):
+    dialect = csv.Sniffer().sniff(csv_file.readline(1024)) 
+    # To reset back position to beginning of the file
+    csv_file.seek(0)
+    return csv.reader(csv_file.readlines(), delimiter=dialect.delimiter)

@@ -1,4 +1,4 @@
-Latitude,Longitude,EPSG,Name,NumberOfCitizens,Date
+LAT,LONG,EPSG,Name,NumberOfCitizens,Date
 52.370197,4.890444,4326,Amsterdam,862276,30.09.2018
 51.930833,4.479167,4326,Rotterdam,643307,30.09.2018
 52.084167,4.3175,4326,Den Haag,537368,30.09.2018

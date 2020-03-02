@@ -25,27 +25,30 @@ def getBoundingBox(filePath):
     returns spatialExtent: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)] 
     '''
     with open(filePath) as csv_file:
-        daten = csv.reader(csv_file.readlines())
+        # To get delimiter either comma or simecolon
+        daten = hf.getDelimiter(csv_file)
+
         elements = []
         for x in daten:
             elements.append(x)
+           
         spatialExtent= []
         spatialLatExtent=[]
         spatialLonExtent=[]
 
-        spatialLatExtent= hf.searchForParameters(elements, ["lat", "latitude","Latitude", "Lat", "y"])
+        spatialLatExtent= hf.searchForParameters(elements, ["latitude", "lat", "y"])
         minlat= None
         maxlat= None
-        if hf.searchForParameters(elements, ["lat", "latitude","Latitude"]) is None:
+        if spatialLatExtent is None:
             pass
         else:
             minlat= (min(spatialLatExtent))
             maxlat= (max(spatialLatExtent))
 
-        spatialLonExtent= hf.searchForParameters(elements, ["lon", "Longitude", "longitude", "Lon", "lng", "Lng","long", "Long", "x"])
+        spatialLonExtent= hf.searchForParameters(elements, ["longitude", "long", "lon", "lng", "x"])
         minlon= None
         maxlon= None
-        if hf.searchForParameters(elements, ["lon", "Lon", "long", "Long", "longitude", "Longitude", "x"]) is None:
+        if spatialLonExtent is None:
             raise Exception('The csv file from ' + filePath + ' has no BoundingBox')
         else:
             minlon= (min(spatialLonExtent))
@@ -63,13 +66,16 @@ def getTemporalExtent(filePath):
     returns temporal extent of the file: type list, length = 2, both entries have the type dateTime, temporalExtent[0] <= temporalExtent[1]
     '''
     with open(filePath) as csv_file:
-        daten = csv.reader(csv_file.readlines())
+        # To get delimiter either comma or simecolon
+        daten = hf.getDelimiter(csv_file)
+
         elements = []
         for x in daten:
             elements.append(x)
+            
         allspatialExtent= []
-        allspatialExtent=hf.searchForParameters(elements, ["time", "timestamp", "date"])
-        if hf.searchForParameters(elements, ["time", "timestamp", "date"] ) is None:
+        allspatialExtent=hf.searchForParameters(elements, ["timestamp", "datetime", "time", "date"])
+        if allspatialExtent is None:
             raise Exception('The csv file from ' + filePath + ' has no TemporalExtent')
         else:
             time=[]
@@ -88,7 +94,7 @@ def getCRS(filePath):
         elements = []
         for x in daten:
             elements.append(x)
-        if hf.searchForParameters(elements,["longitude","Latitude","latitude","Latitude"]) is None:
+        if hf.searchForParameters(elements,["longitude","latitude","long", "lat", "lon", "lng", "x", "y"]) is None:
             if hf.searchForParameters(elements, ["crs","srsID"]) is None:
                 raise Exception('The csv file from ' + filePath + ' has no CRS')
             if hf.searchForParameters(elements, ["crs","srsID"]) == "WGS84":

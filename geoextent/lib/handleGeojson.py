@@ -176,7 +176,6 @@ def getTemporalExtent (filePath):
     #type list, contains all dates
     dateArray = []
     
-    
     def searchForTimeElements(gjsonContent):
         ''' searches for time elements in a json \n
         input "gjsonContent": type dict, Content of geojson File
@@ -184,7 +183,6 @@ def getTemporalExtent (filePath):
         
         ignore = ["created_at", "closed_at", "created", "closed", "initialize", "init", "last_viewed", "last_change", "change", "last_Change", "lastChange"] 
        
-
         if type(gjsonContent) == dict:
             for key, value in gjsonContent.items():     
                 if key not in ignore:
@@ -202,16 +200,19 @@ def getTemporalExtent (filePath):
 
             if type(datetime_object) == datetime.datetime:
                 dateArray.append(gjsonContent)
-
+        
+        return dateArray
 
     gjsonContent = extractContentFromPath(filePath)
+
     temporalExtent = []
 
-    searchForTimeElements(gjsonContent)
+    dateArray = searchForTimeElements(gjsonContent)
+
     if len(dateArray)!= 0:
         dateArray = sorted(dateArray)
         temporalExtent.append(dateArray[0])
         temporalExtent.append(dateArray[len(dateArray)-1])
     else:
-        raise Exception("Could not extract timestamp.")
+        raise Exception("Invalid time format.")
     return temporalExtent
