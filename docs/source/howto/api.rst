@@ -22,6 +22,7 @@ Examples:-
 output
 
 .. jupyter-execute::
+   :hide-code:
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, False)
@@ -35,6 +36,7 @@ output
 output
 
 .. jupyter-execute::
+   :hide-code:
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', False, True)
@@ -48,6 +50,7 @@ output
 output
 
 .. jupyter-execute::
+   :hide-code:
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, True)
