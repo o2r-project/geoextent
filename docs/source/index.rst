@@ -17,4 +17,5 @@ Please report `Bugs <https://github.com/o2r-project/geoextent/issues>`_.
    :caption: Getting started with geoextent
 
    install
+   howto/index
 
