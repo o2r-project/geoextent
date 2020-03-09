@@ -7,3 +7,4 @@ How-to Guides
    :caption: How-to Guides
 
    cli
+   api
