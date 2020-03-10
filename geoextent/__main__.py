@@ -20,6 +20,9 @@ geoextent -b path/to/directory_with_geospatial_data
 geoextent -t path/to/file_with_temporal_extent
 geoextent -b -t path/to/geospatial_files
 
+'''
+
+supported_formats = '''
 Supported formats:
 - GeoJSON (.geojson)
 - Tabular data (.csv)
@@ -46,7 +49,7 @@ def get_argparser():
         prog='geoextent',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=help_description,
-        epilog=help_epilog,
+        epilog=help_epilog + supported_formats,
     )
 
     parser.add_argument(
@@ -71,6 +74,9 @@ def get_argparser():
     
     return parser
 
+
+def print_supported_formats():
+    print(supported_formats)
 
 def main():
     argparser = get_argparser()

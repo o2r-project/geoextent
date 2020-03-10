@@ -18,4 +18,5 @@ Please report `Bugs <https://github.com/o2r-project/geoextent/issues>`_.
 
    install
    howto/index
+   supportedformats/index
 
