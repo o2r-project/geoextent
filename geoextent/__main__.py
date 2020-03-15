@@ -53,10 +53,10 @@ def get_argparser():
     )
 
     parser.add_argument(
-        'input',
+        '--input',
         action=readable_file_or_dir,
         default=os.getcwd(),
-        nargs="+",
+        nargs='+',
         help="input file or path"
     )
     
@@ -71,6 +71,13 @@ def get_argparser():
         action='store_true',
         help='extract temporal extent'
     )
+
+    parser.add_argument(
+        '--format',
+        action='store_true',
+        help='show supported formats'
+    )
+    
     
     return parser
 
@@ -89,21 +96,24 @@ def main():
     args = vars(argparser.parse_args())
     logger.debug('Extracting from inputs %s', args['input'])
 
-    # Check if file is exists happens in parser validation, see readable_file_or_dir
-    if os.path.isfile(os.path.join(os.getcwd(), args['input'])):
-        output = extent.fromFile(args['input'], bbox = args['bounding_box'], tbox = args['time_box'])
-    if os.path.isdir(os.path.join(os.getcwd(), args['input'])):
-        output = extent.fromDirectory(args['input'], bbox = args['bounding_box'], tbox = args['time_box'])
+    if(args['format']):
+        print_supported_formats()
+    else:
+        # Check if file is exists happens in parser validation, see readable_file_or_dir
+        if os.path.isfile(os.path.join(os.getcwd(), args['input'])):
+            output = extent.fromFile(args['input'], bbox = args['bounding_box'], tbox = args['time_box'])
+        if os.path.isdir(os.path.join(os.getcwd(), args['input'])):
+            output = extent.fromDirectory(args['input'], bbox = args['bounding_box'], tbox = args['time_box'])
+        
+        if output is None:
+            raise Exception("This file format is not supported")
+
+        # print output
+        if type(output) == list or type(output) == dict:
+            print(str(output))
+        else: 
+            print(output)
     
-    if output is None:
-        raise Exception("This file format is not supported")
-
-    # print output
-    if type(output) == list or type(output) == dict:
-        print(str(output))
-    else: 
-        print(output)
-
 
 if __name__ == '__main__':
     main()
