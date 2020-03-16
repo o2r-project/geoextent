@@ -19,7 +19,6 @@ geoextent path/to/geofile.ext
 geoextent -b path/to/directory_with_geospatial_data
 geoextent -t path/to/file_with_temporal_extent
 geoextent -b -t path/to/geospatial_files
-
 '''
 
 supported_formats = '''
@@ -46,20 +45,24 @@ class readable_file_or_dir(argparse.Action):
 def get_argparser():
     """Get arguments to extract geoextent """
     parser = argparse.ArgumentParser(
+        add_help=False,
         prog='geoextent',
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=help_description,
-        epilog=help_epilog + supported_formats,
+        description=help_description
     )
 
     parser.add_argument(
-        '--input',
-        action=readable_file_or_dir,
-        default=os.getcwd(),
-        nargs='+',
-        help="input file or path"
+        '-h','--help',
+        action='store_true',
+        help='show help message and exit'
     )
     
+    parser.add_argument(
+        '-formats',
+        action='store_true',
+        help='show supported formats'
+    )
+
     parser.add_argument(
         '-b', '--bounding-box',
         action='store_true',
@@ -73,37 +76,49 @@ def get_argparser():
     )
 
     parser.add_argument(
-        '--format',
-        action='store_true',
-        help='show supported formats'
+        '-input=',
+        action=readable_file_or_dir,
+        default=os.getcwd(),
+        nargs='+',
+        help="input file or path"
     )
-    
     
     return parser
 
+def print_help_fun():
+    argparser.print_help()
+    print_examples()
+    print_supported_formats()
+
+def print_examples():
+    print(help_epilog)
 
 def print_supported_formats():
     print(supported_formats)
 
-def main():
-    argparser = get_argparser()
 
+argparser = get_argparser()
+
+
+def main():
     # Check if there is no arguments, then print help
     if len(sys.argv[1:])==0:
-        argparser.print_help()
+        print_help_fun()
         argparser.exit()
 
     args = vars(argparser.parse_args())
-    logger.debug('Extracting from inputs %s', args['input'])
+    logger.debug('Extracting from inputs %s', args['input='])
 
-    if(args['format']):
+    if(args['help']):
+        print_help_fun()
+    elif(args['formats']):
         print_supported_formats()
     else:
         # Check if file is exists happens in parser validation, see readable_file_or_dir
-        if os.path.isfile(os.path.join(os.getcwd(), args['input'])):
-            output = extent.fromFile(args['input'], bbox = args['bounding_box'], tbox = args['time_box'])
-        if os.path.isdir(os.path.join(os.getcwd(), args['input'])):
-            output = extent.fromDirectory(args['input'], bbox = args['bounding_box'], tbox = args['time_box'])
+        if os.path.isfile(os.path.join(os.getcwd(), args['input='])):
+            output = extent.fromFile(args['input='], bbox = args['bounding_box'], tbox = args['time_box'])
+        if os.path.isdir(os.path.join(os.getcwd(), args['input='])):
+            output = extent.fromDirectory(args['input='], bbox = args['bounding_box'], tbox = args['time_box'])
         
         if output is None:
             raise Exception("This file format is not supported")
