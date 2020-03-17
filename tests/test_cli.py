@@ -6,13 +6,13 @@ def test_helptext_direct(script_runner):
     ret = script_runner.run('geoextent', '--help')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "usage: geoextent [-h]" in ret.stdout, "usage instructions are printed to console"
+    assert "geoextent [-h]" in ret.stdout, "usage instructions are printed to console"
 
 def test_helptext_no_args(script_runner):
     ret = script_runner.run('geoextent')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "usage: geoextent [-h]" in ret.stdout, "usage instructions are printed to console"
+    assert "geoextent [-h]" in ret.stdout, "usage instructions are printed to console"
 
 def test_error_no_file(script_runner):
     ret = script_runner.run('geoextent', 'doesntexist')
