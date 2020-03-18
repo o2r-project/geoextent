@@ -13,7 +13,7 @@ Takes raw data (in the form of a string, boolean, boolean) to output result base
 
 Examples:-
 ----------
-**Ex (1):** Extracting bounding box:
+**Example 1:** Extracting bounding box:
 
 ::
 
@@ -27,7 +27,7 @@ output
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, False)
 
-**Ex (2):** Extracting time interval:
+**Example 2:** Extracting time interval:
 
 ::
 
@@ -41,7 +41,7 @@ output
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', False, True)
 
-**Ex (3):** Extracting both bounding box and time interval:
+**Example 3:** Extracting both bounding box and time interval:
 
 ::
 

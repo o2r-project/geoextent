@@ -10,7 +10,7 @@ Command-Line Interface (CLI)
 
 Examples:-
 ----------
-**Ex (1):** Show help message:
+**Example 1:** Show help message:
 
 ::
 
@@ -24,7 +24,7 @@ output
    import geoextent.__main__ as geoextent
    geoextent.print_help_fun()
 
-**Ex (2):** Extract bounding box:
+**Example 2:** Extract bounding box:
 
 ::
 
@@ -38,7 +38,7 @@ output
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, False)
 
-**Ex (3):** Extract time interval:
+**Example 3:** Extract time interval:
 
 ::
 
@@ -52,7 +52,7 @@ output
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', False, True)
 
-**Ex (4):** Extract both bounding box and time interval:
+**Example 4:** Extract both bounding box and time interval:
 
 ::
 
