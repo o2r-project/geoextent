@@ -48,7 +48,7 @@ def get_argparser():
         add_help=False,
         prog='geoextent',
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        usage= "python3 geoextent [-h] [-formats] [-b] [-t] [-input= '[filepath|input file]']"
+        usage= "geoextent [-h] [-formats] [-b] [-t] [-input= '[filepath|input file]']"
     )
 
     parser.add_argument(

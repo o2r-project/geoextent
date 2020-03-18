@@ -13,6 +13,7 @@ Takes raw data (in the form of a string, boolean, boolean) to output result base
 
 Examples:-
 ----------
+
 **Example 1:** Extracting bounding box:
 
 ::

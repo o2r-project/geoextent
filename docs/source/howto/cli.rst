@@ -2,7 +2,7 @@
 Command-Line Interface (CLI)
 ============================
 
-**geoextent** is called with this Command:
+**geoextent** is called with this command:
    
 .. autoprogram:: geoextent.__main__:argparser
    :prog: \
@@ -10,11 +10,15 @@ Command-Line Interface (CLI)
 
 Examples:-
 ----------
+
+.. note::
+   Depending on the local configuration, **geoextent** might need to be called with the python interpreter prepended.
+
 **Example 1:** Show help message:
 
 ::
 
-   python3 geoextent -h
+   geoextent -h
 
 output
 
@@ -28,7 +32,7 @@ output
 
 ::
 
-   python3 geoextent -b 'file.geojson'
+   geoextent -b 'file.geojson'
 
 output
 
@@ -42,7 +46,7 @@ output
 
 ::
 
-   python3 geoextent -t 'file.geojson'
+   geoextent -t 'file.geojson'
 
 output
 
@@ -56,7 +60,7 @@ output
 
 ::
 
-   python3 geoextent -b -t 'file.geojson'
+   geoextent -b -t 'file.geojson'
 
 output
 
