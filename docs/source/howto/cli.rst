@@ -30,9 +30,13 @@ output
 
 **Example 2:** Extract bounding box:
 
+.. note::
+   You can find the file used in the examples of this section from `file.geojson <https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_. Furthermore, for displaying the rendering of the file contents, see `rendered blob <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_.  
+
+
 ::
 
-   geoextent -b 'file.geojson'
+   geoextent -b -input='file.geojson'
 
 output
 
@@ -46,7 +50,7 @@ output
 
 ::
 
-   geoextent -t 'file.geojson'
+   geoextent -t -input='file.geojson'
 
 output
 
@@ -60,7 +64,7 @@ output
 
 ::
 
-   geoextent -b -t 'file.geojson'
+   geoextent -b -t -input='file.geojson'
 
 output
 
