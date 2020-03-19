@@ -2,7 +2,7 @@
 Installing geoextent
 ====================
 
-geoextent requires Python 3.x and above on Linux.
+geoextent requires Python 3.x and above. It was tested on only linux and should also work on windows.
 
 Installing with ``pip``
 -----------------------
@@ -10,6 +10,7 @@ Installing with ``pip``
 ::
 
    pip install geoextent
+
 
 Installing from source code
 ---------------------------
