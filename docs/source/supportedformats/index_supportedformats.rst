@@ -18,10 +18,13 @@ The library supoorts the following file formats so far. The development process 
       import subprocess
 
       # Download showcase file and extract geoextent data
-      subprocess.run('mkdir '+ folder_name, shell=True)
-      subprocess.run('wget -P '+ folder_name +' '+ url, shell=True)
-      if unzip:
-         subprocess.run('cd showcase_shp; unzip '+ unzip_file, shell=True)
+      subprocess.run('mkdir showcase_folder', shell=True)
+      subprocess.run('wget -P showcase_folder '+ url, shell=True)
+
+      #subprocess.run('mkdir '+ folder_name, shell=True)
+      #subprocess.run('wget -P '+ folder_name +' '+ url, shell=True)
+      if unzip_file:
+         subprocess.run('cd showcase_folder; unzip '+ unzip_file, shell=True)
 
 
 Examples:-
@@ -46,15 +49,7 @@ output
    file_url = 'https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson'
    get_showcase_file(dir_name, file_url)
 
-   geoextent.fromFile('showcase_geojson/muenster_ring_zeit.geojson', True, True)
-
-.. jupyter-execute::
-   :hide-code:
-   :hide-output:
-
-   import subprocess
-   # (2) Remove downloaded showcase file
-   subprocess.run(["rm", "-rf", "showcase_geojson"])
+   geoextent.fromFile('showcase_folder/muenster_ring_zeit.geojson', True, True)
    
 
 
@@ -76,15 +71,8 @@ output
    file_url = 'https://sandbox.zenodo.org/record/256820/files/cities_NL.csv'
    get_showcase_file(dir_name, file_url)
 
-   geoextent.fromFile('showcase_csv/cities_NL.csv', True, True)
+   geoextent.fromFile('showcase_folder/cities_NL.csv', True, True)
 
-.. jupyter-execute::
-   :hide-code:
-   :hide-output:
-
-   import subprocess
-   # (2) Remove downloaded showcase file
-   subprocess.run(["rm", "-rf", "showcase_csv"]) 
 
 
 **Example 3:** Extracting geoextent from a GeoTIFF file:
@@ -105,16 +93,8 @@ output
    file_url = 'https://github.com/o2r-project/geoextent/raw/master/tests/testdata/tif/wf_100m_klas.tif'
    get_showcase_file(dir_name, file_url)
 
-   geoextent.fromFile('showcase_geotiff/wf_100m_klas.tif', True, False)
+   geoextent.fromFile('showcase_folder/wf_100m_klas.tif', True, False)
 
-.. jupyter-execute::
-   :hide-code:
-   :hide-output:
-
-   import subprocess
-   # (2) Remove downloaded showcase file
-   subprocess.run(["rm", "-rf", "showcase_geotiff"])
-   
 
 
 **Example 4:** Extracting geoextent from a shapefile:
@@ -135,11 +115,12 @@ output
    file_url = 'https://www.geofabrik.de/data/shapefiles_toulouse.zip'
    get_showcase_file(dir_name, file_url, 'shapefiles_toulouse.zip')
 
-   geoextent.fromFile('showcase_shp/gis_osm_buildings_a_07_1.shp', True, False)
+   geoextent.fromFile('showcase_folder/gis_osm_buildings_a_07_1.shp', True, False)
 
 .. jupyter-execute::
    :hide-code:
    :hide-output:
 
+   import subprocess
    # (2) Remove downloaded showcase file
-   subprocess.run(["rm", "-rf", "showcase_shp"])
+   subprocess.run(["rm", "-rf", "showcase_folder"])
