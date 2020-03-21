@@ -17,6 +17,6 @@ Please report `Bugs <https://github.com/o2r-project/geoextent/issues>`_.
    :caption: Getting started with geoextent
 
    install
-   howto/index
-   supportedformats/index
+   howto/index_howto
+   supportedformats/index_supportedformats
 

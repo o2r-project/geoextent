@@ -64,6 +64,7 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/source/_build
 
 # PyBuilder
 target/
@@ -101,3 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# vscode
+.vscode/settings.json
