@@ -28,5 +28,14 @@ before_script:
   - pip install -r requirements-dev.txt
 script:
   - pytest
-#after_script:
+
+after_script:
 #  - TODO code coverage
+  - travis-sphinx build
+  - pip install travis-sphinx
+after_success:
+    - travis-sphinx deploy
+
+env:
+  global:
+    - secure: "TjE9UQ+FWwUJjJPiVYGztT0kVf99+ZN0FpZOGJuNj1pyycoqRB09T+cPXOzi8nlIcctJe74QxCkrww26bio1P7TMqoeSjGWcAFl+EcgE8p0G75NFwMphzHQ9RXM1MQgmvY5hlhw8hFVh7IEBZQNxX+z5Qhs8lQ13egisLbZ+Prj4qYEEx/Xt6NvYKBXYUBuzTa1NBAmP1ghVjDynYDRdhqLAdBesJ/rTzp9Mdx5ZJgMHmSNuo/wZk9VQuMKx+V4chQdMsM37a+DYRA4WLqAFs01ec09Ava6Vi0qfAuqZ30lVdJnn8BhmTcUmxA4y79AB30xhwJUiqySfzq0eYs9TrxdMr9Kv5Vq7xqxJC2k2c4dip5H1Eo61qjG/qhlCaleDK9GnrYzE7q2v4FhT+ToN6L6H3Lwb5YsEoEhNRWr69sxqFgihlsfcCFchf8WyVQ6tICybu/HIe/1cyCAtgSAaOUfqQBmvx6bYJjhvVkUGqIByEZFrajqniWTM31BlL+Lb8KpNMgteOA4VfpJdwnzgcUQFbXrcbwcIHLNr+5Gb5LUayalC/jE+ln+C6z5NmTzpGst9Y8plV3Lw8GbGFxTYAFe/VJ4VadBrG9i+v6g9AX7KWGZ1lUJgstK6iBzX9B0xb8X60yj57vMT7tOeRZf1MczIyizzXKefeTb7d+cPGMk="

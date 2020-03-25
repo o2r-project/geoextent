@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/YouQam/geoextent.svg?branch=master)](https://travis-ci.org/github/YouQam/geoextent)
+[![Build Status](https://travis-ci.org/o2r-project/geoextent.svg?branch=master)](https://travis-ci.org/github/o2r-project/geoextent)
 
 # geoextent
 
@@ -65,6 +65,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 
-`geoextent` is licensed under MIT license, see file LICENSE.
+`geoextent` is licensed under MIT license, see file [LICENSE](LICENSE).
 
-Copyright (C) 2019 - o2r project.
+Copyright (C) 2020 - o2r project.
