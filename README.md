@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/YouQam/geoextent.svg?branch=master)](https://travis-ci.org/github/YouQam/geoextent)
+
 # geoextent
 
 Python library for extracting geospatial extent of files and directories with multiple data formats
