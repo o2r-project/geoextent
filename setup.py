@@ -21,7 +21,6 @@ setuptools.setup(
     ],
     entry_points={
         "console_scripts": [
-            "o2r-geoextent = geoextent.__main__:main",
             "geoextent = geoextent.__main__:main",
         ]
     },

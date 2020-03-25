@@ -17,7 +17,7 @@ We follow a _fork and pull_ development model. [Fork](https://help.github.com/en
 git clone https://github.com/o2r-project/geoextent.git
 ```
 
-See the developer README file for installation and running tests.
+See the [development readme](https://o2r.info/geoextent/development.html) file for installation and running tests.
 Make sure the tests pass before you start developing.
 
 - Create a new feature branch from the current `master` branch.
