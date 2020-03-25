@@ -28,12 +28,10 @@ before_script:
 script:
   - pytest
 
-after_script:
-#  - TODO code coverage
+after_success:
   - travis-sphinx build
   - pip install travis-sphinx
-after_success:
-    - travis-sphinx deploy
+  - travis-sphinx deploy
 
 env:
   global:
