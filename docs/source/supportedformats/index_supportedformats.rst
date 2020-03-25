@@ -2,14 +2,14 @@
 Supported file formats
 ======================
 
-The library supoorts the following file formats so far. The development process is persistent to expand the number of supported formats.
+The library supports the following file formats.
+Please see the `project issues <https://github.com/o2r-project/geoextent/issues>`_ for upcoming formats and feature requests.
 
 .. jupyter-execute::
    :hide-code:
 
    import geoextent.__main__ as geoextent
    geoextent.print_supported_formats()
-
 
 .. jupyter-execute::
    :hide-code:
@@ -26,19 +26,19 @@ The library supoorts the following file formats so far. The development process 
       if unzip_file:
          subprocess.run('cd showcase_folder; unzip '+ unzip_file, shell=True)
 
+------
 
-Examples:-
-----------
+Examples
+--------
 
+GeoJSON
+^^^^^^^
 
-**Example 1:** Extracting geoextent from a GeoJSON file:
+The file used in the example can be found `here <https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_.
 
-The file used in the example obtianed from `here <https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_. 
 ::
 
    geoextent -b -t -input= 'muenster_ring_zeit.geojson'
-
-output
 
 .. jupyter-execute::
    :hide-code:
@@ -51,16 +51,28 @@ output
 
    geoextent.fromFile('showcase_folder/muenster_ring_zeit.geojson', True, True)
    
+CSV
+^^^
 
+Different CSV delimiters (``;``, ``,``) are automatically detected.
+Supported column names (in any combination) are as follows:
 
-**Example 2:** Extracting geoextent from Tabular data (.csv):
+- Latitude
+  - ``latitude``
+  - ``lat``
+  - ``y``
+- Longitude
+  - ``longitude``
+  - ``long``
+  - ``lon``
+  - ``lng``
+  - ``x``
 
-The file used in the example obtianed from `here <https://sandbox.zenodo.org/record/256820#.XeGcJJko85k>`_. 
+The file used in the example can be obtained from `here <https://sandbox.zenodo.org/record/256820#.XeGcJJko85k>`_. 
+
 ::
 
    geoextent -b -t -input= 'cities_NL.csv'
-
-output
 
 .. jupyter-execute::
    :hide-code:
@@ -73,16 +85,14 @@ output
 
    geoextent.fromFile('showcase_folder/cities_NL.csv', True, True)
 
+GeoTIFF
+^^^^^^^
 
+The file used in the example was obtained from `here <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif>`_.
 
-**Example 3:** Extracting geoextent from a GeoTIFF file:
-
-The file used in the example obtianed from `here <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif>`_ 
 ::
 
    geoextent -b -input= 'wf_100m_klas.tif'
-
-output
 
 .. jupyter-execute::
    :hide-code:
@@ -95,16 +105,14 @@ output
 
    geoextent.fromFile('showcase_folder/wf_100m_klas.tif', True, False)
 
+Shapefile
+^^^^^^^^^
 
+The file used in the example can be found `here <https://www.geofabrik.de/data/shapefiles_toulouse.zip>`_.
 
-**Example 4:** Extracting geoextent from a shapefile:
-
-The file used in the example obtianed from `here <https://www.geofabrik.de/data/shapefiles_toulouse.zip>`_ 
 ::
 
    geoextent 'gis_osm_buildings_a_07_1.shp'
-
-output
 
 .. jupyter-execute::
    :hide-code:
@@ -122,5 +130,5 @@ output
    :hide-output:
 
    import subprocess
-   # (2) Remove downloaded showcase file
+   # (2) Remove downloaded showcase files
    subprocess.run(["rm", "-rf", "showcase_folder"])
