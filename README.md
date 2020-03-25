@@ -65,6 +65,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 
-`geoextent` is licensed under MIT license, see file LICENSE.
+`geoextent` is licensed under MIT license, see file [LICENSE](LICENSE).
 
 Copyright (C) 2019 - o2r project.
