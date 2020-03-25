@@ -95,34 +95,53 @@ See the ``travis-sphinx`` documentation and the file ``.travis.yml`` for details
 Release
 -------
 
+Prerequisites
+^^^^^^^^^^^^^
+
 See the PyPI documentation on generating a distribution archive, https://packaging.python.org/tutorials/packaging-projects/, for details.
 
-Prerequisites: ``setuptools wheel twine``
+Required tools:
+
+- ``setuptools``
+- ``wheel``
+- ``twine``
+
+::
+
+    pip install --upgrade setuptools wheel twine
 
 ::
 
     python3 setup.py sdist bdist_wheel
 
-**Upload to test repository** and check everything is in order:
+Upload to test repository
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Check https://test.pypi.org/project/geoextent/
+First upload to the test repository and check everything is in order.
 
 ::
 
+    # upload with twine, make sure only one wheel is in dist/
     twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
-    # TODO switch environment
+Check if the information on https://test.pypi.org/project/geoextent/ is correct.
+Then switch to a new Python environment, install geoextent from TestPyPI and try out package:
 
-    # TODO install from TestPyPI and try out package
+::
 
-**Upload to PyPI:**
+    pip install -i https://test.pypi.org/simple/ geoextent
 
-Check https://pypi.org/project/geoextent/
+Upload to PyPI
+^^^^^^^^^^^^^^
 
 ::
 
     twine upload dist/*
 
-    # TODO switch environment
 
-    # TODO install from TestPyPI and try out package
+Check if information on https://pypi.org/project/geoextent/ is all correct.
+Install the library from PyPI into a new Python environment and chech that everything works:
+
+::
+
+    ...
