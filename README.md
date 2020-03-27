@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/YouQam/geoextent.svg?branch=master)](https://travis-ci.org/github/YouQam/geoextent)
+[![Build Status](https://travis-ci.org/o2r-project/geoextent.svg?branch=master)](https://travis-ci.org/github/o2r-project/geoextent) [![PyPI version](https://badge.fury.io/py/geoextent.svg)](https://pypi.org/project/geoextent/0.1.0/)
 
 # geoextent
 
@@ -58,13 +58,13 @@ to see usage instructions.
 
 All help is welcome: asking questions, providing documentation, testing, or even development.
 
-Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md).
+Please note that this project is released with a [Contributor Code of Conduct](https://github.com/o2r-project/geoextent/blob/master/CONDUCT.md).
 By participating in this project you agree to abide by its terms.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+See [CONTRIBUTING.md](https://github.com/o2r-project/geoextent/blob/master/CONTRIBUTING.md) for details.
 
 ## License
 
-`geoextent` is licensed under MIT license, see file LICENSE.
+`geoextent` is licensed under MIT license, see file [LICENSE](https://github.com/o2r-project/geoextent/blob/master/LICENSE).
 
-Copyright (C) 2019 - o2r project.
+Copyright (C) 2020 - o2r project.

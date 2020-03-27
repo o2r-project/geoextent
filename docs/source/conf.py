@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'geoextent'
-copyright = '2019, o2r-project'
+copyright = '2020, o2r-project'
 author = 'o2r-project'
 
 import geoextent

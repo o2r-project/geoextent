@@ -2,26 +2,34 @@
 API Docs
 ========
 
+Documentation for the package's Python API for usage as a library.
+
+The main function is
+
 ::
+
    geoextent.fromFile(input, bbox, time)
 
-Takes raw data (in the form of a string, boolean, boolean) to output result based on these fields.
+It takes raw data (in the form of a string, boolean, boolean) to output result based on these fields.
 
 **Parameters:**   
-   - **input** - a string value of input file or path    
-   - **bbox** - a boolean value to extract spatial extent (bounding box)
-   - **time** - a boolean value to extract temporal extent
+   - ``input``: a string value of input file or path    
+   - ``bbox``: a boolean value to extract spatial extent (bounding box)
+   - ``time``: a boolean value to extract temporal extent
 
-Examples:-
-----------
+Examples
+--------
 
-**Example 1:** Extracting bounding box:
+Extract bounding box from a single file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Code:
 
 ::
 
-   geoextent.fromFile('file.geojson', True, False)
+   geoextent.fromFile('muenster_ring_zeit.geojson', True, False)
 
-output
+Output:
 
 .. jupyter-execute::
    :hide-code:
@@ -29,13 +37,18 @@ output
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, False)
 
-**Example 2:** Extracting time interval:
+(`source of file muenster_ring_zeit.geojson`_)
+
+Extracting time interval from a single file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Code:
 
 ::
 
-   geoextent.fromFile('file.geojson', False, True)
+   geoextent.fromFile('muenster_ring_zeit.geojson', False, True)
 
-output
+Output:
 
 .. jupyter-execute::
    :hide-code:
@@ -43,16 +56,25 @@ output
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', False, True)
 
-**Example 3:** Extracting both bounding box and time interval:
+(`source of file muenster_ring_zeit.geojson`_)
+
+Extracting both bounding box and time interval from a single file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Code:
 
 ::
 
-   geoextent.fromFile('file.geojson', True, True)
+   geoextent.fromFile('muenster_ring_zeit.geojson', True, True)
 
-output
+Output:
 
 .. jupyter-execute::
    :hide-code:
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, True)
+
+(`source of file muenster_ring_zeit.geojson`_)
+
+.. _source of file muenster_ring_zeit.geojson: https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson
