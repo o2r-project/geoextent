@@ -14,13 +14,9 @@ Please report `Bugs <https://github.com/o2r-project/geoextent/issues>`_.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Getting started with geoextent
 
+   install
+   howto/index_howto
+   supportedformats/index_supportedformats
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
