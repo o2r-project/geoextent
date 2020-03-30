@@ -25,6 +25,7 @@ Show help message
 
 .. jupyter-execute::
    :hide-code:
+   :stderr:
 
    import geoextent.__main__ as geoextent
    geoextent.print_help_fun()
@@ -43,6 +44,7 @@ Output:
 
 .. jupyter-execute::
    :hide-code:
+   :stderr:
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, False)
@@ -58,6 +60,7 @@ Output:
 
 .. jupyter-execute::
    :hide-code:
+   :stderr:
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', False, True)
@@ -71,6 +74,7 @@ Extract both bounding box and time interval from a single file
 
 .. jupyter-execute::
    :hide-code:
+   :stderr:
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, True)
