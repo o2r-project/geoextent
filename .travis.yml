@@ -34,9 +34,9 @@ jobs:
       python: "3.7"
       if: branch = master AND type != pull_request 
       script:
-        - pip install travis-sphinx
         - pip install -r docs/requirements-docs.txt
         - pip install -r docs/requirements.txt
+        - pip install -e .
         - shopt -s expand_aliases
         - |-
           if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_REPO_SLUG == $GH_SLUG ]]; then
