@@ -5,6 +5,8 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logging.disable(logging.INFO)
+logging.disable(logging.WARNING)
 
 help_description = '''
 geoextent is a Python library for extracting geospatial and temporal extents of a file or a directory of multiple geospatial data formats.
