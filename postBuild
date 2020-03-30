@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Install GDAL
+pip install GDAL==$(gdal-config --version)
