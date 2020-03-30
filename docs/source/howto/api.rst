@@ -33,6 +33,7 @@ Output:
 
 .. jupyter-execute::
    :hide-code:
+   :stderr:
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, False)
@@ -52,6 +53,7 @@ Output:
 
 .. jupyter-execute::
    :hide-code:
+   :stderr:
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', False, True)
@@ -71,6 +73,7 @@ Output:
 
 .. jupyter-execute::
    :hide-code:
+   :stderr:
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, True)
