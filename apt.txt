@@ -1,0 +1,4 @@
+apt-get install python3.6-dev
+add-apt-repository ppa:ubuntugis/ppa
+apt-get install gdal-bin
+apt-get install libgdal-devpip
