@@ -13,12 +13,13 @@ The library is developed as part of the `DFG-funded <https://o2r.info/about/#fun
 Please report `Bugs <https://github.com/o2r-project/geoextent/issues>`_.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Getting started with geoextent
 
    install
    howto/index_howto
    supportedformats/index_supportedformats
+   development
 
 ------
 

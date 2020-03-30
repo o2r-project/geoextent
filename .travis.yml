@@ -32,9 +32,12 @@ jobs:
   include:
     - stage: build docs
       python: "3.7"
+      if: branch = master
       script:
-        - travis-sphinx build
         - pip install travis-sphinx
+        - pip install -r docs/requirements-docs.txt
+        - cd docs/
+        - travis-sphinx -v build -s source/
         - travis-sphinx deploy
 
 env:

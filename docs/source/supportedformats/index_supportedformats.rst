@@ -18,11 +18,9 @@ Please see the `project issues <https://github.com/o2r-project/geoextent/issues>
       import subprocess
 
       # Download showcase file and extract geoextent data
-      subprocess.run('mkdir showcase_folder', shell=True)
+      subprocess.run('mkdir -p showcase_folder', shell=True)
       subprocess.run('wget -P showcase_folder '+ url, shell=True)
 
-      #subprocess.run('mkdir '+ folder_name, shell=True)
-      #subprocess.run('wget -P '+ folder_name +' '+ url, shell=True)
       if unzip_file:
          subprocess.run('cd showcase_folder; unzip '+ unzip_file, shell=True)
 
@@ -34,7 +32,7 @@ Examples
 GeoJSON
 ^^^^^^^
 
-The file used in the example can be found `here <https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_.
+The file used in the example can be in the code repository: `muenster_ring_zeit.geojson <https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_.
 
 ::
 
@@ -68,7 +66,7 @@ Supported column names (in any combination) are as follows:
   - ``lng``
   - ``x``
 
-The file used in the example can be obtained from `here <https://sandbox.zenodo.org/record/256820#.XeGcJJko85k>`_. 
+The file used in the example can be obtained from `Zenodo Sandbox record 256820 <https://sandbox.zenodo.org/record/256820#.XeGcJJko85k>`_. 
 
 ::
 
@@ -88,7 +86,7 @@ The file used in the example can be obtained from `here <https://sandbox.zenodo.
 GeoTIFF
 ^^^^^^^
 
-The file used in the example was obtained from `here <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif>`_.
+The file used in the example is aviable onlinte: `wf_100m_klas.tif <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif>`_.
 
 ::
 
@@ -108,7 +106,7 @@ The file used in the example was obtained from `here <https://github.com/o2r-pro
 Shapefile
 ^^^^^^^^^
 
-The file used in the example can be found `here <https://www.geofabrik.de/data/shapefiles_toulouse.zip>`_.
+The file used in the example can be found at Geofabrik: `shapefiles_toulouse.zip <https://www.geofabrik.de/data/shapefiles_toulouse.zip>`_.
 
 ::
 
