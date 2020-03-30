@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to geoextent's documentation!
-=====================================
+Welcome to the geoextent documentation!
+=======================================
 
 ``geoextent`` is a Python library for **extracting geospatial extent of files and directories with multiple data formats**.
 
