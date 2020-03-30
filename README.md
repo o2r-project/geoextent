@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/o2r-project/geoextent.svg?branch=master)](https://travis-ci.org/github/o2r-project/geoextent) [![PyPI version](https://badge.fury.io/py/geoextent.svg)](https://pypi.org/project/geoextent/0.1.0/)
+[![Build Status](https://travis-ci.org/o2r-project/geoextent.svg?branch=master)](https://travis-ci.org/github/o2r-project/geoextent) [![PyPI version](https://badge.fury.io/py/geoextent.svg)](https://pypi.org/project/geoextent/0.1.0/) 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/o2r-project/geoextent/master)
 
 # geoextent
 
