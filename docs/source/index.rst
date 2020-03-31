@@ -35,4 +35,4 @@ This work is published from: Germany.
 
 ------
 
-geoextent version @@VERSION@@ @ git @@HASH@@ @@TIMESTAMP@@
+geoextent version PLACEHOLDER_VERSION @ git PLACEHOLDER_HASH PLACEHOLDER_TIMESTAMP
