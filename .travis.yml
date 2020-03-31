@@ -71,12 +71,13 @@ jobs:
           )
         # Copy built docs to gh_pages checkout
         - cp -r docs/build/html/* site/
-        - ls site
-        # Commit changes
+        - ls -l site
+        # Commit changes; git will not add a dotfile with 'add -all'
         - |-
           (
-            cd site
-            touch .
+            cd site/
+            touch .jekyll
+            git add .jekyll
             git add --all
             REV=$(git rev-parse --short HEAD)
             git commit -m "Rebuild pages at ${REV}"
@@ -85,7 +86,8 @@ jobs:
         # Push the documentation to gh-pages
         - git status
         - |-
-          (  
+          (
+            cd site/
             if [[ $TRAVIS_REPO_SLUG == $GH_SLUG ]]
             then
               git push -q upstream HEAD:gh-pages
