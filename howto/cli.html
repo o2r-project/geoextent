@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Command-Line Interface (CLI) &#8212; geoextent 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Docs" href="api.html" />
+    <link rel="prev" title="How-to Guides" href="index_howto.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="command-line-interface-cli">
+<h1>Command-Line Interface (CLI)<a class="headerlink" href="#command-line-interface-cli" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="basics">
+<h2>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">geoextent</span></code> can be called on the command line with this command:</p>
+<div class="section" id="id1">
+<h3><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: geoextent [-h] [-formats] [-b] [-t] [-input= &#39;[filepath|input file]&#39;]</span>
+</pre></div>
+</div>
+<dl class="option">
+<dt id="cmdoption-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message and exit</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-formats">
+<code class="sig-name descname">-formats</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-formats" title="Permalink to this definition">¶</a></dt>
+<dd><p>show supported formats</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-b">
+<code class="sig-name descname">-b</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--bounding-box</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-b" title="Permalink to this definition">¶</a></dt>
+<dd><p>extract spatial extent (bounding box)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-t">
+<code class="sig-name descname">-t</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--time-box</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>extract temporal extent</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-input">
+<code class="sig-name descname">-input</code><code class="sig-prename descclassname">=</code><a class="headerlink" href="#cmdoption-input" title="Permalink to this definition">¶</a></dt>
+<dd><p>input file or path</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Depending on the local configuration, <strong>geoextent</strong> might need to be called with the python interpreter prepended:</p>
+<p><cite>python -m geoextent …</cite></p>
+</div>
+<div class="section" id="show-help-message">
+<h3>Show help message<a class="headerlink" href="#show-help-message" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">h</span>
+</pre></div>
+</div>
+<div class="docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>
+geoextent is a Python library for extracting geospatial and temporal extents of a file or a directory of multiple geospatial data formats.
+
+usage: geoextent [-h] [-formats] [-b] [-t] [-input= &#39;[filepath|input file]&#39;]
+
+optional arguments:
+  -h, --help            show help message and exit
+  -formats              show supported formats
+  -b, --bounding-box    extract spatial extent (bounding box)
+  -t, --time-box        extract temporal extent
+  -input= INPUT= [INPUT= ...]
+                        input file or path
+
+By default, both bounding box and temporal extent are extracted.
+
+Examples:
+
+geoextent path/to/geofile.ext
+geoextent -b path/to/directory_with_geospatial_data
+geoextent -t path/to/file_with_temporal_extent
+geoextent -b -t path/to/geospatial_files
+
+
+Supported formats:
+- GeoJSON (.geojson)
+- Tabular data (.csv)
+- Shapefile (.shp)
+- GeoTIFF (.geotiff, .tif)
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="extract-bounding-box-from-single-file">
+<h3>Extract bounding box from single file<a class="headerlink" href="#extract-bounding-box-from-single-file" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can find the file used in the examples of this section from <a class="reference external" href="https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson">muenster_ring_zeit</a>. Furthermore, for displaying the rendering of the file contents, see <a class="reference external" href="https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson">rendered blob</a>.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="nb">input</span><span class="o">=</span> <span class="s1">&#39;muenster_ring_zeit.geojson&#39;</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="docutils container">
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Extracting bbox=True tbox=False from file ../tests/testdata/geojson/muenster_ring_zeit.geojson
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Module used: geojson
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Checking validity of ../tests/testdata/geojson/muenster_ring_zeit.geojson 
+
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Extracting content from path ../tests/testdata/geojson/muenster_ring_zeit.geojson 
+
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">ERROR:geoextent.lib.extent:
+</pre>
+</div>
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
+ &#39;bbox&#39;: [7.60168075561523,
+  51.9488147720619,
+  7.64725685119629,
+  51.9746240298775],
+ &#39;crs&#39;: 4326}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="extract-time-interval">
+<h3>Extract time interval<a class="headerlink" href="#extract-time-interval" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">t</span> <span class="o">-</span><span class="nb">input</span><span class="o">=</span><span class="s1">&#39;file.geojson&#39;</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="docutils container">
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Extracting bbox=False tbox=True from file ../tests/testdata/geojson/muenster_ring_zeit.geojson
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Module used: geojson
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Checking validity of ../tests/testdata/geojson/muenster_ring_zeit.geojson 
+
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Extracting content from path ../tests/testdata/geojson/muenster_ring_zeit.geojson 
+
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">WARNING:geoextent.lib.extent:Warning: The CRS cannot be extracted from the file ../tests/testdata/geojson/muenster_ring_zeit.geojson
+</pre>
+</div>
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;, &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="extract-both-bounding-box-and-time-interval-from-a-single-file">
+<h3>Extract both bounding box and time interval from a single file<a class="headerlink" href="#extract-both-bounding-box-and-time-interval-from-a-single-file" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">t</span> <span class="o">-</span><span class="nb">input</span><span class="o">=</span> <span class="s1">&#39;file.geojson&#39;</span>
+</pre></div>
+</div>
+<div class="docutils container">
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Extracting bbox=True tbox=True from file ../tests/testdata/geojson/muenster_ring_zeit.geojson
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Module used: geojson
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Checking validity of ../tests/testdata/geojson/muenster_ring_zeit.geojson 
+
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Extracting content from path ../tests/testdata/geojson/muenster_ring_zeit.geojson 
+
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">INFO:root:Extracting content from path ../tests/testdata/geojson/muenster_ring_zeit.geojson 
+
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">ERROR:geoextent.lib.extent:
+</pre>
+</div>
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
+ &#39;crs&#39;: 4326,
+ &#39;bbox&#39;: [7.60168075561523,
+  51.9488147720619,
+  7.64725685119629,
+  51.9746240298775],
+ &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/o2r-logo-only.svg" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">geoextent</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing geoextent</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index_howto.html">How-to Guides</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Command-Line Interface (CLI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">API Docs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supportedformats/index_supportedformats.html">Supported file formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index_howto.html">How-to Guides</a><ul>
+      <li>Previous: <a href="index_howto.html" title="previous chapter">How-to Guides</a></li>
+      <li>Next: <a href="api.html" title="next chapter">API Docs</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, o2r-project.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/howto/cli.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

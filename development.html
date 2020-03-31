@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Development &#8212; geoextent 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Supported file formats" href="supportedformats/index_supportedformats.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h1>
+<p>Notes for developers of <code class="docutils literal notranslate"><span class="pre">geoextent</span></code>.</p>
+<div class="section" id="environment">
+<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this headline">¶</a></h2>
+<p>All commands in this file assume you work in a virtual environment created with [<code class="docutils literal notranslate"><span class="pre">virtualenvwrapper</span></code>](<a class="reference external" href="https://virtualenvwrapper.readthedocs.io/en/latest/install.html">https://virtualenvwrapper.readthedocs.io/en/latest/install.html</a>) as follows (please keep up to date!):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install virtualenvwrapper</span>
+
+<span class="c1"># Add to .bashrc:</span>
+<span class="c1"># export WORKON_HOME=$HOME/.virtualenvs</span>
+<span class="c1"># source ~/.local/bin/virtualenvwrapper.sh</span>
+
+<span class="c1"># Where are my virtual envs stored?</span>
+<span class="c1"># echo $WORKON_HOME</span>
+
+<span class="c1"># Create environment using Python 3</span>
+<span class="c1">#mkvirtualenv -p $(which python3) geoextent</span>
+
+<span class="c1"># Activate env</span>
+<span class="n">workon</span> <span class="n">geoextent</span>
+
+<span class="c1"># Deactivate env</span>
+<span class="n">deactivate</span>
+
+<span class="c1">#cdvirtualenv</span>
+<span class="c1">#rmvirtualenv</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="required-packages">
+<h2>Required packages<a class="headerlink" href="#required-packages" title="Permalink to this headline">¶</a></h2>
+<p>In the environment created above, run</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>Install a matching version of gdal-python into the virtual environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>gdal-config --version
+
+CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal pip install gdal==`gdal-config --version`
+</pre></div>
+</div>
+<p>For the installation to suceed you need the following system packages (on Debian/Ubuntu):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">libproj-dev</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">libgdal-dev</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">libgeos-dev</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gdal-bin</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="run-tests">
+<h2>Run tests<a class="headerlink" href="#run-tests" title="Permalink to this headline">¶</a></h2>
+<p>To install development requirements, run</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">-</span><span class="n">dev</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>Either install the lib and run <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, or run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code>.
+You can also run individual files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="n">tests</span><span class="o">/</span><span class="n">test_api</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>The documentation is based on <a class="reference external" href="https://www.sphinx-doc.org">Sphinx</a>.
+The source files can be found in the directory <code class="docutils literal notranslate"><span class="pre">docs/</span></code> and the rendered online documentation is at <a class="reference external" href="https://o2r.info/geoextent/">https://o2r.info/geoextent/</a>.</p>
+<div class="section" id="build-locally">
+<h3>Build locally<a class="headerlink" href="#build-locally" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docs</span><span class="o">/</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">-</span><span class="n">docs</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">make</span> <span class="n">html</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-documentation-website">
+<h3>Build documentation website<a class="headerlink" href="#build-documentation-website" title="Permalink to this headline">¶</a></h3>
+<p>The documentation website is built on Travis CI using <code class="docutils literal notranslate"><span class="pre">travis-sphinx_</span></code>.
+See the <code class="docutils literal notranslate"><span class="pre">travis-sphinx</span></code> documentation and the file <code class="docutils literal notranslate"><span class="pre">.travis.yml</span></code> for details.</p>
+</div>
+</div>
+<div class="section" id="release">
+<h2>Release<a class="headerlink" href="#release" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h3>
+<p>See the PyPI documentation on generating a distribution archive, <a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">https://packaging.python.org/tutorials/packaging-projects/</a>, for details.</p>
+<p>Required tools:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">setuptools</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wheel</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">twine</span></code></p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">setuptools</span> <span class="n">wheel</span> <span class="n">twine</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">sdist</span> <span class="n">bdist_wheel</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="upload-to-test-repository">
+<h3>Upload to test repository<a class="headerlink" href="#upload-to-test-repository" title="Permalink to this headline">¶</a></h3>
+<p>First upload to the test repository and check everything is in order.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># upload with twine, make sure only one wheel is in dist/</span>
+<span class="n">twine</span> <span class="n">upload</span> <span class="o">--</span><span class="n">repository</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">test</span><span class="o">.</span><span class="n">pypi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">legacy</span><span class="o">/</span> <span class="n">dist</span><span class="o">/*</span>
+</pre></div>
+</div>
+<p>Check if the information on <a class="reference external" href="https://test.pypi.org/project/geoextent/">https://test.pypi.org/project/geoextent/</a> is correct.
+Then switch to a new Python environment, install geoextent from TestPyPI and try out package:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">i</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">test</span><span class="o">.</span><span class="n">pypi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">simple</span><span class="o">/</span> <span class="n">geoextent</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="upload-to-pypi">
+<h3>Upload to PyPI<a class="headerlink" href="#upload-to-pypi" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">twine</span> <span class="n">upload</span> <span class="n">dist</span><span class="o">/*</span>
+</pre></div>
+</div>
+<p>Check if information on <a class="reference external" href="https://pypi.org/project/geoextent/">https://pypi.org/project/geoextent/</a> is all correct.
+Install the library from PyPI into a new Python environment and chech that everything works:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/o2r-logo-only.svg" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">geoextent</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing geoextent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howto/index_howto.html">How-to Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supportedformats/index_supportedformats.html">Supported file formats</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#environment">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#required-packages">Required packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-tests">Run tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#release">Release</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="supportedformats/index_supportedformats.html" title="previous chapter">Supported file formats</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, o2r-project.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/development.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
