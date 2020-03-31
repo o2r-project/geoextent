@@ -76,8 +76,8 @@ jobs:
         - |-
           (
             cd site/
-            touch .jekyll
-            git add .jekyll
+            touch .nojekyll
+            git add .nojekyll
             git add --all
             REV=$(git rev-parse --short HEAD)
             git commit -m "Rebuild pages at ${REV}"
