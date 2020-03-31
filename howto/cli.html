@@ -153,16 +153,12 @@ Supported formats:
 
 </pre>
 </div>
-<div class="stderr docutils container">
-<pre class="stderr literal-block">ERROR:geoextent.lib.extent:
-</pre>
-</div>
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
- &#39;crs&#39;: 4326,
  &#39;bbox&#39;: [7.60168075561523,
   51.9488147720619,
   7.64725685119629,
-  51.9746240298775]}
+  51.9746240298775],
+ &#39;crs&#39;: 4326}
 </pre></div>
 </div>
 </div>
@@ -194,6 +190,10 @@ Supported formats:
 </div>
 <div class="stderr docutils container">
 <pre class="stderr literal-block">WARNING:geoextent.lib.extent:Warning: The CRS cannot be extracted from the file ../tests/testdata/geojson/muenster_ring_zeit.geojson
+</pre>
+</div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">ERROR:geoextent.lib.extent:
 </pre>
 </div>
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;, &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
@@ -230,13 +230,17 @@ Supported formats:
 
 </pre>
 </div>
+<div class="stderr docutils container">
+<pre class="stderr literal-block">ERROR:geoextent.lib.extent:
+</pre>
+</div>
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
  &#39;crs&#39;: 4326,
- &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;],
  &#39;bbox&#39;: [7.60168075561523,
   51.9488147720619,
   7.64725685119629,
-  51.9746240298775]}
+  51.9746240298775],
+ &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
 </pre></div>
 </div>
 </div>
