@@ -1,7 +1,6 @@
 #!/bin/bash
 
+python3 -m pip install numpy
 # Install geoextent
-python3 -m pip install geoextent
 # Install GDAL
 python3 -m pip install GDAL==2.4.0
-python3 -m pip install numpy

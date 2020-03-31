@@ -1,2 +1,4 @@
 python3.6-dev
+add-apt-repository ppa:ubuntugis/ppa
 gdal-bin
+libgdal-dev
