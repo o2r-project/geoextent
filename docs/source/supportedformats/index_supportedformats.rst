@@ -19,7 +19,7 @@ Please see the `project issues <https://github.com/o2r-project/geoextent/issues>
 
       # Download showcase file and extract geoextent data
       subprocess.run('mkdir -p showcase_folder', shell=True)
-      subprocess.run('wget -P showcase_folder '+ url, shell=True)
+      subprocess.run('wget -q --show-progress --progress=bar:force -P showcase_folder '+ url, shell=True)
 
       if unzip_file:
          subprocess.run('cd showcase_folder; unzip '+ unzip_file, shell=True)
