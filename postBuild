@@ -3,4 +3,5 @@
 python3 -m pip install numpy
 # Install geoextent
 # Install GDAL
-python3 -m pip install GDAL==2.4.0
+#python3 -m pip install GDAL==2.4.0
+sudo add-apt-repository ppa:ubuntugis/ppa
