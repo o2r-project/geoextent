@@ -1,4 +1,4 @@
-libevent-dev
+software-properties-common
 python3.6-dev
 gdal-bin
 libgdal-dev
