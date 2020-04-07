@@ -1,6 +1,0 @@
-#!/bin/bash
-
-add-apt-repository ppa:ubuntugis/ppa
-
-# Install GDAL
-#python3 -m pip install GDAL==2.4.0
