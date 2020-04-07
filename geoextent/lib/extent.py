@@ -10,6 +10,7 @@ import geoextent.lib.helpfunctions as hf
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logging.disable(logging.INFO)
 
 
 modulesSupported = {'geojson':handleGeojson, 'json':handleGeojson,'csv':handleCSV,
