@@ -93,7 +93,7 @@ jobs:
               git push -q upstream HEAD:gh-pages
             else
               echo "Not pushing build docs, not the right repo!"
-              exit 1;
+              exit 0;
             fi
           )
 env:
