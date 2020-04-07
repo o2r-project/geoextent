@@ -19,6 +19,14 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    install_requires=[
+        'pyproj',
+        'geojson>=2.4.1',
+        'pygeoj',
+        'pyshp',
+        'python-dateutil',
+        'GDAL==2.4.0'
+    ],
     entry_points={
         "console_scripts": [
             "geoextent = geoextent.__main__:main",
