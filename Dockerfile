@@ -24,7 +24,8 @@ RUN pip3 install gdal==$(gdal-config --version) \
 	--no-cache-dir notebook==6.0.3 \
 	bash_kernel
 
-RUN Python3 -m bash_kernel.install 
+# Install Jupyter kernel for bash
+RUN python3 -m bash_kernel.install 
 
 # Create a user
 ARG NB_USER=o2r
