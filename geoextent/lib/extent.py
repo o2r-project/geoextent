@@ -107,6 +107,8 @@ def fromFile(filePath, bbox=True, tbox=True):
                     # the CRS is not neccessarily required
                     if bbox and hasattr(usedModule, 'getCRS'):
                         metadata["crs"] = usedModule.getCRS(filePath)
+                    elif tbox and hasattr(usedModule, 'getCRS'):
+                        metadata["crs"] = usedModule.getCRS(filePath)
                     else: 
                         logger.warning("Warning: The CRS cannot be extracted from the file {}".format(filePath))
                 except Exception as e:
