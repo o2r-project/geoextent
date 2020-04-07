@@ -28,7 +28,7 @@ RUN pip3 install gdal==$(gdal-config --version) \
 RUN python3 -m bash_kernel.install 
 
 # Create a user
-ARG NB_USER=o2r
+ARG NB_USER=jovyan
 ARG NB_UID=1000
 ENV USER ${NB_USER}
 ENV NB_UID ${NB_UID}
