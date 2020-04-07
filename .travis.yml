@@ -1,3 +1,5 @@
+os: linux
+dist: xenial
 language: python
 python:
   - "3.7"
@@ -32,11 +34,71 @@ jobs:
   include:
     - stage: build docs
       python: "3.7"
+      if: branch = master AND type != pull_request 
       script:
-        - travis-sphinx build
-        - pip install travis-sphinx
-        - travis-sphinx deploy
-
+        - pip install -r docs/requirements-docs.txt
+        - pip install -r requirements.txt
+        - pip install -e .
+        - shopt -s expand_aliases
+        - git config user.name "${GH_USER_NAME}"
+        - git config user.email "${GH_USER_EMAIL}"
+        # Initialize gh-pages checkout
+        - |-
+          (
+            mkdir -p site
+            cd site
+            git init
+            git remote add upstream "https://${GH_TOKEN}@github.com/${GH_SLUG}"
+            git fetch upstream
+            git reset upstream/gh-pages
+            cd ..
+          )
+        # Build the documentation
+        - |-
+          (
+            cd docs
+            make html
+            cd build/html
+            # Replace current build version and date
+            CURRENT_VERSION=$(python -c 'from geoextent import __version__; print(__version__)')
+            CURRENT_HASH=$(git log --pretty=format:'%h' -n 1)
+            CURRENT_DATE=$(git show -s --format=%ci $CURRENT_HASH)
+            echo $CURRENT_VERSION "@" $CURRENT_HASH $CURRENT_DATE
+            sed -i "s/PLACEHOLDER_VERSION/$CURRENT_VERSION/g" index.html
+            sed -i "s/PLACEHOLDER_HASH/$CURRENT_HASH/g" index.html
+            sed -i "s/PLACEHOLDER_TIMESTAMP/$CURRENT_DATE/g" index.html
+            cd ../../..
+          )
+        # Copy built docs to gh_pages checkout
+        - cp -r docs/build/html/* site/
+        - ls -l site
+        # Commit changes; git will not add a dotfile with 'add -all'
+        - |-
+          (
+            cd site/
+            touch .nojekyll
+            git add .nojekyll
+            git add --all
+            REV=$(git rev-parse --short HEAD)
+            git commit -m "Rebuild pages at ${REV}"
+            cd ..
+          )
+        # Push the documentation to gh-pages
+        - git status
+        - |-
+          (
+            cd site/
+            if [[ $TRAVIS_REPO_SLUG == $GH_SLUG ]]
+            then
+              git push -q upstream HEAD:gh-pages
+            else
+              echo "Not pushing build docs, not the right repo!"
+              exit 1;
+            fi
+          )
 env:
   global:
+    - GH_USER_NAME: "Opening Reproducible Research"
+    - GH_USER_EMAIL: "openingrr@uni-muenster.de"
+    - GH_SLUG: "o2r-project/geoextent"
     - secure: "TjE9UQ+FWwUJjJPiVYGztT0kVf99+ZN0FpZOGJuNj1pyycoqRB09T+cPXOzi8nlIcctJe74QxCkrww26bio1P7TMqoeSjGWcAFl+EcgE8p0G75NFwMphzHQ9RXM1MQgmvY5hlhw8hFVh7IEBZQNxX+z5Qhs8lQ13egisLbZ+Prj4qYEEx/Xt6NvYKBXYUBuzTa1NBAmP1ghVjDynYDRdhqLAdBesJ/rTzp9Mdx5ZJgMHmSNuo/wZk9VQuMKx+V4chQdMsM37a+DYRA4WLqAFs01ec09Ava6Vi0qfAuqZ30lVdJnn8BhmTcUmxA4y79AB30xhwJUiqySfzq0eYs9TrxdMr9Kv5Vq7xqxJC2k2c4dip5H1Eo61qjG/qhlCaleDK9GnrYzE7q2v4FhT+ToN6L6H3Lwb5YsEoEhNRWr69sxqFgihlsfcCFchf8WyVQ6tICybu/HIe/1cyCAtgSAaOUfqQBmvx6bYJjhvVkUGqIByEZFrajqniWTM31BlL+Lb8KpNMgteOA4VfpJdwnzgcUQFbXrcbwcIHLNr+5Gb5LUayalC/jE+ln+C6z5NmTzpGst9Y8plV3Lw8GbGFxTYAFe/VJ4VadBrG9i+v6g9AX7KWGZ1lUJgstK6iBzX9B0xb8X60yj57vMT7tOeRZf1MczIyizzXKefeTb7d+cPGMk="
