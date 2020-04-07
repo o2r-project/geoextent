@@ -10,8 +10,6 @@ import geoextent.lib.helpfunctions as hf
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-logging.disable(logging.INFO)
-
 
 modulesSupported = {'geojson':handleGeojson, 'json':handleGeojson,'csv':handleCSV,
     'shp':handleShapefile, 'dbf':handleShapefile, 'geotiff':handleGeotiff, 'tif':handleGeotiff}
@@ -116,7 +114,7 @@ def fromFile(filePath, bbox=True, tbox=True):
             try:
                 barrier.wait()
             except Exception as e:
-                logger.error(e)
+                logger.debug("Error waiting for barrier: %s", e)
                 barrier.abort()
 
     thread_bbox_except = thread(100) 
