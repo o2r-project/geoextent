@@ -86,7 +86,7 @@ The file used in the example can be obtained from `Zenodo Sandbox record 256820 
 GeoTIFF
 ^^^^^^^
 
-The file used in the example is aviable onlinte: `wf_100m_klas.tif <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif>`_.
+The file used in the example is available online: `wf_100m_klas.tif <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif>`_.
 
 ::
 

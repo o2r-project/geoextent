@@ -33,7 +33,7 @@ Show help message
    import geoextent.__main__ as geoextent
    geoextent.print_help_fun()
 
-Extract bounding box from single file
+Extract bounding box from a single file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note::
@@ -52,8 +52,8 @@ Output:
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, False)
 
-Extract time interval
-^^^^^^^^^^^^^^^^^^^^^
+Extract time interval from a single file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
