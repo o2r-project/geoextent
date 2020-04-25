@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>Command-Line Interface (CLI) &#8212; geoextent 0.1.0 documentation</title>
@@ -46,31 +46,31 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: geoextent [-h] [-formats] [-b] [-t] [-input= &#39;[filepath|input file]&#39;]</span>
 </pre></div>
 </div>
-<dl class="option">
+<dl class="std option">
 <dt id="cmdoption-h">
-<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-h" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-help"></span><code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-h" title="Permalink to this definition">¶</a></dt>
 <dd><p>show help message and exit</p>
 </dd></dl>
 
-<dl class="option">
+<dl class="std option">
 <dt id="cmdoption-formats">
 <code class="sig-name descname">-formats</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-formats" title="Permalink to this definition">¶</a></dt>
 <dd><p>show supported formats</p>
 </dd></dl>
 
-<dl class="option">
+<dl class="std option">
 <dt id="cmdoption-b">
-<code class="sig-name descname">-b</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--bounding-box</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-b" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-bounding-box"></span><code class="sig-name descname">-b</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--bounding-box</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-b" title="Permalink to this definition">¶</a></dt>
 <dd><p>extract spatial extent (bounding box)</p>
 </dd></dl>
 
-<dl class="option">
+<dl class="std option">
 <dt id="cmdoption-t">
-<code class="sig-name descname">-t</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--time-box</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-t" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-time-box"></span><code class="sig-name descname">-t</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--time-box</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-t" title="Permalink to this definition">¶</a></dt>
 <dd><p>extract temporal extent</p>
 </dd></dl>
 
-<dl class="option">
+<dl class="std option">
 <dt id="cmdoption-input">
 <code class="sig-name descname">-input</code><code class="sig-prename descclassname">=</code><a class="headerlink" href="#cmdoption-input" title="Permalink to this definition">¶</a></dt>
 <dd><p>input file or path</p>
@@ -124,8 +124,8 @@ Supported formats:
 </div>
 </div>
 </div>
-<div class="section" id="extract-bounding-box-from-single-file">
-<h3>Extract bounding box from single file<a class="headerlink" href="#extract-bounding-box-from-single-file" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="extract-bounding-box-from-a-single-file">
+<h3>Extract bounding box from a single file<a class="headerlink" href="#extract-bounding-box-from-a-single-file" title="Permalink to this headline">¶</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>You can find the file used in the examples of this section from <a class="reference external" href="https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson">muenster_ring_zeit</a>. Furthermore, for displaying the rendering of the file contents, see <a class="reference external" href="https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson">rendered blob</a>.</p>
@@ -154,17 +154,17 @@ Supported formats:
 </pre>
 </div>
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
+ &#39;crs&#39;: 4326,
  &#39;bbox&#39;: [7.60168075561523,
   51.9488147720619,
   7.64725685119629,
-  51.9746240298775],
- &#39;crs&#39;: 4326}
+  51.9746240298775]}
 </pre></div>
 </div>
 </div>
 </div>
-<div class="section" id="extract-time-interval">
-<h3>Extract time interval<a class="headerlink" href="#extract-time-interval" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="extract-time-interval-from-a-single-file">
+<h3>Extract time interval from a single file<a class="headerlink" href="#extract-time-interval-from-a-single-file" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">t</span> <span class="o">-</span><span class="nb">input</span><span class="o">=</span><span class="s1">&#39;file.geojson&#39;</span>
 </pre></div>
 </div>
@@ -188,11 +188,9 @@ Supported formats:
 
 </pre>
 </div>
-<div class="stderr docutils container">
-<pre class="stderr literal-block">WARNING:geoextent.lib.extent:Warning: The CRS cannot be extracted from the file ../tests/testdata/geojson/muenster_ring_zeit.geojson
-</pre>
-</div>
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;, &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
+ &#39;crs&#39;: 4326,
+ &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
 </pre></div>
 </div>
 </div>
@@ -224,14 +222,6 @@ Supported formats:
 <div class="stderr docutils container">
 <pre class="stderr literal-block">INFO:root:Extracting content from path ../tests/testdata/geojson/muenster_ring_zeit.geojson 
 
-</pre>
-</div>
-<div class="stderr docutils container">
-<pre class="stderr literal-block">ERROR:geoextent.lib.extent:
-</pre>
-</div>
-<div class="stderr docutils container">
-<pre class="stderr literal-block">ERROR:geoextent.lib.extent:
 </pre>
 </div>
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
@@ -316,7 +306,7 @@ Supported formats:
       &copy;2020, o2r-project.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
