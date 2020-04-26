@@ -119,7 +119,9 @@ Make sure that all tests work locally by running
 
     pytest
 
-before cotinueing with the following tasks.
+and check the tests on `Travis CI o2r-project/geoextent`_ before continuing with the following tasks.
+
+.. _`Travis CI o2r-project/geoextent`: https://travis-ci.org/github/o2r-project/geoextent
 
 Bump version for release
 ^^^^^^^^^^^^^^^^^^^^^^^^
