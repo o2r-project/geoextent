@@ -192,8 +192,10 @@ Upload to PyPI
 
 
 Check if information on https://pypi.org/project/geoextent/ is all correct.
-Install the library from PyPI into a new Python environment and chech that everything works:
+Install the library from PyPI into a new environment, e.g., by reusing the container session from above, and check that everything works.
 
-::
+Add tag
+^^^^^^^
 
-    ...
+Add a version tag to the commit of the release and push it to the main repository.
+Go to GitHub and create a new release by using the "Draft a new release" button and using the just pushed tag.
