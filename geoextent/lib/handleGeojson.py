@@ -6,7 +6,7 @@ import logging
 from dateutil.parser import *
 import pygeoj
 import os
-import geoextent.lib.helpfunctions as hf
+from . import helpfunctions as hf
 
 fileType = "application/geojson"
 

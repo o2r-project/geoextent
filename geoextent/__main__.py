@@ -1,6 +1,6 @@
 import sys, os, datetime, argparse
-import geoextent.lib.helpfunctions as hf
-import geoextent.lib.extent as extent
+from .lib import helpfunctions as hf
+from .lib import extent
 import logging
 
 logging.basicConfig(level=logging.INFO)

@@ -3,7 +3,7 @@ import shapefile
 import sys
 import os
 import logging
-import geoextent.lib.helpfunctions as hf
+from . import helpfunctions as hf
 
 fileType = "application/shp"
 

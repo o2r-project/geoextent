@@ -1,7 +1,7 @@
 import csv
 import os
 import logging
-import geoextent.lib.helpfunctions as hf
+from . import helpfunctions as hf
 
 fileType = "text/csv"
 

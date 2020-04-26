@@ -2,11 +2,11 @@
 import sys, os, threading
 import logging
 
-import geoextent.lib.handleCSV as handleCSV
-import geoextent.lib.handleGeojson as handleGeojson
-import geoextent.lib.handleShapefile as handleShapefile
-import geoextent.lib.handleGeotiff as handleGeotiff
-import geoextent.lib.helpfunctions as hf
+from . import handleCSV
+from . import handleGeojson
+from . import handleShapefile
+from . import handleGeotiff
+from . import helpfunctions as hf
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
