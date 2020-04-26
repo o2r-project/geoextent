@@ -5,7 +5,7 @@ Changelog
 0.2.0
 ^^^^^
 
-- Add dependencies to required software (:pr:`59`)
+- Add dependencies to required software (:pr:`59`, :commit:`364692964fc34c467c21a7072e1eefb9d354fbb8`)
 - Update documentation, now uses Sphinx and is online at https://o2r.info/geoextent/ (:pr:`67`, :pr:`65`, :pr:`64`, :pr:`62`)
 
 0.1.0
