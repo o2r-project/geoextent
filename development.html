@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Development &#8212; geoextent 0.1.0 documentation</title>
+    <title>Development &#8212; geoextent 0.2.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
@@ -18,7 +18,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Supported file formats" href="supportedformats/index_supportedformats.html" />
+    <link rel="prev" title="Changelog" href="changelog.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -100,8 +100,8 @@ You can also run individual files:</p>
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <p>The documentation is based on <a class="reference external" href="https://www.sphinx-doc.org">Sphinx</a>.
 The source files can be found in the directory <code class="docutils literal notranslate"><span class="pre">docs/</span></code> and the rendered online documentation is at <a class="reference external" href="https://o2r.info/geoextent/">https://o2r.info/geoextent/</a>.</p>
-<div class="section" id="build-locally">
-<h3>Build locally<a class="headerlink" href="#build-locally" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="build-documentation-locally">
+<h3>Build documentation locally<a class="headerlink" href="#build-documentation-locally" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docs</span><span class="o">/</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">-</span><span class="n">docs</span><span class="o">.</span><span class="n">txt</span>
 <span class="n">make</span> <span class="n">html</span>
@@ -110,15 +110,14 @@ The source files can be found in the directory <code class="docutils literal not
 </div>
 <div class="section" id="build-documentation-website">
 <h3>Build documentation website<a class="headerlink" href="#build-documentation-website" title="Permalink to this headline">¶</a></h3>
-<p>The documentation website is built on Travis CI using <code class="docutils literal notranslate"><span class="pre">travis-sphinx_</span></code>.
-See the <code class="docutils literal notranslate"><span class="pre">travis-sphinx</span></code> documentation and the file <code class="docutils literal notranslate"><span class="pre">.travis.yml</span></code> for details.</p>
+<p>The deployed documentation website is built on Travis CI, see file <code class="docutils literal notranslate"><span class="pre">.travis.yml</span></code> for details.
+In short, an extra stage <code class="docutils literal notranslate"><span class="pre">build</span> <span class="pre">docs</span></code> is executed only on the <code class="docutils literal notranslate"><span class="pre">master</span></code> branch and not for pull requests.</p>
 </div>
 </div>
 <div class="section" id="release">
 <h2>Release<a class="headerlink" href="#release" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="prerequisites">
 <h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h3>
-<p>See the PyPI documentation on generating a distribution archive, <a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">https://packaging.python.org/tutorials/packaging-projects/</a>, for details.</p>
 <p>Required tools:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">setuptools</span></code></p></li>
@@ -128,7 +127,32 @@ See the <code class="docutils literal notranslate"><span class="pre">travis-sphi
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">setuptools</span> <span class="n">wheel</span> <span class="n">twine</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">sdist</span> <span class="n">bdist_wheel</span>
+</div>
+<div class="section" id="id1">
+<h3>Run tests<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Make sure that all tests work locally by running</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span>
+</pre></div>
+</div>
+<p>before cotinueing with the following tasks.</p>
+</div>
+<div class="section" id="bump-version-for-release">
+<h3>Bump version for release<a class="headerlink" href="#bump-version-for-release" title="Permalink to this headline">¶</a></h3>
+<p>Follow the <a class="reference external" href="https://semver.org/">Semantic Versioning specification</a> to clearly mark changes as a new major version, minor changes, or patches.
+The version number is centrally managed in the file <code class="docutils literal notranslate"><span class="pre">geoextent/__init__.py</span></code>.</p>
+</div>
+<div class="section" id="update-changelog">
+<h3>Update changelog<a class="headerlink" href="#update-changelog" title="Permalink to this headline">¶</a></h3>
+<p>Update the changelog in file <code class="docutils literal notranslate"><span class="pre">docs/source/changelog.rst</span></code>, use the <a class="reference external" href="https://github.com/sloria/sphinx-issues">sphinx-issues</a> syntax for referring to pull requests and contributors for changes where appropriate.</p>
+</div>
+<div class="section" id="build-distribution-archive">
+<h3>Build distribution archive<a class="headerlink" href="#build-distribution-archive" title="Permalink to this headline">¶</a></h3>
+<p>See the PyPI documentation on generating a distribution archive, <a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">https://packaging.python.org/tutorials/packaging-projects/</a>, for details.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># remove previous releases and builds</span>
+<span class="n">rm</span> <span class="n">dist</span><span class="o">/*</span>
+<span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="n">build</span> <span class="o">*.</span><span class="n">egg</span><span class="o">-</span><span class="n">info</span>
+
+<span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">sdist</span> <span class="n">bdist_wheel</span>
 </pre></div>
 </div>
 </div>
@@ -140,8 +164,23 @@ See the <code class="docutils literal notranslate"><span class="pre">travis-sphi
 </pre></div>
 </div>
 <p>Check if the information on <a class="reference external" href="https://test.pypi.org/project/geoextent/">https://test.pypi.org/project/geoextent/</a> is correct.
-Then switch to a new Python environment, install geoextent from TestPyPI and try out package:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">i</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">test</span><span class="o">.</span><span class="n">pypi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">simple</span><span class="o">/</span> <span class="n">geoextent</span>
+Then switch to a new Python environment or use a container to get an “empty” setup.
+Install geoextent from TestPyPI and ensure the package is functional:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run --rm -it -v $(pwd)/tests/testdata/:/testdata python:3-buster /bin/bash
+
+# install system deps
+apt-get update
+apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev libspatialite-dev libgdal-dev gdal-bin netcdf-bin
+
+# in the container, first install packages not on TestPyPI
+pip install geojson pyproj gdal==`gdal-config --version`
+
+pip install -i https://test.pypi.org/simple/ geoextent
+geoextent --help
+geoextent --version
+
+geoextent -b -t -input= /testdata/geojson/muenster_ring_zeit.geojson
+geoextent -b -t -input= /testdata/shapefile/gis_osm_buildings_a_free_1.shp
 </pre></div>
 </div>
 </div>
@@ -183,6 +222,7 @@ Install the library from PyPI into a new Python environment and chech that every
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing geoextent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="howto/index_howto.html">How-to Guides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="supportedformats/index_supportedformats.html">Supported file formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#environment">Environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#required-packages">Required packages</a></li>
@@ -197,7 +237,7 @@ Install the library from PyPI into a new Python environment and chech that every
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="supportedformats/index_supportedformats.html" title="previous chapter">Supported file formats</a></li>
+      <li>Previous: <a href="changelog.html" title="previous chapter">Changelog</a></li>
   </ul></li>
 </ul>
 </div>

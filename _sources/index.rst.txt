@@ -21,6 +21,7 @@ Documentation overview
    install
    howto/index_howto
    supportedformats/index_supportedformats
+   changelog
    development
 
 ------

@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Command-Line Interface (CLI) &#8212; geoextent 0.1.0 documentation</title>
+    <title>Command-Line Interface (CLI) &#8212; geoextent 0.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
@@ -43,7 +43,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">geoextent</span></code> can be called on the command line with this command:</p>
 <div class="section" id="id1">
 <h3><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: geoextent [-h] [-formats] [-b] [-t] [-input= &#39;[filepath|input file]&#39;]</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: geoextent [-h] [--formats] [--version] [-b] [-t] [-input= &#39;[filepath|input file]&#39;]</span>
 </pre></div>
 </div>
 <dl class="std option">
@@ -54,8 +54,14 @@
 
 <dl class="std option">
 <dt id="cmdoption-formats">
-<code class="sig-name descname">-formats</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-formats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">--formats</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-formats" title="Permalink to this definition">¶</a></dt>
 <dd><p>show supported formats</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-version">
+<code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-version" title="Permalink to this definition">¶</a></dt>
+<dd><p>show installed version</p>
 </dd></dl>
 
 <dl class="std option">
@@ -94,11 +100,12 @@
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>
 geoextent is a Python library for extracting geospatial and temporal extents of a file or a directory of multiple geospatial data formats.
 
-usage: geoextent [-h] [-formats] [-b] [-t] [-input= &#39;[filepath|input file]&#39;]
+usage: geoextent [-h] [--formats] [--version] [-b] [-t] [-input= &#39;[filepath|input file]&#39;]
 
 optional arguments:
   -h, --help            show help message and exit
-  -formats              show supported formats
+  --formats             show supported formats
+  --version             show installed version
   -b, --bounding-box    extract spatial extent (bounding box)
   -t, --time-box        extract temporal extent
   -input= INPUT= [INPUT= ...]
@@ -189,8 +196,8 @@ Supported formats:
 </pre>
 </div>
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
- &#39;crs&#39;: 4326,
- &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
+ &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;],
+ &#39;crs&#39;: 4326}
 </pre></div>
 </div>
 </div>
@@ -225,8 +232,8 @@ Supported formats:
 </pre>
 </div>
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
- &#39;crs&#39;: 4326,
  &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;],
+ &#39;crs&#39;: 4326,
  &#39;bbox&#39;: [7.60168075561523,
   51.9488147720619,
   7.64725685119629,
@@ -266,6 +273,7 @@ Supported formats:
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../supportedformats/index_supportedformats.html">Supported file formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
 </ul>
 

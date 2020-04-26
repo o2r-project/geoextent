@@ -77,8 +77,8 @@ Documentation
 The documentation is based on Sphinx_.
 The source files can be found in the directory ``docs/`` and the rendered online documentation is at https://o2r.info/geoextent/.
 
-Build locally
-^^^^^^^^^^^^^
+Build documentation locally
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
@@ -88,19 +88,17 @@ Build locally
 
 Build documentation website
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The documentation website is built on Travis CI using ``travis-sphinx_``.
-See the ``travis-sphinx`` documentation and the file ``.travis.yml`` for details.
+
+The deployed documentation website is built on Travis CI, see file ``.travis.yml`` for details.
+In short, an extra stage ``build docs`` is executed only on the ``master`` branch and not for pull requests.
 
 .. _Sphinx: https://www.sphinx-doc.org
-.. _travis-sphinx: https://github.com/syntaf/travis-sphinx
 
 Release
 -------
 
 Prerequisites
 ^^^^^^^^^^^^^
-
-See the PyPI documentation on generating a distribution archive, https://packaging.python.org/tutorials/packaging-projects/, for details.
 
 Required tools:
 
@@ -112,7 +110,42 @@ Required tools:
 
     pip install --upgrade setuptools wheel twine
 
+Run tests
+^^^^^^^^^
+
+Make sure that all tests work locally by running
+
 ::
+
+    pytest
+
+before cotinueing with the following tasks.
+
+Bump version for release
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Follow the `Semantic Versioning specification`_ to clearly mark changes as a new major version, minor changes, or patches.
+The version number is centrally managed in the file ``geoextent/__init__.py``.
+
+.. _Semantic Versioning specification: https://semver.org/
+
+Update changelog
+^^^^^^^^^^^^^^^^
+
+Update the changelog in file ``docs/source/changelog.rst``, use the `sphinx-issues`_ syntax for referring to pull requests and contributors for changes where appropriate.
+
+.. _sphinx-issues: https://github.com/sloria/sphinx-issues
+
+Build distribution archive
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+See the PyPI documentation on generating a distribution archive, https://packaging.python.org/tutorials/packaging-projects/, for details.
+
+::
+
+    # remove previous releases and builds
+    rm dist/*
+    rm -rf build *.egg-info
 
     python3 setup.py sdist bdist_wheel
 
@@ -127,11 +160,26 @@ First upload to the test repository and check everything is in order.
     twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 Check if the information on https://test.pypi.org/project/geoextent/ is correct.
-Then switch to a new Python environment, install geoextent from TestPyPI and try out package:
+Then switch to a new Python environment or use a container to get an "empty" setup.
+Install geoextent from TestPyPI and ensure the package is functional:
 
 ::
 
+    docker run --rm -it -v $(pwd)/tests/testdata/:/testdata python:3-buster /bin/bash
+
+    # install system deps
+    apt-get update
+    apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev libspatialite-dev libgdal-dev gdal-bin netcdf-bin
+
+    # in the container, first install packages not on TestPyPI
+    pip install geojson pyproj gdal==`gdal-config --version`
+
     pip install -i https://test.pypi.org/simple/ geoextent
+    geoextent --help
+    geoextent --version
+
+    geoextent -b -t -input= /testdata/geojson/muenster_ring_zeit.geojson
+    geoextent -b -t -input= /testdata/shapefile/gis_osm_buildings_a_free_1.shp
 
 Upload to PyPI
 ^^^^^^^^^^^^^^
