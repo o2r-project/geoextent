@@ -12,6 +12,7 @@ setuptools.setup(
     description="A package to extract geospatial extent from files and directories",
     long_description=long_description,
     long_description_content_type="text/markdown",
+    license="MIT",
     url="https://github.com/o2r-project/geoextent",
     packages=setuptools.find_packages(),
     classifiers=[
@@ -24,6 +25,7 @@ setuptools.setup(
         'geojson>=2.4.1',
         'pygeoj',
         'pyshp',
+        'GDAL',
         'python-dateutil'
     ],
     entry_points={
