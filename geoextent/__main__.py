@@ -1,6 +1,7 @@
 import sys, os, datetime, argparse
 from .lib import helpfunctions as hf
 from .lib import extent
+from . import __version__ as current_version
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -48,7 +49,7 @@ def get_argparser():
         add_help=False,
         prog='geoextent',
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        usage= "geoextent [-h] [-formats] [-b] [-t] [-input= '[filepath|input file]']"
+        usage= "geoextent [-h] [--formats] [--version] [-b] [-t] [-input= '[filepath|input file]']"
     )
 
     parser.add_argument(
@@ -58,9 +59,15 @@ def get_argparser():
     )
     
     parser.add_argument(
-        '-formats',
+        '--formats',
         action='store_true',
         help='show supported formats'
+    )
+    
+    parser.add_argument(
+        '--version',
+        action='store_true',
+        help='show installed version'
     )
 
     parser.add_argument(
@@ -97,6 +104,8 @@ def print_examples():
 def print_supported_formats():
     print(supported_formats)
 
+def print_version():
+    print(current_version)
 
 argparser = get_argparser()
 
@@ -112,6 +121,8 @@ def main():
 
     if(args['help']):
         print_help_fun()
+    elif(args['version']):
+        print_version()
     elif(args['formats']):
         print_supported_formats()
     else:

@@ -176,6 +176,7 @@ Install geoextent from TestPyPI and ensure the package is functional:
 
     pip install -i https://test.pypi.org/simple/ geoextent
     geoextent --help
+    geoextent --version
 
     geoextent -b -t -input= /testdata/geojson/muenster_ring_zeit.geojson
     geoextent -b -t -input= /testdata/shapefile/gis_osm_buildings_a_free_1.shp

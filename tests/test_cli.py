@@ -65,7 +65,7 @@ def test_geojson_time_invalid(script_runner):
     assert 'Invalid time format' in ret.stderr, "stderr should not be empty"
 
 def test_print_supported_formats(script_runner):
-    ret = script_runner.run('geoextent', '-formats')
+    ret = script_runner.run('geoextent', '--formats')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "Supported formats:" in ret.stdout,  "list of supported formats is printed to console"
