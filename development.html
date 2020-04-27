@@ -164,13 +164,13 @@ The version number is centrally managed in the file <code class="docutils litera
 </pre></div>
 </div>
 <p>Check if the information on <a class="reference external" href="https://test.pypi.org/project/geoextent/">https://test.pypi.org/project/geoextent/</a> is correct.
-Then switch to a new Python environment or use a container to get an “empty” setup.
+Then switch to a new Python environment or use a Python 3 container to get an “empty” setup.
 Install geoextent from TestPyPI and ensure the package is functional:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run --rm -it -v $(pwd)/tests/testdata/:/testdata python:3-buster /bin/bash
 
 # install system deps
 apt-get update
-apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev libspatialite-dev libgdal-dev gdal-bin netcdf-bin
+apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev libspatialite-dev netcdf-bin
 
 # in the container, first install packages not on TestPyPI
 pip install geojson pyproj gdal==`gdal-config --version`
@@ -181,6 +181,19 @@ geoextent --version
 
 geoextent -b -t -input= /testdata/geojson/muenster_ring_zeit.geojson
 geoextent -b -t -input= /testdata/shapefile/gis_osm_buildings_a_free_1.shp
+</pre></div>
+</div>
+<p>Alternatively, use Debian Testing container to try out a more recent version of GDAL which matches the current release of the GDAL package on PyPI:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">--</span><span class="n">rm</span> <span class="o">-</span><span class="n">it</span> <span class="n">debian</span><span class="p">:</span><span class="n">testing</span>
+
+<span class="c1"># Python + PIP</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python3</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span> <span class="n">wget</span>
+
+<span class="c1"># System dependencies</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">gdal</span><span class="o">-</span><span class="nb">bin</span> <span class="n">libgdal</span><span class="o">-</span><span class="n">dev</span> <span class="n">libproj</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgeos</span><span class="o">-</span><span class="n">dev</span>
+
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">o2r</span><span class="o">-</span><span class="n">project</span><span class="o">/</span><span class="n">geoextent</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">tests</span><span class="o">/</span><span class="n">testdata</span><span class="o">/</span><span class="n">tif</span><span class="o">/</span><span class="n">wf_100m_klas</span><span class="o">.</span><span class="n">tif</span>
 </pre></div>
 </div>
 </div>
@@ -269,7 +282,7 @@ Go to GitHub and create a new release by using the “Draft a new release” but
       &copy;2020, o2r-project.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
