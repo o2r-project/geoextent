@@ -162,7 +162,7 @@ First upload to the test repository and check everything is in order.
     twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 Check if the information on https://test.pypi.org/project/geoextent/ is correct.
-Then switch to a new Python environment or use a container to get an "empty" setup.
+Then switch to a new Python environment or use a Python 3 container to get an "empty" setup.
 Install geoextent from TestPyPI and ensure the package is functional:
 
 ::
@@ -171,7 +171,7 @@ Install geoextent from TestPyPI and ensure the package is functional:
 
     # install system deps
     apt-get update
-    apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev libspatialite-dev libgdal-dev gdal-bin netcdf-bin
+    apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev libspatialite-dev netcdf-bin
 
     # in the container, first install packages not on TestPyPI
     pip install geojson pyproj gdal==`gdal-config --version`
@@ -182,6 +182,22 @@ Install geoextent from TestPyPI and ensure the package is functional:
 
     geoextent -b -t -input= /testdata/geojson/muenster_ring_zeit.geojson
     geoextent -b -t -input= /testdata/shapefile/gis_osm_buildings_a_free_1.shp
+
+Alternatively, use Debian Testing container to try out a more recent version of GDAL which matches the current release of the GDAL package on PyPI:
+
+::
+    
+    docker run --rm -it debian:testing
+    
+    # Python + PIP
+    apt-get update
+    apt-get install python3 python3-pip wget
+
+    # System dependencies
+    apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev
+
+    wget https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif
+
 
 Upload to PyPI
 ^^^^^^^^^^^^^^
