@@ -180,8 +180,8 @@ Install geoextent from TestPyPI and ensure the package is functional:
     geoextent --help
     geoextent --version
 
-    geoextent -b -t -input= /testdata/geojson/muenster_ring_zeit.geojson
-    geoextent -b -t -input= /testdata/shapefile/gis_osm_buildings_a_free_1.shp
+    geoextent -b -t /testdata/geojson/muenster_ring_zeit.geojson
+    geoextent -b -t /testdata/shapefile/gis_osm_buildings_a_free_1.shp
 
 Alternatively, use Debian Testing container to try out a more recent version of GDAL which matches the current release of the GDAL package on PyPI:
 
@@ -198,7 +198,7 @@ Alternatively, use Debian Testing container to try out a more recent version of 
 
     wget https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif
 
-    geoextent -b -input= 'muenster_ring_zeit.geojson' 
+    geoextent -b muenster_ring_zeit.geojson
     geoextent --version
     geoextent --help
 

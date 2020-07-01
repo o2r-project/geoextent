@@ -83,3 +83,8 @@ def test_not_found_file():
 def test_not_supported_file_format():
     result = geoextent.fromFile('tests/testdata/geojson/empty.geo', bbox=True) 
     assert result == None
+
+def test_bbox_and_tbox_both_false():
+    with pytest.raises(Exception) as excinfo:
+        geoextent.fromFile('tests/path_does_not_matter', bbox=False, tbox=False)
+    assert "No extraction options" in str(excinfo.value)

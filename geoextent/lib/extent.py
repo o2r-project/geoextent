@@ -53,8 +53,9 @@ def fromFile(filePath, bbox=True, tbox=True):
     logger.info("Extracting bbox={} tbox={} from file {}".format(bbox, tbox, filePath))
 
     if bbox == False and tbox == False:
-        raise Exception("Please enter correct arguments")
-    
+        logger.error("Require at least one of extraction options, but bbox is {} and tbox is {}".format(bbox, tbox))
+        raise Exception("No extraction options enabled!")
+
     fileFormat = os.path.splitext(filePath)[1][1:]
 
     usedModule = None
