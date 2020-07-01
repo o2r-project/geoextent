@@ -196,7 +196,7 @@ Alternatively, use Debian Testing container to try out a more recent version of 
     # System dependencies
     apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev
 
-    wget https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson
+    wget https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif
 
     geoextent -b -input= 'muenster_ring_zeit.geojson' 
     geoextent --version
