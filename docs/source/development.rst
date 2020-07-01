@@ -6,7 +6,9 @@ Notes for developers of ``geoextent``.
 Environment
 -----------
 
-All commands in this file assume you work in a virtual environment created with [``virtualenvwrapper``](https://virtualenvwrapper.readthedocs.io/en/latest/install.html) as follows (please keep up to date!):
+All commands in this file assume you work in a virtual environment created with virtualenvwrapper_ as follows (please keep up to date!):
+
+.. _virtualenvwrapper: https://virtualenvwrapper.readthedocs.io/en/latest/install.html
 
 ::
 
@@ -68,6 +70,8 @@ Either install the lib and run ``pytest``, or run ``python -m pytest``.
 You can also run individual files:
 
 ::
+
+    pytest
 
     pytest tests/test_api.py
 
