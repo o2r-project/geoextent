@@ -19,9 +19,9 @@ addons:
 before_install:
   - gdal-config --version
   # installation of gdal Python package, see https://stackoverflow.com/a/17311033
-  - export CPLUS_INCLUDE_PATH=/usr/include/gdal
-  - export C_INCLUDE_PATH=/usr/include/gdal
-  - pip install gdal==`gdal-config --version`
+  #- export CPLUS_INCLUDE_PATH=/usr/include/gdal
+  #- export C_INCLUDE_PATH=/usr/include/gdal
+  - pip install pygdal=="`gdal-config --version`.*"
 install:
   - pip install -r requirements.txt
   - pip install -e .

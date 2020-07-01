@@ -25,7 +25,7 @@ setuptools.setup(
         'geojson>=2.4.1',
         'pygeoj',
         'pyshp',
-        'GDAL',
+        'pygdal',
         'python-dateutil'
     ],
     entry_points={
