@@ -13,7 +13,7 @@ The following steps assume you are familiar with Python packages.
 
 We follow a _fork and pull_ development model. [Fork](https://help.github.com/en/articles/fork-a-repo), then clone the repo:
 
-```
+```bash
 git clone https://github.com/o2r-project/geoextent.git
 ```
 

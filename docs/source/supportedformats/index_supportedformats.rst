@@ -36,7 +36,7 @@ The file used in the example can be in the code repository: `muenster_ring_zeit.
 
 ::
 
-   geoextent -b -t -input= 'muenster_ring_zeit.geojson'
+   geoextent -b -t muenster_ring_zeit.geojson
 
 .. jupyter-execute::
    :hide-code:
@@ -70,7 +70,7 @@ The file used in the example can be obtained from `Zenodo Sandbox record 256820 
 
 ::
 
-   geoextent -b -t -input= 'cities_NL.csv'
+   geoextent -b -t cities_NL.csv
 
 .. jupyter-execute::
    :hide-code:
@@ -90,7 +90,7 @@ The file used in the example is available online: `wf_100m_klas.tif <https://git
 
 ::
 
-   geoextent -b -input= 'wf_100m_klas.tif'
+   geoextent -b wf_100m_klas.tif
 
 .. jupyter-execute::
    :hide-code:
@@ -110,7 +110,7 @@ The file used in the example can be found at Geofabrik: `shapefiles_toulouse.zip
 
 ::
 
-   geoextent 'gis_osm_buildings_a_07_1.shp'
+   geoextent -b gis_osm_buildings_a_07_1.shp
 
 .. jupyter-execute::
    :hide-code:

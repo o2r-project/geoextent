@@ -1,15 +1,15 @@
-[![Build Status](https://travis-ci.org/o2r-project/geoextent.svg?branch=master)](https://travis-ci.org/github/o2r-project/geoextent) [![PyPI version](https://badge.fury.io/py/geoextent.svg)](https://pypi.org/project/geoextent/0.1.0/) 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/o2r-project/geoextent/master)
-
 # geoextent
+
+[![Build Status](https://travis-ci.org/o2r-project/geoextent.svg?branch=master)](https://travis-ci.org/github/o2r-project/geoextent) [![PyPI version](https://badge.fury.io/py/geoextent.svg)](https://pypi.org/project/geoextent/0.1.0/)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/o2r-project/geoextent/master)
 
 Python library for extracting geospatial extent of files and directories with multiple data formats
 
-This project is developed as part of the [DFG-funded](https://o2r.info/about/#funding) research project Opening Reproducible Research (o2r, https://o2r.info).
+This project is developed as part of the [DFG-funded](https://o2r.info/about/#funding) research project Opening Reproducible Research (o2r, [https://o2r.info](https://o2r.info)).
 
 ## Installation
 
-**System requirements**
+### System requirements
 
 Python: `3.x`
 
@@ -18,13 +18,17 @@ On Debian systems, the [UbuntuGIS](https://wiki.ubuntu.com/UbuntuGIS) project of
 
 See the `packages` list in `travis.yml` for a full list of dependencies on Linux.
 
-**Install from PyPI**
+### Install from PyPI
+
+You must install a suitable version of `pygdal` manually first, see [instructions](https://pypi.org/project/pygdal/) and [this related SO thread with different helpful answers](https://gis.stackexchange.com/questions/28966/python-gdal-package-missing-header-file-when-installing-via-pip/124420#124420).
+We use `pygdal` for better compatibility with virtual environments.
 
 ```bash
+# pip install pygdal=="`gdal-config --version`.*"
 pip install geoextent
 ```
 
-**Source installation**
+### Source installation
 
 ```bash
 git clone https://github.com/o2r-project/geoextent
@@ -33,10 +37,6 @@ pip install -r requirements.txt
 
 pip install -e .
 ```
-
-**System requirements**
-
-- see `travis.yml`
 
 ## Use
 

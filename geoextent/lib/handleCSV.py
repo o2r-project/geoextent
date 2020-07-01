@@ -5,16 +5,19 @@ from . import helpfunctions as hf
 
 fileType = "text/csv"
 
+logger = logging.getLogger("geoextent")
+
 def checkFileValidity(filePath):
     '''Checks whether it is valid CSV or not. \n
     input "path": type string, path to file which shall be extracted \n
     raise exception if not valid
     '''
-    logging.info("Checking validity of {} \n".format(filePath))
+    logger.info("Checking validity of {} \n".format(filePath))
     
     with open(filePath) as csv_file:
         daten = csv.reader(csv_file.readlines())
         if daten is None:
+            logger.error("File {} is invalid!".format(filePath))
             raise Exception("The file {} has no valid csv Attributes".format(filePath))
 
 

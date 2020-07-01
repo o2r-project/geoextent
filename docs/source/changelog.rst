@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.3.0
+^^^^^
+
+- Add debug option ``--debug`` and environment variable ``GEOEXTENT_DEBUG`` (:pr:`73`)
+- Remove need for ``-input=`` for passing input paths in CLI (:pr:`73`)
+- Switch to ``pygdal`` and update docs (:pr:`73`)
+
 0.2.0
 ^^^^^
 

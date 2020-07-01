@@ -10,12 +10,14 @@ from . import helpfunctions as hf
 
 fileType = "application/geojson"
 
+logger = logging.getLogger("geoextent")
+
 def extractContentFromPath(filePath):
     ''' method to extract geojson content from a file by using its filepath \n
     input "filepath": type string, path to file which shall be extracted \n
     returns geojson content of the filePath: type string,  returns  geojson content of filepath 
     '''
-    logging.info("Extracting content from path {} \n".format(filePath))
+    logger.info("Extracting content from path {} \n".format(filePath))
 
     with open(filePath, "rb") as gjson:
         gjsonContent = json.load(gjson)
@@ -26,7 +28,7 @@ def checkFileValidity(filePath):
     input "filepath": type string, path to file which shall be extracted \n
     output 'valid' if file is valid and not empty, 'empty' if file is empty, 'notvalid' if not valid
     '''
-    logging.info("Checking validity of {} \n".format(filePath))
+    logger.info("Checking validity of {} \n".format(filePath))
 
     try :
         gjson = open(filePath, "rb")
@@ -34,13 +36,15 @@ def checkFileValidity(filePath):
         if 'coordinates' in gjsonContent['features'][0]['geometry']:
             gjson.close()
         else:
+            logger.error("File {} is invalid!".format(filePath))
             raise Exception("GeoJSON file {} is not valid.".format(filePath))
     except ValueError as e:
+        logger.error("File {} is invalid!".format(filePath))
         raise Exception("GeoJSON file {} is not valid:\n{}".format(filePath, str(e)))
     except RuntimeError as e:
+        logger.error("File {} is invalid!".format(filePath))
         raise Exception("GeoJSON file cannot be opened:{}.".format(str(e)))
- 
-   
+
 def convert3dto2d(filePath):
     '''transforms 3d to 2d coordinates in a geojson file. \n
     input "filepath": type string, path to file which shall be extracted \n
@@ -63,7 +67,6 @@ def convert3dto2d(filePath):
             for element in content:
                 extractAfterKeyword(searchParam, element)
 
-
     def extractCoordinates(coordsList):
         ''' extract coordinates out of a some more lists (e.g. with Multipolygons), cuts the height from 3d coordinates \n
         input "coordsList": type list, value of dict entry with key "coordinates" \n
@@ -79,7 +82,6 @@ def convert3dto2d(filePath):
     #TODO:It works the same even when this line is Commented out
     extractAfterKeyword("coordinates", gjsonContent) 
     return gjsonContent
-
 
 def getBoundingBox (filePath):
     '''
@@ -105,7 +107,6 @@ def getBoundingBox (filePath):
     if not bbox:
         raise Exception("Bounding box could not be extracted")
     return bbox
-
 
 def getCRS(filePath):
     ''' extracts EPSG number of the taken coordinate reference system (short: crs), as standard the crs WGS84 is used. \n
@@ -152,7 +153,7 @@ def getCRS(filePath):
                     except:
                         pass
                 #formats like urn:ogc:def:crs:EPSG::25832
-                
+            
         return hf.WGS84_EPSG_ID
     except:
         gjsonContent = extractContentFromPath(filePath)
@@ -165,8 +166,6 @@ def getCRS(filePath):
             if type(extracted[0]) == dict and "properties" in extracted[0] and "code" in extracted[0]["properties"]:
                         crsCode = extracted[0]["properties"]["code"]
         return crsCode
-
-
 
 def getTemporalExtent (filePath):
     ''' extract time extent from json string \n

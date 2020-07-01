@@ -10,7 +10,6 @@ Basics
 .. autoprogram:: geoextent.__main__:argparser
    :prog: \
 
-
 Examples
 --------
 
@@ -31,7 +30,7 @@ Show help message
    :stderr:
 
    import geoextent.__main__ as geoextent
-   geoextent.print_help_fun()
+   geoextent.print_help()
 
 Extract bounding box from a single file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -41,7 +40,7 @@ Extract bounding box from a single file
 
 ::
 
-   geoextent -b -input= 'muenster_ring_zeit.geojson'
+   geoextent -b muenster_ring_zeit.geojson
 
 Output:
 
@@ -55,9 +54,12 @@ Output:
 Extract time interval from a single file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. note::
+   You can find the file used in the examples of this section from `muenster_ring_zeit <https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_. Furthermore, for displaying the rendering of the file contents, see `rendered blob <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_.
+
 ::
 
-   geoextent -t -input='file.geojson'
+   geoextent -t muenster_ring_zeit.geojson
 
 Output:
 
@@ -71,9 +73,12 @@ Output:
 Extract both bounding box and time interval from a single file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. note::
+   You can find the file used in the examples of this section from `muenster_ring_zeit <https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_. Furthermore, for displaying the rendering of the file contents, see `rendered blob <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_.
+
 ::
 
-   geoextent -b -t -input= 'file.geojson'
+   geoextent -b -t muenster_ring_zeit.geojson
 
 .. jupyter-execute::
    :hide-code:
@@ -81,3 +86,14 @@ Extract both bounding box and time interval from a single file
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, True)
+
+Debugging
+^^^^^^^^^
+
+You can enable detailed logs by passing the ``--debug`` option, or by setting the environment variable ``GEOEXTENT_DEBUG=1``.
+
+::
+
+   geoextent --debug -b -t muenster_ring_zeit.geojson
+
+   GEOEXTENT_DEBUG=1 geoextent -b -t muenster_ring_zeit.geojson

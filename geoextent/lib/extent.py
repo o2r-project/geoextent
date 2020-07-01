@@ -8,8 +8,7 @@ from . import handleShapefile
 from . import handleGeotiff
 from . import helpfunctions as hf
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("geoextent")
 
 modulesSupported = {'geojson':handleGeojson, 'json':handleGeojson,'csv':handleCSV,
     'shp':handleShapefile, 'dbf':handleShapefile, 'geotiff':handleGeotiff, 'tif':handleGeotiff}
@@ -51,11 +50,12 @@ def fromFile(filePath, bbox=True, tbox=True):
     returns None if the format is not supported, else returns the metadata of the file as a dict 
     (possible) keys of the dict: 'temporal_extent', 'bbox', 'vector_reps', 'crs'
     '''
-    logging.info("Extracting bbox={} tbox={} from file {}".format(bbox, tbox, filePath))
+    logger.info("Extracting bbox={} tbox={} from file {}".format(bbox, tbox, filePath))
 
     if bbox == False and tbox == False:
-        raise Exception("Please enter correct arguments")
-    
+        logger.error("Require at least one of extraction options, but bbox is {} and tbox is {}".format(bbox, tbox))
+        raise Exception("No extraction options enabled!")
+
     fileFormat = os.path.splitext(filePath)[1][1:]
 
     usedModule = None
@@ -66,7 +66,7 @@ def fromFile(filePath, bbox=True, tbox=True):
     # get the module that will be called (depending on the format of the file)
     for key in modulesSupported.keys():
         if key == fileFormat:
-            logging.info("Module used: {}".format(key))
+            logger.info("Module used: {}".format(key))
             usedModule = modulesSupported.get(key)
 
     # If file format is not supported
@@ -79,28 +79,30 @@ def fromFile(filePath, bbox=True, tbox=True):
         usedModule.checkFileValidity(filePath)
     except Exception as e:
         raise Exception(os.getcwd()+" The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
-        
+
     #get Bbox, Temporal Extent, Vector representation and crs parallel with threads
     class thread(threading.Thread): 
-        def __init__(self, thread_ID): 
+        def __init__(self, task): 
             threading.Thread.__init__(self) 
-            self.thread_ID = thread_ID
+            self.task = task
         def run(self):
             metadata["format"] = usedModule.fileType
 
-            if self.thread_ID == 100:
+            #with lock:
+            logger.debug("Starting  thread {} on file {}".format(self.task, filePath))
+            if self.task == "bbox":
                 try:
                     if bbox:
                         metadata["bbox"] = computeBboxInWGS84(usedModule, filePath)
                 except Exception as e:
-                    logger.warning("Warning for {} extracting bbox:\n{}".format(filePath, str(e)))
-            elif self.thread_ID == 101:
+                    logger.warning("Error for {} extracting bbox:\n{}".format(filePath, str(e)))
+            elif self.task == "tbox":
                 try:
                     if tbox:
                         metadata["tbox"] = usedModule.getTemporalExtent(filePath)
                 except Exception as e:
-                    logger.warning("Warning for {} extracting tbox:\n{}".format(filePath, str(e)))
-            elif self.thread_ID == 103:
+                    logger.warning("Error for {} extracting tbox:\n{}".format(filePath, str(e)))
+            elif self.task == "crs":
                 try:
                     # the CRS is not neccessarily required
                     if bbox and hasattr(usedModule, 'getCRS'):
@@ -108,26 +110,28 @@ def fromFile(filePath, bbox=True, tbox=True):
                     elif tbox and hasattr(usedModule, 'getCRS'):
                         metadata["crs"] = usedModule.getCRS(filePath)
                     else: 
-                        logger.warning("Warning: The CRS cannot be extracted from the file {}".format(filePath))
+                        logger.debug("The CRS cannot be extracted from the file {}".format(filePath))
                 except Exception as e:
-                    logger.warning("Warning for {} extracting CRS:\n{}".format(filePath, str(e)))
-            try:
-                barrier.wait()
-            except Exception as e:
-                logger.debug("Error waiting for barrier: %s", e)
-                barrier.abort()
+                    logger.warning("Error for {} extracting CRS:\n{}".format(filePath, str(e)))
+            else:
+                raise Exception("Unsupported thread task {}".format(self.task))
+        
+            logger.debug("Completed thread {} on file {}".format(self.task, filePath))
+            
+    thread_bbox_except = thread("bbox") 
+    thread_temp_except = thread("tbox") 
+    thread_crs_except = thread("crs")
 
-    thread_bbox_except = thread(100) 
-    thread_temp_except = thread(101) 
-    thread_crs_except = thread(103)
+    #lock = threading.Lock()
+    logger.debug("Starting 3 threads for extraction.")
     
-    barrier = threading.Barrier(4)
-    thread_bbox_except.start() 
-    thread_temp_except.start() 
+    thread_bbox_except.start()
+    thread_temp_except.start()
     thread_crs_except.start()
-    barrier.wait() 
-    barrier.reset() 
-    barrier.abort()
+
+    thread_bbox_except.join()
+    thread_temp_except.join() 
+    thread_crs_except.join()
 
     logger.debug("Extraction finished: {}".format(str(metadata)))
     return metadata

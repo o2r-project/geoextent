@@ -7,16 +7,19 @@ from . import helpfunctions as hf
 
 fileType = "application/shp"
 
+logger = logging.getLogger("geoextent")
+
 def checkFileValidity(filePath):
     '''Checks whether it is valid shapefile or not. \n
     input "path": type string, path to file which shall be extracted \n
     raise exception if not valid
     '''
-    logging.info("Checking validity of {} \n".format(filePath))
+    logger.info("Checking validity of {} \n".format(filePath))
     
     try:
         sf = shapefile.Reader(filePath)
     except Exception as e:
+        logger.error("File {} is invalid!".format(filePath))
         raise Exception("The Shapefile {} is not valid:\n{}".format(filePath, str(e)))
 
 

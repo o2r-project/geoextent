@@ -6,12 +6,14 @@ from . import helpfunctions as hf
 
 fileType = "image/tiff"
 
+logger = logging.getLogger("geoextent")
+
 def checkFileValidity(filePath):
     '''Checks whether it is valid geotiff or not.
     input filepath: type string, path to file which shall be extracted
     raise exception if not valid
     '''
-    logging.info("Checking validity of {} \n".format(filePath))
+    logger.info("Checking validity of {} \n".format(filePath))
 
     # Enable exceptions
     gdal.UseExceptions()
@@ -22,8 +24,8 @@ def checkFileValidity(filePath):
         width = gtiffContent.RasterXSize
         height = gtiffContent.RasterYSize
     except Exception as e:
+        logger.error("File {} is invalid!".format(filePath))
         raise Exception("The GeoTIFF file {} is not valid:\n{}".format(filePath, str(e)))
-
 
 def getBoundingBox(filePath):
     ''' extracts bounding box from geotiff \n
@@ -77,8 +79,6 @@ def getBoundingBox(filePath):
 
     return bbox
 
-
-
 def getCRS(filePath):
     ''' gets the coordinate reference systems from the geotiff file \n
     input "filepath": type string, file path to geotiff file \n
@@ -86,8 +86,6 @@ def getCRS(filePath):
     '''
 
     return '4326'
-
-
 
 def getTemporalExtent(filePath):
     ''' extracts temporal extent of the geotiff \n
