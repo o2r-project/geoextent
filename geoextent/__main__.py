@@ -72,7 +72,7 @@ def get_argparser():
 
     parser.add_argument(
         '--debug',
-        help='turn on debug logging',
+        help='turn on debug logging, alternatively set environment variable GEOEXTENT_DEBUG=1',
         action='store_true'
     )
 
@@ -139,8 +139,10 @@ def main():
 
     # Set logging level
     if(args['debug']):
-        logging.getLogger("geoextent").setLevel(logging.DEBUG)
-    
+        logging.getLogger('geoextent').setLevel(logging.DEBUG)
+    if(os.environ.get('GEOEXTENT_DEBUG', None) == "1"):
+        logging.getLogger('geoextent').setLevel(logging.DEBUG)
+
     # Check if file is exists happens in parser validation, see readable_file_or_dir
     try:
         if os.path.isfile(os.path.join(os.getcwd(), files)):

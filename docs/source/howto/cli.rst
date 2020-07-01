@@ -10,7 +10,6 @@ Basics
 .. autoprogram:: geoextent.__main__:argparser
    :prog: \
 
-
 Examples
 --------
 
@@ -87,3 +86,14 @@ Extract both bounding box and time interval from a single file
 
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, True)
+
+Debugging
+^^^^^^^^^
+
+You can enable detailed logs by passing the ``--debug`` option, or by setting the environment variable ``GEOEXTENT_DEBUG=1``.
+
+::
+
+   geoextent --debug -b -t muenster_ring_zeit.geojson
+
+   GEOEXTENT_DEBUG=1 geoextent -b -t muenster_ring_zeit.geojson

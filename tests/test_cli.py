@@ -46,6 +46,15 @@ def test_debug_output(script_runner):
     #assert "DEBUG:geoextent" in retd.stdout
     #assert "geoextent" not in retd.stdout
 
+# FIXME
+#def test_debug_config_envvar(script_runner):
+#    os.environ["GEOEXTENT_DEBUG"] = "1" # this is picked up by the library, BUT the stdout is empty still
+#    ret = script_runner.run('geoextent', '-b', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
+#    print(str(ret))
+#    assert ret.success, "process should return success"
+#    assert "DEBUG:geoextent" in ret.stdout
+#    os.environ["GEOEXTENT_DEBUG"] = None
+
 def test_geojson_invalid_second_input(script_runner):
     ret = script_runner.run('geoextent',
         'tests/testdata/geojson/muenster_ring_zeit.geojson',
