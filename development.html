@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Development &#8212; geoextent 0.2.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development &#8212; geoextent 0.3.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
@@ -40,7 +41,7 @@
 <p>Notes for developers of <code class="docutils literal notranslate"><span class="pre">geoextent</span></code>.</p>
 <div class="section" id="environment">
 <h2>Environment<a class="headerlink" href="#environment" title="Permalink to this headline">¶</a></h2>
-<p>All commands in this file assume you work in a virtual environment created with [<code class="docutils literal notranslate"><span class="pre">virtualenvwrapper</span></code>](<a class="reference external" href="https://virtualenvwrapper.readthedocs.io/en/latest/install.html">https://virtualenvwrapper.readthedocs.io/en/latest/install.html</a>) as follows (please keep up to date!):</p>
+<p>All commands in this file assume you work in a virtual environment created with <a class="reference external" href="https://virtualenvwrapper.readthedocs.io/en/latest/install.html">virtualenvwrapper</a> as follows (please keep up to date!):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install virtualenvwrapper</span>
 
 <span class="c1"># Add to .bashrc:</span>
@@ -92,7 +93,9 @@ CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal pip instal
 </div>
 <p>Either install the lib and run <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, or run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code>.
 You can also run individual files:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="n">tests</span><span class="o">/</span><span class="n">test_api</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span>
+
+<span class="n">pytest</span> <span class="n">tests</span><span class="o">/</span><span class="n">test_api</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
 </div>
@@ -179,8 +182,8 @@ pip install -i https://test.pypi.org/simple/ geoextent
 geoextent --help
 geoextent --version
 
-geoextent -b -t -input= /testdata/geojson/muenster_ring_zeit.geojson
-geoextent -b -t -input= /testdata/shapefile/gis_osm_buildings_a_free_1.shp
+geoextent -b -t /testdata/geojson/muenster_ring_zeit.geojson
+geoextent -b -t /testdata/shapefile/gis_osm_buildings_a_free_1.shp
 </pre></div>
 </div>
 <p>Alternatively, use Debian Testing container to try out a more recent version of GDAL which matches the current release of the GDAL package on PyPI:</p>
@@ -194,6 +197,10 @@ geoextent -b -t -input= /testdata/shapefile/gis_osm_buildings_a_free_1.shp
 <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">gdal</span><span class="o">-</span><span class="nb">bin</span> <span class="n">libgdal</span><span class="o">-</span><span class="n">dev</span> <span class="n">libproj</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgeos</span><span class="o">-</span><span class="n">dev</span>
 
 <span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">o2r</span><span class="o">-</span><span class="n">project</span><span class="o">/</span><span class="n">geoextent</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">tests</span><span class="o">/</span><span class="n">testdata</span><span class="o">/</span><span class="n">tif</span><span class="o">/</span><span class="n">wf_100m_klas</span><span class="o">.</span><span class="n">tif</span>
+
+<span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="n">muenster_ring_zeit</span><span class="o">.</span><span class="n">geojson</span>
+<span class="n">geoextent</span> <span class="o">--</span><span class="n">version</span>
+<span class="n">geoextent</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
 </div>
@@ -282,7 +289,7 @@ Go to GitHub and create a new release by using the “Draft a new release” but
       &copy;2020, o2r-project.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

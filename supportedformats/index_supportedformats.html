@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Supported file formats &#8212; geoextent 0.2.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supported file formats &#8212; geoextent 0.3.0 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
@@ -40,7 +41,8 @@
 <h1>Supported file formats<a class="headerlink" href="#supported-file-formats" title="Permalink to this headline">¶</a></h1>
 <p>The library supports the following file formats.
 Please see the <a class="reference external" href="https://github.com/o2r-project/geoextent/issues">project issues</a> for upcoming formats and feature requests.</p>
-<div class="docutils container">
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>
 Supported formats:
 - GeoJSON (.geojson)
@@ -51,7 +53,10 @@ Supported formats:
 </pre></div>
 </div>
 </div>
-<div class="docutils container">
+</div>
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
+</div>
 </div>
 <hr class="docutils" />
 <div class="section" id="examples">
@@ -59,10 +64,11 @@ Supported formats:
 <div class="section" id="geojson">
 <h3>GeoJSON<a class="headerlink" href="#geojson" title="Permalink to this headline">¶</a></h3>
 <p>The file used in the example can be in the code repository: <a class="reference external" href="https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson">muenster_ring_zeit.geojson</a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">t</span> <span class="o">-</span><span class="nb">input</span><span class="o">=</span> <span class="s1">&#39;muenster_ring_zeit.geojson&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">t</span> <span class="n">muenster_ring_zeit</span><span class="o">.</span><span class="n">geojson</span>
 </pre></div>
 </div>
-<div class="docutils container">
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
  &#39;bbox&#39;: [7.60168075561523,
   51.9488147720619,
@@ -71,6 +77,7 @@ Supported formats:
  &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;],
  &#39;crs&#39;: 4326}
 </pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -91,25 +98,28 @@ Supported column names (in any combination) are as follows:</p>
 - <code class="docutils literal notranslate"><span class="pre">x</span></code></p></li>
 </ul>
 <p>The file used in the example can be obtained from <a class="reference external" href="https://sandbox.zenodo.org/record/256820#.XeGcJJko85k">Zenodo Sandbox record 256820</a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">t</span> <span class="o">-</span><span class="nb">input</span><span class="o">=</span> <span class="s1">&#39;cities_NL.csv&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">t</span> <span class="n">cities_NL</span><span class="o">.</span><span class="n">csv</span>
 </pre></div>
 </div>
-<div class="docutils container">
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;text/csv&#39;,
- &#39;tbox&#39;: [&#39;30.09.2018&#39;, &#39;30.09.2018&#39;],
  &#39;crs&#39;: &#39;4326&#39;,
- &#39;bbox&#39;: [4.3175, 51.434444, 6.574722, 53.217222]}
+ &#39;bbox&#39;: [4.3175, 51.434444, 6.574722, 53.217222],
+ &#39;tbox&#39;: [&#39;30.09.2018&#39;, &#39;30.09.2018&#39;]}
 </pre></div>
+</div>
 </div>
 </div>
 </div>
 <div class="section" id="geotiff">
 <h3>GeoTIFF<a class="headerlink" href="#geotiff" title="Permalink to this headline">¶</a></h3>
 <p>The file used in the example is available online: <a class="reference external" href="https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif">wf_100m_klas.tif</a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="nb">input</span><span class="o">=</span> <span class="s1">&#39;wf_100m_klas.tif&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="n">wf_100m_klas</span><span class="o">.</span><span class="n">tif</span>
 </pre></div>
 </div>
-<div class="docutils container">
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;image/tiff&#39;,
  &#39;crs&#39;: &#39;4326&#39;,
  &#39;bbox&#39;: [5.91530075648462,
@@ -120,20 +130,25 @@ Supported column names (in any combination) are as follows:</p>
 </div>
 </div>
 </div>
+</div>
 <div class="section" id="shapefile">
 <h3>Shapefile<a class="headerlink" href="#shapefile" title="Permalink to this headline">¶</a></h3>
 <p>The file used in the example can be found at Geofabrik: <a class="reference external" href="https://www.geofabrik.de/data/shapefiles_toulouse.zip">shapefiles_toulouse.zip</a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="s1">&#39;gis_osm_buildings_a_07_1.shp&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="n">gis_osm_buildings_a_07_1</span><span class="o">.</span><span class="n">shp</span>
 </pre></div>
 </div>
-<div class="docutils container">
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
  &#39;bbox&#39;: [1.24951, 43.4682, 1.695996, 43.74498],
  &#39;crs&#39;: &#39;None&#39;}
 </pre></div>
 </div>
 </div>
-<div class="docutils container">
+</div>
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
+</div>
 </div>
 </div>
 </div>
@@ -205,7 +220,7 @@ Supported column names (in any combination) are as follows:</p>
       &copy;2020, o2r-project.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
