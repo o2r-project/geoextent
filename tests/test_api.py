@@ -39,9 +39,9 @@ def test_gml_extract_bbox():
 
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_folder_multiple_files():
-    assert [7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454] in geoextent.fromFile('tests/testdata//folder/', bbox=True)
-    assert [6.574722, 51.434444, 4.3175, 53.217222] in geoextent.fromFile('tests/testdata//folder', bbox=True)
-    assert [292063.81225905, 5618144.09259115, 302531.3161606, 5631223.82854667] in geoextent.fromFile('tests/testdata//folder', bbox=True)
+    assert [7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454] in geoextent.fromFile('tests/testdata/folder/', bbox=True)
+    assert [6.574722, 51.434444, 4.3175, 53.217222] in geoextent.fromFile('tests/testdata/folder', bbox=True)
+    assert [292063.81225905, 5618144.09259115, 302531.3161606, 5631223.82854667] in geoextent.fromFile('tests/testdata/folder', bbox=True)
 
 
 @pytest.mark.skip(reason="file format not implemented yet")
