@@ -1,5 +1,6 @@
 import os           # used to get the location of the testdata
 import pytest
+from osgeo import gdal
 
 def test_helptext_direct(script_runner):
     ret = script_runner.run('geoextent', '--help')
@@ -29,7 +30,7 @@ def test_error_no_option(script_runner):
 
 def test_debug_output(script_runner):
     ret = script_runner.run('geoextent',
-        '-b', '-input=', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
+        '-b', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
     assert ret.success, "process should return success"
     assert "DEBUG:geoextent" not in ret.stderr
     assert "INFO:geoextent" not in ret.stderr
@@ -40,7 +41,7 @@ def test_debug_output(script_runner):
     #retd = script_runner.run('geoextent',
     #    '--debug',
     #    '-b',
-    #    '-input=', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
+    #    'tests/testdata/geojson/muenster_ring_zeit.geojson')
     #assert retd.success, "process should return success"
     #assert "DEBUG:geoextent" in retd.stdout
     #assert "geoextent" not in retd.stdout
