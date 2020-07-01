@@ -8,8 +8,7 @@ from . import handleShapefile
 from . import handleGeotiff
 from . import helpfunctions as hf
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("geoextent")
 
 modulesSupported = {'geojson':handleGeojson, 'json':handleGeojson,'csv':handleCSV,
     'shp':handleShapefile, 'dbf':handleShapefile, 'geotiff':handleGeotiff, 'tif':handleGeotiff}
@@ -51,7 +50,7 @@ def fromFile(filePath, bbox=True, tbox=True):
     returns None if the format is not supported, else returns the metadata of the file as a dict 
     (possible) keys of the dict: 'temporal_extent', 'bbox', 'vector_reps', 'crs'
     '''
-    logging.info("Extracting bbox={} tbox={} from file {}".format(bbox, tbox, filePath))
+    logger.info("Extracting bbox={} tbox={} from file {}".format(bbox, tbox, filePath))
 
     if bbox == False and tbox == False:
         raise Exception("Please enter correct arguments")
@@ -66,7 +65,7 @@ def fromFile(filePath, bbox=True, tbox=True):
     # get the module that will be called (depending on the format of the file)
     for key in modulesSupported.keys():
         if key == fileFormat:
-            logging.info("Module used: {}".format(key))
+            logger.info("Module used: {}".format(key))
             usedModule = modulesSupported.get(key)
 
     # If file format is not supported

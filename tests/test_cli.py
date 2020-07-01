@@ -21,9 +21,27 @@ def test_error_no_file(script_runner):
     assert 'doesntexist' in ret.stderr, "wrong input is printed to console"
     assert ret.stdout == ''
 
+def test_debug_output(script_runner):
+    ret = script_runner.run('geoextent',
+        '-b', '-input=', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
+    assert ret.success, "process should return success"
+    assert "DEBUG:geoextent" not in ret.stderr
+    assert "INFO:geoextent" not in ret.stderr
+    assert "DEBUG:geoextent" not in ret.stdout
+    assert "INFO:geoextent" not in ret.stdout
+
+    # FIXME
+    #retd = script_runner.run('geoextent',
+    #    '--debug',
+    #    '-b',
+    #    '-input=', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
+    #assert retd.success, "process should return success"
+    #assert "DEBUG:geoextent" in retd.stdout
+    #assert "geoextent" not in retd.stdout
+
 def test_geojson_invalid_second_input(script_runner):
     ret = script_runner.run('geoextent', 
-    '-input=', 'tests/testdata//geojson/muenster_ring_zeit.geojson', 'tests/testdata//geojson/not_existing.geojson')
+    '-input=', 'tests/testdata/geojson/muenster_ring_zeit.geojson', 'tests/testdata/geojson/not_existing.geojson')
     assert not ret.success, "process should return failue"
     assert ret.stderr != '', "stderr should not be empty"
     assert 'not a valid directory or file' in ret.stderr, "wrong input is printed to console"

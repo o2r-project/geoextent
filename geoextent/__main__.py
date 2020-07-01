@@ -4,8 +4,8 @@ from .lib import extent
 from . import __version__ as current_version
 import logging
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger("geoextent")
 
 help_description = '''
 geoextent is a Python library for extracting geospatial and temporal extents of a file or a directory of multiple geospatial data formats.
@@ -71,6 +71,12 @@ def get_argparser():
     )
 
     parser.add_argument(
+        '--debug',
+        help='turn on debug logging',
+        action='store_true'
+    )
+
+    parser.add_argument(
         '-b', '--bounding-box',
         action='store_true',
         help='extract spatial extent (bounding box)'
@@ -126,6 +132,10 @@ def main():
     elif(args['formats']):
         print_supported_formats()
     else:
+        # Set logging level
+        if(args['debug']):
+            logging.getLogger("geoextent").setLevel(logging.DEBUG)
+        
         # Check if file is exists happens in parser validation, see readable_file_or_dir
         if os.path.isfile(os.path.join(os.getcwd(), args['input='])):
             output = extent.fromFile(args['input='], bbox = args['bounding_box'], tbox = args['time_box'])
