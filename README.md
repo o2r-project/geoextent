@@ -1,7 +1,7 @@
 # geoextent
 
 [![Build Status](https://travis-ci.org/o2r-project/geoextent.svg?branch=master)](https://travis-ci.org/github/o2r-project/geoextent) [![PyPI version](https://badge.fury.io/py/geoextent.svg)](https://pypi.org/project/geoextent/0.1.0/)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/o2r-project/geoextent/master)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/o2r-project/geoextent/master) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3925694.svg)](https://doi.org/10.5281/zenodo.3925694)
 
 Python library for extracting geospatial extent of files and directories with multiple data formats
 
@@ -63,6 +63,12 @@ Please note that this project is released with a [Contributor Code of Conduct](h
 By participating in this project you agree to abide by its terms.
 
 See [CONTRIBUTING.md](https://github.com/o2r-project/geoextent/blob/master/CONTRIBUTING.md) for details.
+
+## How to cite
+
+> 
+
+See also the `CITATION.cff` and `codemeta.json` files in this repository, which can possibly be imported in the reference manager of your choice.
 
 ## License
 
