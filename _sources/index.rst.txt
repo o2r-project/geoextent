@@ -1,8 +1,3 @@
-.. geoextent documentation master file, created by
-   sphinx-quickstart on Mon Nov  4 10:22:12 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to the geoextent documentation!
 =======================================
 
@@ -16,20 +11,22 @@ Documentation overview
 ----------------------
 
 .. toctree::
-   :maxdepth: 2
-   
-   install
-   howto/index_howto
-   supportedformats/index_supportedformats
-   changelog
-   development
+    :maxdepth: 2
+    
+    install
+    howto/index_howto
+    supportedformats/index_supportedformats
+    changelog
+    development
 
 ------
 
 How to cite
 -----------
 
-> Nüst, Daniel and Qamaz, Yousef. (2020, July 1). o2r-project/geoextent (Version v0.3.0). Zenodo. https://doi.org/10.5281/zenodo.3925693
+::
+
+    Nüst, Daniel and Qamaz, Yousef. (2020, July 1). o2r-project/geoextent (Version v0.3.0). Zenodo. https://doi.org/10.5281/zenodo.3925693
 
 ------
 
