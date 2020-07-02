@@ -142,6 +142,15 @@ Update the changelog in file ``docs/source/changelog.rst``, use the `sphinx-issu
 
 .. _sphinx-issues: https://github.com/sloria/sphinx-issues
 
+Update citation and authors information
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Make sure the following files have the current information (version, commit, contributors, dates, ...):
+
+- ``CITATION.cff``, see https://citation-file-format.github.io/
+- ``codemeta.json``, see https://codemeta.github.io/codemeta-generator/
+- ``README.md`` and ``docs/source/index.rst``, the "How to cite" sections.
+
 Build distribution archive
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -177,8 +186,8 @@ Install geoextent from TestPyPI and ensure the package is functional:
     apt-get update
     apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev libspatialite-dev netcdf-bin
 
-    # in the container, first install packages not on TestPyPI
-    pip install geojson pyproj gdal==`gdal-config --version`
+    # in the container, first install packages not on TestPyPI or where we need a specific version (you might have to manually identify the closest matching pygdal version
+    pip install geojson pyproj pygdal==`gdal-config --version`
 
     pip install -i https://test.pypi.org/simple/ geoextent
     geoextent --help
@@ -191,7 +200,7 @@ Alternatively, use Debian Testing container to try out a more recent version of 
 
 ::
     
-    docker run --rm -it debian:testing
+    docker run --rm -it -v $(pwd)/tests/testdata/:/testdata debian:testing
     
     # Python + PIP
     apt-get update
@@ -200,11 +209,15 @@ Alternatively, use Debian Testing container to try out a more recent version of 
     # System dependencies
     apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev
 
-    wget https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif
+    pip install geojson pyproj pygdal==`gdal-config --version`
 
-    geoextent -b muenster_ring_zeit.geojson
-    geoextent --version
+    pip install -i https://test.pypi.org/simple/ geoextent
     geoextent --help
+    geoextent --version
+
+    wget https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif
+    
+    geoextent -b wf_100m_klas.tif
 
 
 Upload to PyPI
@@ -218,8 +231,10 @@ Upload to PyPI
 Check if information on https://pypi.org/project/geoextent/ is all correct.
 Install the library from PyPI into a new environment, e.g., by reusing the container session from above, and check that everything works.
 
+
 Add tag
 ^^^^^^^
 
 Add a version tag to the commit of the release and push it to the main repository.
 Go to GitHub and create a new release by using the "Draft a new release" button and using the just pushed tag.
+Releases are automatically stored on Zenodo - double-check that the release is also available on Zenodo

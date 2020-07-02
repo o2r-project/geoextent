@@ -148,6 +148,15 @@ The version number is centrally managed in the file <code class="docutils litera
 <h3>Update changelog<a class="headerlink" href="#update-changelog" title="Permalink to this headline">¶</a></h3>
 <p>Update the changelog in file <code class="docutils literal notranslate"><span class="pre">docs/source/changelog.rst</span></code>, use the <a class="reference external" href="https://github.com/sloria/sphinx-issues">sphinx-issues</a> syntax for referring to pull requests and contributors for changes where appropriate.</p>
 </div>
+<div class="section" id="update-citation-and-authors-information">
+<h3>Update citation and authors information<a class="headerlink" href="#update-citation-and-authors-information" title="Permalink to this headline">¶</a></h3>
+<p>Make sure the following files have the current information (version, commit, contributors, dates, …):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CITATION.cff</span></code>, see <a class="reference external" href="https://citation-file-format.github.io/">https://citation-file-format.github.io/</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">codemeta.json</span></code>, see <a class="reference external" href="https://codemeta.github.io/codemeta-generator/">https://codemeta.github.io/codemeta-generator/</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">README.md</span></code> and <code class="docutils literal notranslate"><span class="pre">docs/source/index.rst</span></code>, the “How to cite” sections.</p></li>
+</ul>
+</div>
 <div class="section" id="build-distribution-archive">
 <h3>Build distribution archive<a class="headerlink" href="#build-distribution-archive" title="Permalink to this headline">¶</a></h3>
 <p>See the PyPI documentation on generating a distribution archive, <a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">https://packaging.python.org/tutorials/packaging-projects/</a>, for details.</p>
@@ -175,8 +184,8 @@ Install geoextent from TestPyPI and ensure the package is functional:</p>
 apt-get update
 apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev libspatialite-dev netcdf-bin
 
-# in the container, first install packages not on TestPyPI
-pip install geojson pyproj gdal==`gdal-config --version`
+# in the container, first install packages not on TestPyPI or where we need a specific version (you might have to manually identify the closest matching pygdal version
+pip install geojson pyproj pygdal==`gdal-config --version`
 
 pip install -i https://test.pypi.org/simple/ geoextent
 geoextent --help
@@ -187,20 +196,24 @@ geoextent -b -t /testdata/shapefile/gis_osm_buildings_a_free_1.shp
 </pre></div>
 </div>
 <p>Alternatively, use Debian Testing container to try out a more recent version of GDAL which matches the current release of the GDAL package on PyPI:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">--</span><span class="n">rm</span> <span class="o">-</span><span class="n">it</span> <span class="n">debian</span><span class="p">:</span><span class="n">testing</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run --rm -it -v $(pwd)/tests/testdata/:/testdata debian:testing
 
-<span class="c1"># Python + PIP</span>
-<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
-<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python3</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span> <span class="n">wget</span>
+# Python + PIP
+apt-get update
+apt-get install python3 python3-pip wget
 
-<span class="c1"># System dependencies</span>
-<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">gdal</span><span class="o">-</span><span class="nb">bin</span> <span class="n">libgdal</span><span class="o">-</span><span class="n">dev</span> <span class="n">libproj</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgeos</span><span class="o">-</span><span class="n">dev</span>
+# System dependencies
+apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev
 
-<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">o2r</span><span class="o">-</span><span class="n">project</span><span class="o">/</span><span class="n">geoextent</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">tests</span><span class="o">/</span><span class="n">testdata</span><span class="o">/</span><span class="n">tif</span><span class="o">/</span><span class="n">wf_100m_klas</span><span class="o">.</span><span class="n">tif</span>
+pip install geojson pyproj pygdal==`gdal-config --version`
 
-<span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="n">muenster_ring_zeit</span><span class="o">.</span><span class="n">geojson</span>
-<span class="n">geoextent</span> <span class="o">--</span><span class="n">version</span>
-<span class="n">geoextent</span> <span class="o">--</span><span class="n">help</span>
+pip install -i https://test.pypi.org/simple/ geoextent
+geoextent --help
+geoextent --version
+
+wget https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif
+
+geoextent -b wf_100m_klas.tif
 </pre></div>
 </div>
 </div>
@@ -215,7 +228,8 @@ Install the library from PyPI into a new environment, e.g., by reusing the conta
 <div class="section" id="add-tag">
 <h3>Add tag<a class="headerlink" href="#add-tag" title="Permalink to this headline">¶</a></h3>
 <p>Add a version tag to the commit of the release and push it to the main repository.
-Go to GitHub and create a new release by using the “Draft a new release” button and using the just pushed tag.</p>
+Go to GitHub and create a new release by using the “Draft a new release” button and using the just pushed tag.
+Releases are automatically stored on Zenodo - double-check that the release is also available on Zenodo</p>
 </div>
 </div>
 </div>
