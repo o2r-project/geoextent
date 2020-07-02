@@ -21,4 +21,4 @@ repository-artifact: https://pypi.org/project/geoextent/0.3.0/
 repository-code: https://github.com/o2r-project/geoextent/releases/tag/v0.3.0
 identifiers:
   - type: "swh"
-    value: "swh:1:rel:TODO"
+    value: "swh:1:rev:6aca93956d5cd6742318fd3ab27bb176b5f8c24b"
