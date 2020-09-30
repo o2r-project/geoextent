@@ -1,10 +1,12 @@
-import sys, os, threading
 import logging
+import os
+import threading
+import zipfile
 
 from . import handleCSV
 from . import handleGeojson
-from . import handleShapefile
 from . import handleGeotiff
+from . import handleShapefile
 from . import helpfunctions as hf
 
 logger = logging.getLogger("geoextent")
@@ -36,12 +38,71 @@ def computeBboxInWGS84(module, path):
         raise Exception("The bounding box could not be related to a CRS")
 
 
+def fromZipfile(path,bbox=False, tbox=False):
+
+    metadata_zip = {}
+    logger.info("Inspecting zipfile {}".format(zip_path))
+    hf.extract_zip(os.path.join(zip_path))
+    extract_folder = zip_path[:-4]
+    logger.info("Extract_folder zipfile {}".format(extract_folder))
+    metadata_directory = fromDirectory(extract_folder, bbox, tbox)
+    metadata_zip[str(zip_path)] = metadata_directory
+
+    return metadata_zip
+
+
 def fromDirectory(path, bbox=False, tbox=False):
     ''' TODO: implement
     '''
 
 
 def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
+
+    logger.info("Extracting bbox={} tbox={} from Directory {}".format(bbox, tbox, path))
+
+    if not bbox and not tbox:
+        logger.error("Require at least one of extraction options, but bbox is {} and tbox is {}".format(bbox, tbox))
+        raise Exception("No extraction options enabled!")
+    metadata = {}
+    # initialization of later output dict
+    metadata_directory = {}
+
+    isZip = zipfile.is_zipfile(path)
+
+    if isZip:
+        logger.info("Inspecting zipfile {}".format(path))
+        hf.extract_zip(path)
+        extract_folder = path[:-4]
+        logger.info("Extract_folder zipfile {}".format(extract_folder))
+        path = extract_folder
+
+    for filename in os.listdir(path):
+        logger.info("path {}, folder/zipfile {}".format(path,filename))
+        isZip = zipfile.is_zipfile(os.path.join(path, filename))
+        if isZip:
+            logger.info("**Inspecting folder {}, is zip ? {}**".format(filename, str(isZip)))
+            metadata_directory[filename] = fromDirectory(os.path.join(path,filename),bbox,tbox)
+        else:
+            logger.info("Inspecting folder {}, is zip ? {}".format(filename, str(isZip)))
+            if os.path.isdir(os.path.join(path,filename)):
+                metadata_directory[filename] = fromDirectory(os.path.join(path, filename), bbox, tbox)
+            else:
+                metadata_file = fromFile(os.path.join(path, filename), bbox, tbox)
+                metadata_directory[str(filename)] = metadata_file
+
+    if bbox:
+        bbox_ext = hf.bbox_merge(metadata_directory)
+        metadata['bbox'] = bbox_ext
+
+    if tbox:
+        tbox_ext = hf.tbox_merge(metadata_directory)
+        metadata['tbox'] = tbox_ext
+
+    metadata['details'] = metadata_directory
+
+    return metadata
+
+def fromFile(filePath, bbox=True, tbox=True):
     ''' TODO: update these docs
     
     function is called when filePath is included in commandline (with tag 'b')
@@ -74,6 +135,7 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     # If file format is not supported
     if not usedModule:
         logger.info("Did not find a compatible module for file format {} of file {}".format(fileFormat, filePath))
+
         return None
 
     # Only extract metadata if the file content is valid
@@ -89,9 +151,11 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
             self.task = task
 
         def run(self):
+
             metadata["format"] = usedModule.fileType
 
             # with lock:
+
             logger.debug("Starting  thread {} on file {}".format(self.task, filePath))
             if self.task == "bbox":
                 try:

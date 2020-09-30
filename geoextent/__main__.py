@@ -1,4 +1,6 @@
 import sys, os, datetime, argparse
+import zipfile
+
 from .lib import helpfunctions as hf
 from .lib import extent
 from . import __version__ as current_version
@@ -35,7 +37,7 @@ Supported formats:
 class readable_file_or_dir(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         for candidate in values:
-            if not (os.path.isdir(candidate) or os.path.isfile(candidate)):
+            if not (os.path.isdir(candidate) or os.path.isfile(candidate) or zipfile.is_zipfile(candidate)):
                 raise argparse.ArgumentTypeError("{0} is not a valid directory or file".format(candidate))
             if os.access(candidate, os.R_OK):
                 setattr(namespace,self.dest,candidate)
@@ -145,10 +147,12 @@ def main():
 
     # Check if file is exists happens in parser validation, see readable_file_or_dir
     try:
-        if os.path.isfile(os.path.join(os.getcwd(), files)):
+        if os.path.isfile(os.path.join(os.getcwd(), files)) and not zipfile.is_zipfile(os.path.join(os.getcwd(),files)):
             output = extent.fromFile(files, bbox = args['bounding_box'], tbox = args['time_box'])
-        if os.path.isdir(os.path.join(os.getcwd(), files)):
+        if os.path.isdir(os.path.join(os.getcwd(), files)) or zipfile.is_zipfile(os.path.join(os.getcwd(),files)):
             output = extent.fromDirectory(files, bbox = args['bounding_box'], tbox = args['time_box'])
+
+
     except Exception as e:
         if(logger.getEffectiveLevel() >= logging.DEBUG):
             logger.exception(e)
@@ -158,6 +162,7 @@ def main():
         raise Exception("Did not find supported files at {}".format(files))
 
     # print output
+
     if type(output) == list or type(output) == dict:
         print(str(output))
     else: 

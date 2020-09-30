@@ -1,4 +1,6 @@
 import sys, os, platform, datetime, math, random
+import zipfile, re
+
 import getopt
 import pandas as pd
 from pandas.core.tools.datetimes import _guess_datetime_format_for_array as time_format
@@ -8,7 +10,9 @@ from osgeo import osr
 import logging
 from pyproj import Proj, transform
 import csv
+
 PREFERRED_SAMPLE_SIZE = 30
+
 WGS84_EPSG_ID = 4326
 logger = logging.getLogger("geoextent")
 
@@ -38,7 +42,6 @@ def searchForParameters(elements, paramArray):
         for row in elements[0]:
             if x in row.lower():
                 return getAllRowElements(x, elements)
-
 
 def transformingIntoWGS84(crs, coordinate):
     '''
@@ -155,3 +158,93 @@ def date_parser(datetime_list, num_sample = None):
         parse_time = None
 
     return parse_time
+
+def extract_zip(zippedFile):
+    '''
+    Function purpose: unzip file (always inside a new folder)
+    Input: filepath
+    '''
+
+    abs_path = os.path.abspath(zippedFile)
+    root_folder = os.path.split(abs_path)[0]
+    zip_name = os.path.split(abs_path)[1][:-4]
+    zip_folder_path = os.path.join(root_folder, zip_name)
+
+    #print("****************")
+    #print("Abs: ", abs_path)
+    #print("root_folder: ", root_folder)
+    #print("zip_name: ", zip_name)
+    #print("zip_folder_path: ", zip_folder_path)
+    #print("****************")
+
+    with zipfile.ZipFile(abs_path) as zipf:
+        zipf.extractall(zip_folder_path)
+    #os.remove(abs_path)
+
+    for root, dirs, files in os.walk(zip_folder_path):
+        for filename in files:
+            if re.search(r'\.zip$', filename):
+                #print("*root:", root)
+                #print("*filename:", filename)
+                abs_path_file = os.path.join(root, filename)
+                #print("*abs_path_file:", abs_path_file)
+                extract_zip(abs_path_file)
+
+
+def bbox_merge(metadata):
+    boxes = []
+    spatial_extent = {}
+    for x, y in metadata.items():
+        if isinstance(y, dict):
+            try:
+                boxes.append(y['bbox'])
+            except:
+                print('An exception flew by!')
+
+    if len(boxes) == 0:
+        spatial_extent = None
+        metadata = None
+    elif len(boxes) > 0:
+        multipolygon = ogr.Geometry(ogr.wkbMultiPolygon)
+        des_srs = ogr.osr.SpatialReference()
+        des_srs.ImportFromEPSG(4326)
+        multipolygon.AssignSpatialReference(des_srs)
+
+        for bbox in boxes:
+            box = ogr.Geometry(ogr.wkbLinearRing)
+            box.AddPoint(bbox[0], bbox[1])
+            box.AddPoint(bbox[2], bbox[1])
+            box.AddPoint(bbox[2], bbox[3])
+            box.AddPoint(bbox[0], bbox[3])
+            box.AddPoint(bbox[0], bbox[1])
+
+            polygon = ogr.Geometry(ogr.wkbPolygon)
+            polygon.AddGeometry(box)
+
+            multipolygon.AddGeometry(polygon)
+
+        env = multipolygon.GetEnvelope()
+        spatial_extent = [env[0], env[2], env[1], env[3]]
+        metadata = spatial_extent
+
+    return metadata
+
+def tbox_merge(metadata):
+    boxes = []
+    for x, y in metadata.items():
+        if isinstance(y, dict):
+            try:
+                boxes.append(datetime.strptime(y['tbox'][0], '%d.%m.%Y'))
+                boxes.append(datetime.strptime(y['tbox'][1], '%d.%m.%Y'))
+            except:
+                print('An exception flew by!')
+    if len(boxes) == 0:
+        time_ext = None
+
+    elif len(boxes) >= 1:
+        min_date = min(boxes).strftime('%d.%m.%Y')
+        max_date = max(boxes).strftime('%d.%m.%Y')
+        time_ext = [min_date, max_date]
+
+    return time_ext
+
