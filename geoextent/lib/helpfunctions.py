@@ -1,13 +1,17 @@
-
-import sys, os, platform, datetime, math 
+import sys, os, platform, datetime, math
 import getopt
+from parser import ParserError
+import pandas as pd
+from pandas.core.tools.datetimes import _guess_datetime_format_for_array as time_format
+import numpy as np
+import dateutil
 from osgeo import ogr
 from osgeo import osr
 from pyproj import Proj, transform
 import csv
+import dateutil.parser
 
 WGS84_EPSG_ID = 4326
-
 
 def getAllRowElements(rowname,elements):
     '''
@@ -50,12 +54,12 @@ def transformingIntoWGS84 (crs, coordinate):
     target.ImportFromEPSG(4326)
 
     transform = osr.CoordinateTransformation(source, target)
-        
+
     point = ogr.Geometry(ogr.wkbPoint)
     point.AddPoint(float(coordinate[0]), float(coordinate[1]))
     point = point.ExportToWkt()
     point = ogr.CreateGeometryFromWkt(point)
-  
+
     point.Transform(transform)
     return [point.GetX(), point.GetY()]
 
@@ -89,7 +93,37 @@ def validate(date_text):
 
 
 def getDelimiter(csv_file):
-    dialect = csv.Sniffer().sniff(csv_file.readline(1024)) 
+    dialect = csv.Sniffer().sniff(csv_file.readline(1024))
     # To reset back position to beginning of the file
     csv_file.seek(0)
     return csv.reader(csv_file.readlines(), delimiter=dialect.delimiter)
+
+def date_parser_iso8601(list):
+    '''
+    Function purpose: help-function to transform tbox from extracted time format into ISO8601
+    Input: list (tbox) \n
+    Output: array values
+    '''
+
+    time_1, time_2 = None, None
+    time_form = [time_format(np.array([list[0]])), time_format(np.array([list[1]]))]
+
+    if time_form[0] == time_form[1]:
+        time_1 = pd.to_datetime(list[0], format=time_form[0])
+        time_2 = pd.to_datetime(list[1], format=time_form[0])
+
+    else:
+        for i in time_form:
+            try:
+                time_1 = pd.to_datetime(list[0], format=i)
+                time_2 = pd.to_datetime(list[1], format=i)
+            except:
+                pass
+
+    if time_1 is not None and time_2 is not None:
+        time_1 = time_1.strftime('%Y-%m-%d')
+        time_2 = time_2.strftime('%Y-%m-%d')
+
+    bbox_iso8601 = [time_1, time_2]
+
+    return bbox_iso8601

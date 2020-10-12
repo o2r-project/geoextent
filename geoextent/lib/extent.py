@@ -99,7 +99,8 @@ def fromFile(filePath, bbox=True, tbox=True):
             elif self.task == "tbox":
                 try:
                     if tbox:
-                        metadata["tbox"] = usedModule.getTemporalExtent(filePath)
+                        extract_tbox = usedModule.getTemporalExtent(filePath)
+                        metadata["tbox"] = hf.date_parser_iso8601(extract_tbox)
                 except Exception as e:
                     logger.warning("Error for {} extracting tbox:\n{}".format(filePath, str(e)))
             elif self.task == "crs":
