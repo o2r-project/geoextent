@@ -10,11 +10,11 @@ from osgeo import osr
 import logging
 from pyproj import Proj, transform
 import csv
-
 PREFERRED_SAMPLE_SIZE = 30
 
 WGS84_EPSG_ID = 4326
 logger = logging.getLogger("geoextent")
+
 
 def getAllRowElements(rowname, elements):
     '''
@@ -199,7 +199,7 @@ def bbox_merge(metadata):
             try:
                 boxes.append(y['bbox'])
             except:
-                print('An exception flew by!')
+                pass
 
     if len(boxes) == 0:
         spatial_extent = None
@@ -231,19 +231,32 @@ def bbox_merge(metadata):
 
 def tbox_merge(metadata):
     boxes = []
+    time_ext = []
     for x, y in metadata.items():
         if isinstance(y, dict):
             try:
-                boxes.append(datetime.strptime(y['tbox'][0], '%d.%m.%Y'))
-                boxes.append(datetime.strptime(y['tbox'][1], '%d.%m.%Y'))
+                boxes.append(y['tbox'][0])
+                boxes.append(y['tbox'][1])
             except:
-                print('An exception flew by!')
+                pass
+
     if len(boxes) == 0:
         time_ext = None
 
     elif len(boxes) >= 1:
-        min_date = min(boxes).strftime('%d.%m.%Y')
-        max_date = max(boxes).strftime('%d.%m.%Y')
+        for i in range(0, len(boxes)):
+            if not validate(boxes[i]):
+                try:
+                    date_iso8601 = dateutil.parser.parse(boxes[i])
+                except ParserError:
+                    date_iso8601 = None
+
+                boxes[i] = date_iso8601
+            else:
+                boxes[i] = datetime.datetime.strptime(boxes[i], '%Y-%m-%d')
+
+        min_date = min(boxes).strftime('%Y-%m-%d')
+        max_date = max(boxes).strftime('%Y-%m-%d')
         time_ext = [min_date, max_date]
 
     return time_ext

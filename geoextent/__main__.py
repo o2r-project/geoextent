@@ -163,7 +163,10 @@ def main():
 
     # print output
 
-    if type(output) == list or type(output) == dict:
+    if type(output) == list:
+        print(str(output))
+    elif type(output) == dict:
+        output.pop('details', None)
         print(str(output))
     else: 
         print(output)
