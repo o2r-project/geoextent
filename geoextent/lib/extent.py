@@ -6,7 +6,6 @@ from . import handleGeojson
 from . import handleShapefile
 from . import handleGeotiff
 from . import helpfunctions as hf
-from py._log import warning
 
 logger = logging.getLogger("geoextent")
 
@@ -71,7 +70,6 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
         if key == fileFormat:
             logger.info("Module used: {}".format(key))
             usedModule = modulesSupported.get(key)
-            print(usedModule)
 
     # If file format is not supported
     if not usedModule:
