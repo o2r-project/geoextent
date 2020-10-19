@@ -7,10 +7,7 @@ from osgeo import ogr
 from osgeo import osr
 from pyproj import Proj, transform
 import csv
-import logging
 
-
-logger = logging.getLogger("geoextent")
 WGS84_EPSG_ID = 4326
 
 
@@ -102,10 +99,11 @@ def getDelimiter(csv_file):
 
 def get_time_format(time_list):
     '''
-    Function purpose: 'Guess' time format of a list of 'strings'
+    Function purpose: 'Guess' time format of a list of 'strings' by taking a representative sample
     Input: list of strings \n
     Output: time format in string format (e.g '%Y.%M.d')
     '''
+
     date_time_format = None
     num_sample = 30
 

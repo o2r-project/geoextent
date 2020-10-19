@@ -1,6 +1,4 @@
 import csv
-import os
-import pandas as pd
 import logging
 from . import helpfunctions as hf
 
