@@ -100,12 +100,12 @@ def fromFile(filePath, bbox=True, tbox=True):
                 try:
                     if tbox:
                         extract_tbox = usedModule.getTemporalExtent(filePath)
-                        metadata["tbox"] = hf.date_parser_iso8601(extract_tbox)
+                        metadata["tbox"] = extract_tbox
                 except Exception as e:
-                    logger.warning("Error for {} extracting tbox:\n{}".format(filePath, str(e)))
+                    logger.warning("Error extracting tbox, time format not found \n {}:".format(str(e)))
             elif self.task == "crs":
                 try:
-                    # the CRS is not neccessarily required
+                    # the CRS is not necessarily required
                     if bbox and hasattr(usedModule, 'getCRS'):
                         metadata["crs"] = usedModule.getCRS(filePath)
                     elif tbox and hasattr(usedModule, 'getCRS'):

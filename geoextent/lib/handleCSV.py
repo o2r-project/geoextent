@@ -1,5 +1,6 @@
 import csv
 import os
+import pandas as pd
 import logging
 from . import helpfunctions as hf
 
@@ -62,11 +63,10 @@ def getBoundingBox(filePath):
             raise Exception("Bounding box could not be extracted")
         return spatialExtent
 
-
 def getTemporalExtent(filePath):
     ''' extract time extent from csv string \n
     input "filePath": type string, file path to csv File \n
-    returns temporal extent of the file: type list, length = 2, both entries have the type dateTime, temporalExtent[0] <= temporalExtent[1]
+    returns temporal extent of the file: type list, length = 2, both entries have the type str, temporalExtent[0] <= temporalExtent[1]
     '''
     with open(filePath) as csv_file:
         # To get delimiter either comma or simecolon
@@ -75,17 +75,22 @@ def getTemporalExtent(filePath):
         elements = []
         for x in daten:
             elements.append(x)
-            
-        allspatialExtent= []
-        allspatialExtent=hf.searchForParameters(elements, ["timestamp", "datetime", "time", "date"])
-        if allspatialExtent is None:
+
+        allspatial_extent = hf.searchForParameters(elements, ["timestamp", "datetime", "time", "date"])
+        if allspatial_extent is None:
             raise Exception('The csv file from ' + filePath + ' has no TemporalExtent')
         else:
-            time=[]
-            time.append(min(allspatialExtent))
-            time.append(max(allspatialExtent))
-            return time
+            tbox = []
+            parsed_time = hf.date_parser(allspatial_extent)
 
+            if parsed_time is not None:
+                # Min and max into ISO8601 format ('%Y-%m-%d')
+                tbox.append(min(parsed_time).strftime('%Y-%m-%d'))
+                tbox.append(max(parsed_time).strftime('%Y-%m-%d'))
+            else:
+                raise Exception('The csv file from ' + filePath + ' has no recognizable TemporalExtent')
+                tbox = None
+            return tbox
 
 def getCRS(filePath):
     '''extracts coordinatesystem from csv File \n
