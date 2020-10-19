@@ -15,7 +15,7 @@ It takes raw data (in the form of a string, boolean, boolean) to output result b
 **Parameters:**   
    - ``input``: a string value of input file or path    
    - ``bbox``: a boolean value to extract spatial extent (bounding box)
-   - ``time``: a boolean value to extract temporal extent
+   - ``time``: a boolean value to extract temporal extent ( at "day" precision '%Y-%m-%d')
 
 Examples
 --------

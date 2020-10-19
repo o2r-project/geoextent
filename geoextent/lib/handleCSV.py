@@ -19,7 +19,6 @@ def checkFileValidity(filePath):
             logger.error("File {} is invalid!".format(filePath))
             raise Exception("The file {} has no valid csv Attributes".format(filePath))
 
-
 def getBoundingBox(filePath):
     '''
     Function purpose: extracts the spatial extent (bounding box) from a csv-file \n
@@ -61,11 +60,13 @@ def getBoundingBox(filePath):
             raise Exception("Bounding box could not be extracted")
         return spatialExtent
 
-def getTemporalExtent(filePath):
+def getTemporalExtent(filePath, num_sample):
     ''' extract time extent from csv string \n
     input "filePath": type string, file path to csv File \n
     returns temporal extent of the file: type list, length = 2, both entries have the type str, temporalExtent[0] <= temporalExtent[1]
     '''
+
+
     with open(filePath) as csv_file:
         # To get delimiter either comma or simecolon
         daten = hf.getDelimiter(csv_file)
@@ -79,7 +80,7 @@ def getTemporalExtent(filePath):
             raise Exception('The csv file from ' + filePath + ' has no TemporalExtent')
         else:
             tbox = []
-            parsed_time = hf.date_parser(allspatial_extent)
+            parsed_time = hf.date_parser(allspatial_extent, num_sample = num_sample)
 
             if parsed_time is not None:
                 # Min and max into ISO8601 format ('%Y-%m-%d')
@@ -87,7 +88,6 @@ def getTemporalExtent(filePath):
                 tbox.append(max(parsed_time).strftime('%Y-%m-%d'))
             else:
                 raise Exception('The csv file from ' + filePath + ' has no recognizable TemporalExtent')
-                tbox = None
             return tbox
 
 def getCRS(filePath):

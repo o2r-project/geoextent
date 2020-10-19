@@ -5,10 +5,12 @@ from pandas.core.tools.datetimes import _guess_datetime_format_for_array as time
 import numpy as np
 from osgeo import ogr
 from osgeo import osr
+import logging
 from pyproj import Proj, transform
 import csv
-
+PREFERRED_SAMPLE_SIZE = 30
 WGS84_EPSG_ID = 4326
+logger = logging.getLogger("geoextent")
 
 
 def getAllRowElements(rowname, elements):
@@ -97,26 +99,33 @@ def getDelimiter(csv_file):
     csv_file.seek(0)
     return csv.reader(csv_file.readlines(), delimiter=dialect.delimiter)
 
-def get_time_format(time_list):
+
+def get_time_format(time_list, num_sample):
     '''
     Function purpose: 'Guess' time format of a list of 'strings' by taking a representative sample
-    Input: list of strings \n
+    time_list:  list of strings \n
+    num_sample: size of the sample to determine time format \n
     Output: time format in string format (e.g '%Y.%M.d')
     '''
 
-    date_time_format = None
-    num_sample = 30
+    if num_sample is None:
+        num_sample = PREFERRED_SAMPLE_SIZE
+        logger.error("num_sample not provided, num_sample modified to SAMPLE_SIZE {}".format(PREFERRED_SAMPLE_SIZE))
+    elif(type(num_sample) is not int):
+        raise Exception('num_sample parameter  must be an integer')
+    elif(num_sample <= 0):
+        raise Exception('num_sample parameter: {} must be greater than 0'.format(num_sample))
 
-    if len(time_list) <= num_sample:
+    if len(time_list) < num_sample:
         time_sample = time_list
+        logger.error("num_sample is greater than the length of the list. num_sample modified to length of list {}".format(len(time_list)))
     else:
-        time_sample = random.sample(time_list, 30)
+        time_sample = random.sample(time_list, num_sample)
 
     format_list = []
 
     for i in range(0, len(time_sample)):
         format_list.append(time_format(np.array([time_sample[i]])))
-
     unique_formats = list(set(format_list))
 
     if unique_formats is not None:
@@ -132,14 +141,14 @@ def get_time_format(time_list):
     return date_time_format
 
 
-def date_parser(datetime_list):
+def date_parser(datetime_list, num_sample = None):
     '''
     Function purpose: transform list of strings into ISO8601 ('%Y-%m-%d')
-    Input: list (datetime_list) \n
+    datetime_list: list of date-times (strings) \n
     Output: list of DatetimeIndex
     '''
 
-    datetime_format = get_time_format(datetime_list)
+    datetime_format = get_time_format(datetime_list, num_sample)
 
     if datetime_format is not None:
         parse_time = pd.to_datetime(datetime_list, format=datetime_format, errors='coerce')
