@@ -38,25 +38,9 @@ def computeBboxInWGS84(module, path):
         raise Exception("The bounding box could not be related to a CRS")
 
 
-def fromZipfile(path,bbox=False, tbox=False):
-
-    metadata_zip = {}
-    logger.info("Inspecting zipfile {}".format(zip_path))
-    hf.extract_zip(os.path.join(zip_path))
-    extract_folder = zip_path[:-4]
-    logger.info("Extract_folder zipfile {}".format(extract_folder))
-    metadata_directory = fromDirectory(extract_folder, bbox, tbox)
-    metadata_zip[str(zip_path)] = metadata_directory
-
-    return metadata_zip
-
-
 def fromDirectory(path, bbox=False, tbox=False):
     ''' TODO: implement
     '''
-
-
-def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
 
     logger.info("Extracting bbox={} tbox={} from Directory {}".format(bbox, tbox, path))
 
@@ -102,7 +86,7 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
 
     return metadata
 
-def fromFile(filePath, bbox=True, tbox=True):
+def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     ''' TODO: update these docs
     
     function is called when filePath is included in commandline (with tag 'b')

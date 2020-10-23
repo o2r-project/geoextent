@@ -206,25 +206,8 @@ def extract_zip(zippedFile):
     zip_name = os.path.split(abs_path)[1][:-4]
     zip_folder_path = os.path.join(root_folder, zip_name)
 
-    #print("****************")
-    #print("Abs: ", abs_path)
-    #print("root_folder: ", root_folder)
-    #print("zip_name: ", zip_name)
-    #print("zip_folder_path: ", zip_folder_path)
-    #print("****************")
-
     with zipfile.ZipFile(abs_path) as zipf:
         zipf.extractall(zip_folder_path)
-    #os.remove(abs_path)
-
-    for root, dirs, files in os.walk(zip_folder_path):
-        for filename in files:
-            if re.search(r'\.zip$', filename):
-                #print("*root:", root)
-                #print("*filename:", filename)
-                abs_path_file = os.path.join(root, filename)
-                #print("*abs_path_file:", abs_path_file)
-                extract_zip(abs_path_file)
 
 
 def bbox_merge(metadata):
@@ -281,16 +264,7 @@ def tbox_merge(metadata):
 
     elif len(boxes) >= 1:
         for i in range(0, len(boxes)):
-            if not validate(boxes[i]):
-                try:
-                    date_iso8601 = dateutil.parser.parse(boxes[i])
-                except ParserError:
-                    date_iso8601 = None
-
-                boxes[i] = date_iso8601
-            else:
-                boxes[i] = datetime.datetime.strptime(boxes[i], '%Y-%m-%d')
-
+            boxes[i] = datetime.datetime.strptime(boxes[i], '%Y-%m-%d')
         min_date = min(boxes).strftime('%Y-%m-%d')
         max_date = max(boxes).strftime('%Y-%m-%d')
         time_ext = [min_date, max_date]
