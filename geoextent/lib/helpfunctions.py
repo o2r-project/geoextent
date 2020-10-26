@@ -12,10 +12,10 @@ PREFERRED_SAMPLE_SIZE = 30
 WGS84_EPSG_ID = 4326
 logger = logging.getLogger("geoextent")
 
-def getAllRowElements(rowname, elements):
+def getAllRowElements(rowname, elements, exp_data = None):
     '''
     Function purpose: help-function to get all row elements for a specific string \n
-    Input: rowname, elements \n
+    Input: rowname, elements, exp_format \n
     Output: array values
     '''
 
@@ -25,10 +25,25 @@ def getAllRowElements(rowname, elements):
             values = []
             for x in elements:
                 if x[indexOf] != rowname:
-                    values.append(x[indexOf])
+                    values.append(x[indexOf].replace(" ",""))
+
+    if exp_data == 'time':
+        if get_time_format(values,30) is not None:
             return values
 
-def searchForParameters(elements, paramArray):
+    elif exp_data == 'numeric':
+        try:
+            list(map(float, values))
+            return values
+        except:
+            return None
+
+    else:
+        return values
+
+
+
+def searchForParameters(elements, paramArray, exp_data = None):
     '''
     Function purpose: return all attributes of a elements in the first row of a file \n
     Function purpose: return all attributes of a elements in the first row of a file \n
@@ -40,9 +55,11 @@ def searchForParameters(elements, paramArray):
     for x in paramArray:
         for row in elements[0]:
             if x in row.lower():
-                matching_elements.append(getAllRowElements(row, elements))
-    matching_elements = sum(matching_elements,[])
+                row_to_extract = getAllRowElements(row, elements, exp_data)
+                if row_to_extract is not None:
+                    matching_elements.append(row_to_extract)
 
+    matching_elements = sum(matching_elements,[])
     if len(matching_elements) == 0:
         return None
 
@@ -116,9 +133,11 @@ def get_time_format(time_list, num_sample):
     Output: time format in string format (e.g '%Y.%M.d')
     '''
 
+    date_time_format = None
+
     if num_sample is None:
         num_sample = PREFERRED_SAMPLE_SIZE
-        logger.error("num_sample not provided, num_sample modified to SAMPLE_SIZE {}".format(PREFERRED_SAMPLE_SIZE))
+        logger.warning("num_sample not provided, num_sample modified to SAMPLE_SIZE {}".format(PREFERRED_SAMPLE_SIZE))
     elif(type(num_sample) is not int):
         raise Exception('num_sample parameter  must be an integer')
     elif(num_sample <= 0):
@@ -138,8 +157,8 @@ def get_time_format(time_list, num_sample):
     for i in range(0, len(time_sample)):
         format_list.append(time_format(np.array([time_sample[i]])))
     unique_formats = list(set(format_list))
-    logger.error("Formats {}".format(unique_formats))
 
+    logger.info("UNIQUE_FORMATS {}".format(unique_formats))
     if unique_formats is not None:
         for tf in unique_formats:
             try:

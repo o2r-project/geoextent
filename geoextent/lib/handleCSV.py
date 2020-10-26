@@ -37,7 +37,8 @@ def getBoundingBox(filePath):
         spatialLatExtent=[]
         spatialLonExtent=[]
 
-        spatialLatExtent= hf.searchForParameters(elements, ["latitude", "lat", "y"])
+        spatialLatExtent= hf.searchForParameters(elements, ["latitude", "lat", "y"], exp_data= 'numeric')
+        logger.error(spatialLatExtent)
         minlat= None
         maxlat= None
         if spatialLatExtent is None:
@@ -46,7 +47,8 @@ def getBoundingBox(filePath):
             minlat= (min(spatialLatExtent))
             maxlat= (max(spatialLatExtent))
 
-        spatialLonExtent= hf.searchForParameters(elements, ["longitude", "long", "lon", "lng", "x"])
+        spatialLonExtent= hf.searchForParameters(elements, ["longitude", "long", "lon", "lng", "x"], exp_data= 'numeric')
+        logger.error(spatialLonExtent)
         minlon= None
         maxlon= None
         if spatialLonExtent is None:
@@ -76,7 +78,7 @@ def getTemporalExtent(filePath, num_sample):
             elements.append(x)
         logger.info("Elements {}".format(elements))
 
-        all_temporal_extent = hf.searchForParameters(elements, ["timestamp", "datetime", "time", "date"])
+        all_temporal_extent = hf.searchForParameters(elements, ["timestamp", "datetime", "time", "date"], exp_data = "time" )
         if all_temporal_extent is None:
             raise Exception('The csv file from ' + filePath + ' has no TemporalExtent')
         else:
