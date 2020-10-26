@@ -74,13 +74,14 @@ def getTemporalExtent(filePath, num_sample):
         elements = []
         for x in daten:
             elements.append(x)
+        logger.info("Elements {}".format(elements))
 
-        allspatial_extent = hf.searchForParameters(elements, ["timestamp", "datetime", "time", "date"])
-        if allspatial_extent is None:
+        all_temporal_extent = hf.searchForParameters(elements, ["timestamp", "datetime", "time", "date"])
+        if all_temporal_extent is None:
             raise Exception('The csv file from ' + filePath + ' has no TemporalExtent')
         else:
             tbox = []
-            parsed_time = hf.date_parser(allspatial_extent, num_sample = num_sample)
+            parsed_time = hf.date_parser(all_temporal_extent, num_sample = num_sample)
 
             if parsed_time is not None:
                 # Min and max into ISO8601 format ('%Y-%m-%d')

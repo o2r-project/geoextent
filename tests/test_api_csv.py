@@ -89,7 +89,7 @@ def test_csv_extract_bbox_and_tbox_with_TIME_DATE():
     assert "bbox" in result
     assert "tbox" in result
     assert result["bbox"] == [4.3175, 51.434444, 6.574722, 53.217222]
-    assert result["tbox"] == ['2017-08-01', '2019-09-30']
+    assert result["tbox"] == ['2010-09-01', '2019-09-30']
 
 def test_csv_extract_bbox_and_tbox_with_cols_diff_order():
     result = geoextent.fromFile('tests/testdata/csv/cities_NL_case1.csv', bbox=True, tbox=True)

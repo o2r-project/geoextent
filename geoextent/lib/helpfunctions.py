@@ -18,26 +18,35 @@ def getAllRowElements(rowname, elements):
     Input: rowname, elements \n
     Output: array values
     '''
+
     for idx, val in enumerate(elements[0]):
-        if rowname in val.lower():
+        if rowname in val:
             indexOf = idx
             values = []
             for x in elements:
-                if x[indexOf].lower() != rowname:
+                if x[indexOf] != rowname:
                     values.append(x[indexOf])
             return values
-
 
 def searchForParameters(elements, paramArray):
     '''
     Function purpose: return all attributes of a elements in the first row of a file \n
+    Function purpose: return all attributes of a elements in the first row of a file \n
     Input: paramArray, elements \n
     Output: getAllRowElements(x,elements)
     '''
+
+    matching_elements = []
     for x in paramArray:
         for row in elements[0]:
             if x in row.lower():
-                return getAllRowElements(x, elements)
+                matching_elements.append(getAllRowElements(row, elements))
+    matching_elements = sum(matching_elements,[])
+
+    if len(matching_elements) == 0:
+        return None
+
+    return matching_elements
 
 
 def transformingIntoWGS84(crs, coordinate):
@@ -117,15 +126,19 @@ def get_time_format(time_list, num_sample):
 
     if len(time_list) < num_sample:
         time_sample = time_list
-        logger.error("num_sample is greater than the length of the list. num_sample modified to length of list {}".format(len(time_list)))
+        logger.warning("num_sample is greater than the length of the list. num_sample modified to length of list {}".format(len(time_list)))
     else:
-        time_sample = random.sample(time_list, num_sample)
+        # Selects first and last element
+        time_sample = [[time_list[1], time_list[-1]]]
+        time_sample.append(random.sample(time_list[1:-1], num_sample - 2))
+        time_sample = sum(time_sample, [])
 
     format_list = []
 
     for i in range(0, len(time_sample)):
         format_list.append(time_format(np.array([time_sample[i]])))
     unique_formats = list(set(format_list))
+    logger.error("Formats {}".format(unique_formats))
 
     if unique_formats is not None:
         for tf in unique_formats:
@@ -150,6 +163,7 @@ def date_parser(datetime_list, num_sample = None):
     datetime_format = get_time_format(datetime_list, num_sample)
 
     if datetime_format is not None:
+        logger.error(datetime_list)
         parse_time = pd.to_datetime(datetime_list, format=datetime_format, errors='coerce')
     else:
         parse_time = None
