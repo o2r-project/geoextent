@@ -1,6 +1,7 @@
 import sys, os, platform, datetime, math, random
 import getopt
 import pandas as pd
+import re
 from pandas.core.tools.datetimes import _guess_datetime_format_for_array as time_format
 import numpy as np
 from osgeo import ogr
@@ -8,11 +9,13 @@ from osgeo import osr
 import logging
 from pyproj import Proj, transform
 import csv
+
 PREFERRED_SAMPLE_SIZE = 30
 WGS84_EPSG_ID = 4326
 logger = logging.getLogger("geoextent")
 
-def getAllRowElements(rowname, elements, exp_data = None):
+
+def getAllRowElements(rowname, elements, exp_data=None):
     '''
     Function purpose: help-function to get all row elements for a specific string \n
     Input: rowname, elements, exp_format \n
@@ -25,10 +28,10 @@ def getAllRowElements(rowname, elements, exp_data = None):
             values = []
             for x in elements:
                 if x[indexOf] != rowname:
-                    values.append(x[indexOf].replace(" ",""))
+                    values.append(x[indexOf].replace(" ", ""))
 
     if exp_data == 'time':
-        if get_time_format(values,30) is not None:
+        if get_time_format(values, 30) is not None:
             return values
 
     elif exp_data == 'numeric':
@@ -42,8 +45,7 @@ def getAllRowElements(rowname, elements, exp_data = None):
         return values
 
 
-
-def searchForParameters(elements, paramArray, exp_data = None):
+def searchForParameters(elements, paramArray, exp_data=None):
     '''
     Function purpose: return all attributes of a elements in the first row of a file \n
     Function purpose: return all attributes of a elements in the first row of a file \n
@@ -54,12 +56,13 @@ def searchForParameters(elements, paramArray, exp_data = None):
     matching_elements = []
     for x in paramArray:
         for row in elements[0]:
-            if x in row.lower():
+            p = re.compile(x, re.IGNORECASE)
+            if p.search(row) is not None:
                 row_to_extract = getAllRowElements(row, elements, exp_data)
                 if row_to_extract is not None:
                     matching_elements.append(row_to_extract)
 
-    matching_elements = sum(matching_elements,[])
+    matching_elements = sum(matching_elements, [])
     if len(matching_elements) == 0:
         return None
 
@@ -137,15 +140,17 @@ def get_time_format(time_list, num_sample):
 
     if num_sample is None:
         num_sample = PREFERRED_SAMPLE_SIZE
-        logger.warning("num_sample not provided, num_sample modified to SAMPLE_SIZE {}".format(PREFERRED_SAMPLE_SIZE))
-    elif(type(num_sample) is not int):
+        logger.info("num_sample not provided, num_sample modified to SAMPLE_SIZE {}".format(PREFERRED_SAMPLE_SIZE))
+    elif (type(num_sample) is not int):
         raise Exception('num_sample parameter  must be an integer')
-    elif(num_sample <= 0):
+    elif (num_sample <= 0):
         raise Exception('num_sample parameter: {} must be greater than 0'.format(num_sample))
 
     if len(time_list) < num_sample:
         time_sample = time_list
-        logger.warning("num_sample is greater than the length of the list. num_sample modified to length of list {}".format(len(time_list)))
+        logger.info(
+            "num_sample is greater than the length of the list. num_sample modified to length of list {}".format(
+                len(time_list)))
     else:
         # Selects first and last element
         time_sample = [[time_list[1], time_list[-1]]]
@@ -172,7 +177,7 @@ def get_time_format(time_list, num_sample):
     return date_time_format
 
 
-def date_parser(datetime_list, num_sample = None):
+def date_parser(datetime_list, num_sample=None):
     '''
     Function purpose: transform list of strings into ISO8601 ('%Y-%m-%d')
     datetime_list: list of date-times (strings) \n
@@ -182,7 +187,6 @@ def date_parser(datetime_list, num_sample = None):
     datetime_format = get_time_format(datetime_list, num_sample)
 
     if datetime_format is not None:
-        logger.error(datetime_list)
         parse_time = pd.to_datetime(datetime_list, format=datetime_format, errors='coerce')
     else:
         parse_time = None

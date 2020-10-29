@@ -6,6 +6,10 @@ fileType = "text/csv"
 
 logger = logging.getLogger("geoextent")
 
+search = { "longitude" : ["(.)*longitude","(.)*long(.)*", "^lon","lon$","(.)*lng(.)*", "^x","x$"],
+                   "latitude" : ["(.)*latitude(.)*", "^lat","lat$", "^y","y$"],
+           "time":["(.)*timestamp(.)*", "(.)*datetime(.)*", "(.)*time(.)*", "date$","^date"]}
+
 def checkFileValidity(filePath):
     '''Checks whether it is valid CSV or not. \n
     input "path": type string, path to file which shall be extracted \n
@@ -37,8 +41,8 @@ def getBoundingBox(filePath):
         spatialLatExtent=[]
         spatialLonExtent=[]
 
-        spatialLatExtent= hf.searchForParameters(elements, ["latitude", "lat", "y"], exp_data= 'numeric')
-        logger.error(spatialLatExtent)
+        spatialLatExtent= hf.searchForParameters(elements, search['latitude'], exp_data= 'numeric')
+
         minlat= None
         maxlat= None
         if spatialLatExtent is None:
@@ -47,8 +51,8 @@ def getBoundingBox(filePath):
             minlat= (min(spatialLatExtent))
             maxlat= (max(spatialLatExtent))
 
-        spatialLonExtent= hf.searchForParameters(elements, ["longitude", "long", "lon", "lng", "x"], exp_data= 'numeric')
-        logger.error(spatialLonExtent)
+        spatialLonExtent= hf.searchForParameters(elements, search['longitude'], exp_data= 'numeric')
+
         minlon= None
         maxlon= None
         if spatialLonExtent is None:
@@ -78,7 +82,7 @@ def getTemporalExtent(filePath, num_sample):
             elements.append(x)
         logger.info("Elements {}".format(elements))
 
-        all_temporal_extent = hf.searchForParameters(elements, ["timestamp", "datetime", "time", "date"], exp_data = "time" )
+        all_temporal_extent = hf.searchForParameters(elements, search['time'], exp_data = "time" )
         if all_temporal_extent is None:
             raise Exception('The csv file from ' + filePath + ' has no TemporalExtent')
         else:
@@ -103,7 +107,7 @@ def getCRS(filePath):
         elements = []
         for x in daten:
             elements.append(x)
-        if hf.searchForParameters(elements,["longitude","latitude","long", "lat", "lon", "lng", "x", "y"]) is None:
+        if hf.searchForParameters(elements,search['latitude']+search['longitude']) is None:
             if hf.searchForParameters(elements, ["crs","srsID"]) is None:
                 raise Exception('The csv file from ' + filePath + ' has no CRS')
             if hf.searchForParameters(elements, ["crs","srsID"]) == "WGS84":
