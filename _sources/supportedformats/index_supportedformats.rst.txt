@@ -53,18 +53,30 @@ CSV
 ^^^
 
 Different CSV delimiters (``;``, ``,``) are automatically detected.
-Supported column names (in any combination) are as follows:
+Supported column names, by using `Regular expressions operations <https://docs.python.org/3/library/re.html>`_, are as follows:
 
 - Latitude
-  - ``latitude``
-  - ``lat``
-  - ``y``
+  - ``(.)*latitude(.)*``
+  - ``^lat``
+  - ``lat$``
+  - ``^y``
+  - ``y$``
+  
 - Longitude
-  - ``longitude``
-  - ``long``
-  - ``lon``
-  - ``lng``
-  - ``x``
+  - ``(.)*longitude"``
+  - ``(.)*long(.)``
+  - ``^lon``
+  - ``lon$``
+  - ``(.)*lng(.)*``
+  - ``^x``
+  - ``x$``
+- Time
+  - ``(.)*timestamp(.)*``
+  - ``(.)*datetime(.)*``
+  - ``(.)*time(.)*``
+  - ``^date``
+  - ``date$``
+
 
 The file used in the example can be obtained from `Zenodo Sandbox record 256820 <https://sandbox.zenodo.org/record/256820#.XeGcJJko85k>`_. 
 

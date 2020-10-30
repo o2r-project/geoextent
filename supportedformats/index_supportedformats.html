@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Supported file formats &#8212; geoextent 0.3.0 documentation</title>
+    <title>Supported file formats &#8212; geoextent 0.3.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
@@ -86,18 +86,28 @@ Supported formats:
 <div class="section" id="csv">
 <h3>CSV<a class="headerlink" href="#csv" title="Permalink to this headline">¶</a></h3>
 <p>Different CSV delimiters (<code class="docutils literal notranslate"><span class="pre">;</span></code>, <code class="docutils literal notranslate"><span class="pre">,</span></code>) are automatically detected.
-Supported column names (in any combination) are as follows:</p>
+Supported column names, by using <a class="reference external" href="https://docs.python.org/3/library/re.html">Regular expressions operations</a>, are as follows:</p>
 <ul class="simple">
 <li><p>Latitude
-- <code class="docutils literal notranslate"><span class="pre">latitude</span></code>
-- <code class="docutils literal notranslate"><span class="pre">lat</span></code>
-- <code class="docutils literal notranslate"><span class="pre">y</span></code></p></li>
+- <code class="docutils literal notranslate"><span class="pre">(.)*latitude(.)*</span></code>
+- <code class="docutils literal notranslate"><span class="pre">^lat</span></code>
+- <code class="docutils literal notranslate"><span class="pre">lat$</span></code>
+- <code class="docutils literal notranslate"><span class="pre">^y</span></code>
+- <code class="docutils literal notranslate"><span class="pre">y$</span></code></p></li>
 <li><p>Longitude
-- <code class="docutils literal notranslate"><span class="pre">longitude</span></code>
-- <code class="docutils literal notranslate"><span class="pre">long</span></code>
-- <code class="docutils literal notranslate"><span class="pre">lon</span></code>
-- <code class="docutils literal notranslate"><span class="pre">lng</span></code>
-- <code class="docutils literal notranslate"><span class="pre">x</span></code></p></li>
+- <code class="docutils literal notranslate"><span class="pre">(.)*longitude&quot;</span></code>
+- <code class="docutils literal notranslate"><span class="pre">(.)*long(.)</span></code>
+- <code class="docutils literal notranslate"><span class="pre">^lon</span></code>
+- <code class="docutils literal notranslate"><span class="pre">lon$</span></code>
+- <code class="docutils literal notranslate"><span class="pre">(.)*lng(.)*</span></code>
+- <code class="docutils literal notranslate"><span class="pre">^x</span></code>
+- <code class="docutils literal notranslate"><span class="pre">x$</span></code></p></li>
+<li><p>Time
+- <code class="docutils literal notranslate"><span class="pre">(.)*timestamp(.)*</span></code>
+- <code class="docutils literal notranslate"><span class="pre">(.)*datetime(.)*</span></code>
+- <code class="docutils literal notranslate"><span class="pre">(.)*time(.)*</span></code>
+- <code class="docutils literal notranslate"><span class="pre">^date</span></code>
+- <code class="docutils literal notranslate"><span class="pre">date$</span></code></p></li>
 </ul>
 <p>The file used in the example can be obtained from <a class="reference external" href="https://sandbox.zenodo.org/record/256820#.XeGcJJko85k">Zenodo Sandbox record 256820</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">t</span> <span class="n">cities_NL</span><span class="o">.</span><span class="n">csv</span>
@@ -106,9 +116,9 @@ Supported column names (in any combination) are as follows:</p>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;text/csv&#39;,
- &#39;bbox&#39;: [4.3175, 51.434444, 6.574722, 53.217222],
- &#39;tbox&#39;: [&#39;30.09.2018&#39;, &#39;30.09.2018&#39;],
- &#39;crs&#39;: &#39;4326&#39;}
+ &#39;tbox&#39;: [&#39;2018-09-30&#39;, &#39;2018-09-30&#39;],
+ &#39;crs&#39;: &#39;4326&#39;,
+ &#39;bbox&#39;: [4.3175, 51.434444, 6.574722, 53.217222]}
 </pre></div>
 </div>
 </div>

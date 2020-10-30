@@ -5,7 +5,7 @@ Command-Line Interface (CLI)
 Basics
 ------
 
-``geoextent`` can be called on the command line with this command:
+``geoextent`` can be called on the command line with this command :
    
 .. autoprogram:: geoextent.__main__:argparser
    :prog: \

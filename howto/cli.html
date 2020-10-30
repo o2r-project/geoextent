@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Command-Line Interface (CLI) &#8212; geoextent 0.3.0 documentation</title>
+    <title>Command-Line Interface (CLI) &#8212; geoextent 0.3.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
@@ -43,7 +43,7 @@
 <h1>Command-Line Interface (CLI)<a class="headerlink" href="#command-line-interface-cli" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="basics">
 <h2>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">geoextent</span></code> can be called on the command line with this command:</p>
+<p><code class="docutils literal notranslate"><span class="pre">geoextent</span></code> can be called on the command line with this command :</p>
 <div class="section" id="id1">
 <h3><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: geoextent [-h] [--formats] [--version] [--debug] [-b] [-t] [input file]&#39;]</span>
@@ -88,7 +88,7 @@
 <dl class="std option">
 <dt id="cmdoption-t">
 <span id="cmdoption-time-box"></span><code class="sig-name descname">-t</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--time-box</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-t" title="Permalink to this definition">¶</a></dt>
-<dd><p>extract temporal extent</p>
+<dd><p>extract temporal extent (%Y-%m-%d)</p>
 </dd></dl>
 
 </div>
@@ -122,7 +122,7 @@ optional arguments:
   --debug             turn on debug logging, alternatively set environment
                       variable GEOEXTENT_DEBUG=1
   -b, --bounding-box  extract spatial extent (bounding box)
-  -t, --time-box      extract temporal extent
+  -t, --time-box      extract temporal extent (%Y-%m-%d)
 
 By default, both bounding box and temporal extent are extracted.
 
@@ -158,11 +158,11 @@ Supported formats:
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
+ &#39;crs&#39;: 4326,
  &#39;bbox&#39;: [7.60168075561523,
   51.9488147720619,
   7.64725685119629,
-  51.9746240298775],
- &#39;crs&#39;: 4326}
+  51.9746240298775]}
 </pre></div>
 </div>
 </div>
