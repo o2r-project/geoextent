@@ -154,6 +154,7 @@ def get_time_format(time_list, num_sample):
     else:
         # Selects first and last element
         time_sample = [[time_list[1], time_list[-1]]]
+        # Selects num_sample-2 elements
         time_sample.append(random.sample(time_list[1:-1], num_sample - 2))
         time_sample = sum(time_sample, [])
 
