@@ -106,7 +106,7 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
                             extract_tbox = usedModule.getTemporalExtent(filePath, num_sample)
                         else:
                             if num_sample is not None:
-                                logger.warning("num_sample parameter NOT used, only required for csv")
+                                logger.warning("num_sample parameter is ignored, only applies to CSV files")
                             extract_tbox = usedModule.getTemporalExtent(filePath)
                         metadata["tbox"] = extract_tbox
                 except Exception as e:
