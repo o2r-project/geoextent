@@ -187,8 +187,7 @@ def test_csv_time(script_runner, tmpdir):
         '-t', 'tests/testdata/csv/cities_NL.csv')
     assert ret.success, "process should return success"
     #assert ret.stderr == '', "stderr should be empty"
-    assert "['01.08.2017', '30.09.2019']" in ret.stdout, "time value is printed to console"
-
+    assert "['2017-08-01', '2019-09-30']" in ret.stdout, "time value is printed to console"
 
 def test_csv_time_invalid(script_runner, tmpdir):
     ret = script_runner.run('geoextent',

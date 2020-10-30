@@ -1,4 +1,3 @@
-
 import sys, os, threading
 import logging
 
@@ -10,8 +9,9 @@ from . import helpfunctions as hf
 
 logger = logging.getLogger("geoextent")
 
-modulesSupported = {'geojson':handleGeojson, 'json':handleGeojson,'csv':handleCSV,
-    'shp':handleShapefile, 'dbf':handleShapefile, 'geotiff':handleGeotiff, 'tif':handleGeotiff}
+modulesSupported = {'geojson': handleGeojson, 'json': handleGeojson, 'csv': handleCSV,
+                    'shp': handleShapefile, 'dbf': handleShapefile, 'geotiff': handleGeotiff, 'tif': handleGeotiff}
+
 
 def computeBboxInWGS84(module, path):
     ''' 
@@ -21,7 +21,7 @@ def computeBboxInWGS84(module, path):
     '''
     bbox_in_orig_crs = module.getBoundingBox(path)
     try:
-        #TODO: Add function using to reproject coordinates system
+        # TODO: Add function using to reproject coordinates system
         if module.fileType == "application/shp":
             crs = 'None'
             return bbox_in_orig_crs
@@ -35,11 +35,13 @@ def computeBboxInWGS84(module, path):
     else:
         raise Exception("The bounding box could not be related to a CRS")
 
+
 def fromDirectory(path, bbox=False, tbox=False):
     ''' TODO: implement
     '''
 
-def fromFile(filePath, bbox=True, tbox=True):
+
+def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     ''' TODO: update these docs
     
     function is called when filePath is included in commandline (with tag 'b')
@@ -62,7 +64,7 @@ def fromFile(filePath, bbox=True, tbox=True):
 
     # initialization of later output dict
     metadata = {}
-    
+
     # get the module that will be called (depending on the format of the file)
     for key in modulesSupported.keys():
         if key == fileFormat:
@@ -73,22 +75,23 @@ def fromFile(filePath, bbox=True, tbox=True):
     if not usedModule:
         logger.info("Did not find a compatible module for file format {} of file {}".format(fileFormat, filePath))
         return None
- 
+
     # Only extract metadata if the file content is valid
     try:
         usedModule.checkFileValidity(filePath)
     except Exception as e:
-        raise Exception(os.getcwd()+" The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
+        raise Exception(os.getcwd() + " The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
 
-    #get Bbox, Temporal Extent, Vector representation and crs parallel with threads
-    class thread(threading.Thread): 
-        def __init__(self, task): 
-            threading.Thread.__init__(self) 
+    # get Bbox, Temporal Extent, Vector representation and crs parallel with threads
+    class thread(threading.Thread):
+        def __init__(self, task):
+            threading.Thread.__init__(self)
             self.task = task
+
         def run(self):
             metadata["format"] = usedModule.fileType
 
-            #with lock:
+            # with lock:
             logger.debug("Starting  thread {} on file {}".format(self.task, filePath))
             if self.task == "bbox":
                 try:
@@ -99,38 +102,44 @@ def fromFile(filePath, bbox=True, tbox=True):
             elif self.task == "tbox":
                 try:
                     if tbox:
-                        metadata["tbox"] = usedModule.getTemporalExtent(filePath)
+                        if usedModule.fileType == 'text/csv':
+                            extract_tbox = usedModule.getTemporalExtent(filePath, num_sample)
+                        else:
+                            if num_sample is not None:
+                                logger.warning("num_sample parameter is ignored, only applies to CSV files")
+                            extract_tbox = usedModule.getTemporalExtent(filePath)
+                        metadata["tbox"] = extract_tbox
                 except Exception as e:
-                    logger.warning("Error for {} extracting tbox:\n{}".format(filePath, str(e)))
+                    logger.warning("Error extracting tbox, time format not found \n {}:".format(str(e)))
             elif self.task == "crs":
                 try:
-                    # the CRS is not neccessarily required
+                    # the CRS is not necessarily required
                     if bbox and hasattr(usedModule, 'getCRS'):
                         metadata["crs"] = usedModule.getCRS(filePath)
                     elif tbox and hasattr(usedModule, 'getCRS'):
                         metadata["crs"] = usedModule.getCRS(filePath)
-                    else: 
+                    else:
                         logger.debug("The CRS cannot be extracted from the file {}".format(filePath))
                 except Exception as e:
                     logger.warning("Error for {} extracting CRS:\n{}".format(filePath, str(e)))
             else:
                 raise Exception("Unsupported thread task {}".format(self.task))
-        
+
             logger.debug("Completed thread {} on file {}".format(self.task, filePath))
-            
-    thread_bbox_except = thread("bbox") 
-    thread_temp_except = thread("tbox") 
+
+    thread_bbox_except = thread("bbox")
+    thread_temp_except = thread("tbox")
     thread_crs_except = thread("crs")
 
-    #lock = threading.Lock()
+    # lock = threading.Lock()
     logger.debug("Starting 3 threads for extraction.")
-    
+
     thread_bbox_except.start()
     thread_temp_except.start()
     thread_crs_except.start()
 
     thread_bbox_except.join()
-    thread_temp_except.join() 
+    thread_temp_except.join()
     thread_crs_except.join()
 
     logger.debug("Extraction finished: {}".format(str(metadata)))

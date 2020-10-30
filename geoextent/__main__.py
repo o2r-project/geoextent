@@ -87,7 +87,7 @@ def get_argparser():
         '-t', '--time-box',
         action='store_true',
         default=False,
-        help='extract temporal extent'
+        help='extract temporal extent (%%Y-%%m-%%d)'
     )
 
     parser.add_argument(

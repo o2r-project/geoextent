@@ -3,3 +3,5 @@ geojson>=2.4.1
 pygeoj
 pyshp
 python-dateutil
+pandas
+numpy
