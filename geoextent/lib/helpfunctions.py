@@ -16,8 +16,13 @@ PREFERRED_SAMPLE_SIZE = 30
 WGS84_EPSG_ID = 4326
 logger = logging.getLogger("geoextent")
 
+<<<<<<< HEAD
 def getAllRowElements(rowname, elements, exp_data=None):
 
+=======
+
+def getAllRowElements(rowname, elements):
+>>>>>>> 8f073a0572c9bfe179b397df2e73e562aeb85329
     '''
     Function purpose: help-function to get all row elements for a specific string \n
     Input: rowname, elements, exp_format \n
