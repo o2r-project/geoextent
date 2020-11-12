@@ -99,7 +99,7 @@ It takes raw data (in the form of a string, boolean, boolean) to output result b
    - ``bbox``: a boolean value to extract spatial extent (bounding box)
    - ``time``: a boolean value to extract temporal extent ( at "day" precision '%Y-%m-%d')
 
-The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: :doc:`../supportedformats/index_supportedformats`) inside the folder or zipfile. The resulting coordinate reference system  ``CRS`` of the combined bbox is always in the `EPSG: 4236 <https://epsg.io/4326>`_ system.
+The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: :doc:`../supportedformats/index_supportedformats`) inside the folder or zipfile. The resulting coordinate reference system  ``CRS`` of the combined bbox is always in the `EPSG: 4326 <https://epsg.io/4326>`_ system.
 
  
 Extracting both bounding box and time interval from a folder

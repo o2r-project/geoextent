@@ -106,7 +106,7 @@ Extract both bounding box and time interval from a folder or zipfile
    import geoextent.lib.extent as geoextent
    geoextent.fromDirectory('../tests/testdata/folders/folder_two_files', True, True)
 
-The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: :doc:`../supportedformats/index_supportedformats`) inside the folder or zipfile. The resulting coordinate reference system  ``CRS`` of the combined bbox is always in the `EPSG: 4236 <https://epsg.io/4326>`_ system.
+The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: :doc:`../supportedformats/index_supportedformats`) inside the folder or zipfile. The resulting coordinate reference system  ``CRS`` of the combined bbox is always in the `EPSG: 4326 <https://epsg.io/4326>`_ system.
 
 
  

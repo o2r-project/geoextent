@@ -44,9 +44,11 @@ def test_gml_extract_bbox():
                                                                                    -6.95938792923511, 39.3011352746141]
 
 def test_empty_folder():
-    result = geoextent.fromDirectory('tests/testdata/folders/empty_folder', bbox=True, tbox=True)
+    os.mkdir('tests/testdata/folders/temp_empty_folder')
+    result = geoextent.fromDirectory('tests/testdata/folders/temp_empty_folder', bbox=True, tbox=True)
     assert "bbox" not in result
     assert "tbox" not in result
+    os.rmdir('tests/testdata/folders/temp_empty_folder')
 
 def test_folder_one_file():
     result = geoextent.fromDirectory('tests/testdata/folders/folder_one_file', bbox=True, tbox=True)

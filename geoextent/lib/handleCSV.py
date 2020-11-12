@@ -106,9 +106,9 @@ def getCRS(filePath):
         for x in daten:
             elements.append(x)
         if hf.searchForParameters(elements,search['latitude']+search['longitude']) is None:
-            if hf.searchForParameters(elements, ["crs","crsID"]) is None:
+            if hf.searchForParameters(elements, ["crs","srsID"]) is None:
                 raise Exception('The csv file from ' + filePath + ' has no CRS')
-            if hf.searchForParameters(elements, ["crs","crsID"]) == "WGS84":
+            if hf.searchForParameters(elements, ["crs","srsID"]) == "WGS84":
                 return "4326"
             else:
                 raise Exception('The csv file from ' + filePath + ' has no WGS84 CRS')
