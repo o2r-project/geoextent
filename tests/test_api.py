@@ -72,10 +72,12 @@ def test_folder_nested_files():
     assert result["tbox"] == ['2017-04-08', '2020-02-06']
 
 def test_empty_zipfile():
-    folder_name = "tests/testdata/folders/empty_folder"
+    folder_name = "tests/testdata/folders/temp_empty_folder"
+    os.mkdir(folder_name)
     hf.create_zip(folder_name)
     result = geoextent.fromDirectory(folder_name+'.zip', bbox=True, tbox=True)
     os.remove(folder_name + '.zip')
+    os.rmdir(folder_name)
     assert "bbox" not in result
     assert "tbox" not in result
 
