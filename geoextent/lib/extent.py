@@ -74,15 +74,29 @@ def fromDirectory(path, bbox=False, tbox=False):
                 metadata_file = fromFile(os.path.join(path, filename), bbox, tbox)
                 metadata_directory[str(filename)] = metadata_file
 
+    if isZip:
+        file_format = 'zipfile'
+    else:
+        file_format = 'folder'
+
+    metadata['format'] = file_format
+
     if bbox:
         bbox_ext = hf.bbox_merge(metadata_directory)
-        metadata['bbox'] = bbox_ext
+        if bbox_ext is not None:
+            metadata['bbox'] = bbox_ext
+            metadata['crs'] = "4326"
+        else:
+            logger.warning("The {} {} has no identifiable bbox - Coordinate reference system (CRS) may be missing".format(file_format,path))
 
     if tbox:
         tbox_ext = hf.tbox_merge(metadata_directory)
-        metadata['tbox'] = tbox_ext
+        if tbox_ext is not None:
+            metadata['tbox'] = tbox_ext
+        else:
+            logger.warning("The {} {} has no identifiable time extent".format(file_format,path))
 
-    metadata['details'] = metadata_directory
+    #metadata['details'] = metadata_directory
 
     return metadata
 

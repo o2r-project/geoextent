@@ -53,8 +53,6 @@ def getBoundingBox(filePath):
 
         spatialLonExtent= hf.searchForParameters(elements, search['longitude'], exp_data= 'numeric')
 
-        minlon= None
-        maxlon= None
         if spatialLonExtent is None:
             raise Exception('The csv file from ' + filePath + ' has no BoundingBox')
         else:
@@ -108,9 +106,9 @@ def getCRS(filePath):
         for x in daten:
             elements.append(x)
         if hf.searchForParameters(elements,search['latitude']+search['longitude']) is None:
-            if hf.searchForParameters(elements, ["crs","srsID"]) is None:
+            if hf.searchForParameters(elements, ["crs","crsID"]) is None:
                 raise Exception('The csv file from ' + filePath + ' has no CRS')
-            if hf.searchForParameters(elements, ["crs","srsID"]) == "WGS84":
+            if hf.searchForParameters(elements, ["crs","crsID"]) == "WGS84":
                 return "4326"
             else:
                 raise Exception('The csv file from ' + filePath + ' has no WGS84 CRS')

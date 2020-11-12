@@ -152,12 +152,11 @@ def main():
         if os.path.isdir(os.path.join(os.getcwd(), files)) or zipfile.is_zipfile(os.path.join(os.getcwd(),files)):
             output = extent.fromDirectory(files, bbox = args['bounding_box'], tbox = args['time_box'])
 
-
     except Exception as e:
         if(logger.getEffectiveLevel() >= logging.DEBUG):
             logger.exception(e)
         sys.exit(1)
-
+    logger.info("Output{}:".format(output))
     if output is None:
         raise Exception("Did not find supported files at {}".format(files))
 
@@ -168,7 +167,7 @@ def main():
     elif type(output) == dict:
         output.pop('details', None)
         print(str(output))
-    else: 
+    else:
         print(output)
 
 if __name__ == '__main__':

@@ -33,7 +33,7 @@ Show help message
    geoextent.print_help()
 
 Extract bounding box from a single file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note::
    You can find the file used in the examples of this section from `muenster_ring_zeit <https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_. Furthermore, for displaying the rendering of the file contents, see `rendered blob <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_.
@@ -52,7 +52,7 @@ Output:
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, False)
 
 Extract time interval from a single file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note::
    You can find the file used in the examples of this section from `muenster_ring_zeit <https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_. Furthermore, for displaying the rendering of the file contents, see `rendered blob <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_.
@@ -71,7 +71,7 @@ Output:
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', False, True)
 
 Extract both bounding box and time interval from a single file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note::
    You can find the file used in the examples of this section from `muenster_ring_zeit <https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_. Furthermore, for displaying the rendering of the file contents, see `rendered blob <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson>`_.
@@ -87,6 +87,29 @@ Extract both bounding box and time interval from a single file
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, True)
 
+Folders or zipfiles
+-------------------
+
+Geoextent also supports queries for multiple files inside ``folders`` or ``zipfiles``. 
+
+Extract both bounding box and time interval from a folder or zipfile
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+   geoextent -b -t folder_two_files
+
+.. jupyter-execute::
+   :hide-code:
+   :stderr:
+
+   import geoextent.lib.extent as geoextent
+   geoextent.fromDirectory('../tests/testdata/folders/folder_two_files', True, True)
+
+The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: :doc:`../supportedformats/index_supportedformats`) inside the folder or zipfile. The resulting coordinate reference system  ``CRS`` of the combined bbox is always in the `EPSG: 4236 <https://epsg.io/4326>`_ system.
+
+
+ 
 Debugging
 ^^^^^^^^^
 

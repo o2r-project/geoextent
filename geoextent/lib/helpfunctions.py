@@ -1,7 +1,6 @@
 import sys, os, platform, datetime, math, random
 import zipfile, re
-
-import getopt
+from os.path import basename
 import pandas as pd
 import re
 from pandas.core.tools.datetimes import _guess_datetime_format_for_array as time_format
@@ -16,13 +15,8 @@ PREFERRED_SAMPLE_SIZE = 30
 WGS84_EPSG_ID = 4326
 logger = logging.getLogger("geoextent")
 
-<<<<<<< HEAD
 def getAllRowElements(rowname, elements, exp_data=None):
 
-=======
-
-def getAllRowElements(rowname, elements):
->>>>>>> 8f073a0572c9bfe179b397df2e73e562aeb85329
     '''
     Function purpose: help-function to get all row elements for a specific string \n
     Input: rowname, elements, exp_format \n
@@ -214,46 +208,77 @@ def extract_zip(zippedFile):
     with zipfile.ZipFile(abs_path) as zipf:
         zipf.extractall(zip_folder_path)
 
+def create_zip(folder):
+    '''
+    Function purpose: create a zip file
+    Input: filepath
+    Source: https://thispointer.com/python-how-to-create-a-zip-archive-from-multiple-files-or-directory/
+    '''
+
+    with zipfile.ZipFile(folder +'.zip', 'w') as zipObj:
+        # Iterate over all the files in directory
+        for folderName, subfolders, filenames in os.walk(folder):
+            for filename in filenames:
+                # create complete filepath of file in directory
+                file_root = os.path.abspath(folderName)
+                filePath = os.path.join(file_root, filename)
+                zipObj.write(filePath)
+
 
 def bbox_merge(metadata):
-    boxes = []
-    spatial_extent = {}
+    boxes_extent = []
     for x, y in metadata.items():
         if isinstance(y, dict):
             try:
-                boxes.append(y['bbox'])
+                bbox_extent = [y['bbox'], y['crs']]
+                boxes_extent.append(bbox_extent)
             except:
                 pass
+    if len(boxes_extent) == 0:
+        return None
+    elif len(boxes_extent) > 0:
 
-    if len(boxes) == 0:
-        spatial_extent = None
-        metadata = None
-    elif len(boxes) > 0:
         multipolygon = ogr.Geometry(ogr.wkbMultiPolygon)
         des_srs = ogr.osr.SpatialReference()
-        des_srs.ImportFromEPSG(4326)
+        des_srs.ImportFromEPSG(WGS84_EPSG_ID)
         multipolygon.AssignSpatialReference(des_srs)
 
-        for bbox in boxes:
-            box = ogr.Geometry(ogr.wkbLinearRing)
-            box.AddPoint(bbox[0], bbox[1])
-            box.AddPoint(bbox[2], bbox[1])
-            box.AddPoint(bbox[2], bbox[3])
-            box.AddPoint(bbox[0], bbox[3])
-            box.AddPoint(bbox[0], bbox[1])
+        for bbox in boxes_extent:
 
-            polygon = ogr.Geometry(ogr.wkbPolygon)
-            polygon.AddGeometry(box)
+            try:
 
-            multipolygon.AddGeometry(polygon)
+                box = ogr.Geometry(ogr.wkbLinearRing)
+                box.AddPoint(bbox[0][0], bbox[0][1])
+                box.AddPoint(bbox[0][2], bbox[0][1])
+                box.AddPoint(bbox[0][2], bbox[0][3])
+                box.AddPoint(bbox[0][0], bbox[0][3])
+                box.AddPoint(bbox[0][0], bbox[0][1])
 
-        env = multipolygon.GetEnvelope()
-        spatial_extent = [env[0], env[2], env[1], env[3]]
-        metadata = spatial_extent
+                if bbox[1] != "4326":
+                    logger.warning("Transforming bbox CRS from EPSG [{}] to [{}] ".format(bbox[1], WGS84_EPSG_ID))
+                    source = osr.SpatialReference()
+                    source.ImportFromEPSG(int(bbox[1]))
+                    transform = osr.CoordinateTransformation(source, des_srs)
+                    box.Transform(transform)
 
-    return metadata
+                polygon = ogr.Geometry(ogr.wkbPolygon)
+                polygon.AddGeometry(box)
+                multipolygon.AddGeometry(polygon)
+
+            except:
+
+                continue
+
+        if multipolygon.GetGeometryCount() > 0:
+            env = multipolygon.GetEnvelope()
+            metadata_merge = [env[0], env[2], env[1], env[3]]
+        else:
+            metadata_merge = None
+
+    return metadata_merge
 
 def tbox_merge(metadata):
+
     boxes = []
     time_ext = []
     for x, y in metadata.items():
@@ -268,6 +293,7 @@ def tbox_merge(metadata):
         time_ext = None
 
     elif len(boxes) >= 1:
+        logger.info("Boxes to compare {}".format(boxes))
         for i in range(0, len(boxes)):
             boxes[i] = datetime.datetime.strptime(boxes[i], '%Y-%m-%d')
         min_date = min(boxes).strftime('%Y-%m-%d')
@@ -275,4 +301,6 @@ def tbox_merge(metadata):
         time_ext = [min_date, max_date]
 
     return time_ext
+
+
 
