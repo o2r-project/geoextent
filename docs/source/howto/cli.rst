@@ -87,10 +87,10 @@ Extract both bounding box and time interval from a single file
    import geoextent.lib.extent as geoextent
    geoextent.fromFile('../tests/testdata/geojson/muenster_ring_zeit.geojson', True, True)
 
-Folders or zipfiles
--------------------
+Folders or ZIP files(s)
+-----------------------
 
-Geoextent also supports queries for multiple files inside ``folders`` or ``zipfiles``. 
+Geoextent also supports queries for multiple files inside **folders** or **ZIP file(s)**. 
 
 Extract both bounding box and time interval from a folder or zipfile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -108,8 +108,6 @@ Extract both bounding box and time interval from a folder or zipfile
 
 The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: :doc:`../supportedformats/index_supportedformats`) inside the folder or zipfile. The resulting coordinate reference system  ``CRS`` of the combined bbox is always in the `EPSG: 4326 <https://epsg.io/4326>`_ system.
 
-
- 
 Debugging
 ^^^^^^^^^
 

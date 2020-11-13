@@ -36,7 +36,7 @@ def getTemporalExtent(filePath):
     input "path": type string, file path to shapefile file
     '''
 
-    return 'None'
+    return None
 
 
 def getBoundingBox(filePath):

@@ -1,6 +1,9 @@
 import os           # used to get the location of the testdata
 import pytest
+import tempfile
+from help_functions_test import create_zip
 from osgeo import gdal
+
 
 def test_helptext_direct(script_runner):
     ret = script_runner.run('geoextent', '--help')
@@ -244,6 +247,16 @@ def test_folder(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     assert "[2.05233338763921, 41.3170385224048, 7.64725685119629, 51.9746240298775]" in ret.stdout,"merge bbox of folder files, is printed to console"
     assert "['2018-11-14', '2019-09-11']" in ret.stdout,"merge time value of folder files, is printed to console"
+
+def test_zipfile(script_runner):
+
+    folder_name = "tests/testdata/folders/folder_one_file"
+    with tempfile.NamedTemporaryFile(suffix=".zip") as tmp:
+        create_zip(folder_name, tmp)
+        ret = script_runner.run('geoextent','-b','-t', tmp.name)
+        assert ret.success, "process should return success"
+        assert "[7.60168075561523, 51.9488147720619, 7.64725685119629, 51.9746240298775]" in ret.stdout
+        assert "['2018-11-14', '2018-11-14']" in ret.stdout
 
 @pytest.mark.skip(reason="director input not implemented yet")
 def test_multiple_folders(script_runner):

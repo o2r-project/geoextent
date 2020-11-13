@@ -1,8 +1,8 @@
 import os  # used to get the location of the testdata
-import sys
+import tempfile
 import pytest
 import geoextent.lib.extent as geoextent
-import geoextent.lib.helpfunctions as hf
+from help_functions_test import create_zip
 import geoextent.__main__ as geoextent_main
 
 @pytest.mark.skip(reason="file format not implemented yet")
@@ -44,11 +44,11 @@ def test_gml_extract_bbox():
                                                                                    -6.95938792923511, 39.3011352746141]
 
 def test_empty_folder():
-    os.mkdir('tests/testdata/folders/temp_empty_folder')
-    result = geoextent.fromDirectory('tests/testdata/folders/temp_empty_folder', bbox=True, tbox=True)
-    assert "bbox" not in result
-    assert "tbox" not in result
-    os.rmdir('tests/testdata/folders/temp_empty_folder')
+
+    with tempfile.TemporaryDirectory() as temp:
+        result = geoextent.fromDirectory(temp, bbox=True, tbox=True)
+        assert "bbox" not in result
+        assert "tbox" not in result
 
 def test_folder_one_file():
     result = geoextent.fromDirectory('tests/testdata/folders/folder_one_file', bbox=True, tbox=True)
@@ -71,31 +71,32 @@ def test_folder_nested_files():
     assert result["bbox"] == [7.60168075561523, 34.7, 142.0, 51.9746240298775]
     assert result["tbox"] == ['2017-04-08', '2020-02-06']
 
-def test_empty_zipfile():
-    folder_name = "tests/testdata/folders/temp_empty_folder"
-    os.mkdir(folder_name)
-    hf.create_zip(folder_name)
-    result = geoextent.fromDirectory(folder_name+'.zip', bbox=True, tbox=True)
-    os.remove(folder_name + '.zip')
-    os.rmdir(folder_name)
-    assert "bbox" not in result
-    assert "tbox" not in result
+def test_zipfile_unsupported_file():
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        f = open(tmp_dir + "/unsupported_file.txt", "a")
+        f.write("No geographical data")
+        f.close()
+        with tempfile.NamedTemporaryFile(suffix=".zip") as tmp:
+            create_zip(tmp_dir, tmp)
+            result = geoextent.fromDirectory(tmp.name, bbox=True, tbox=True)
+            assert "bbox" not in result
+            assert "tbox" not in result
 
 def test_zipfile_one_file():
     folder_name = "tests/testdata/folders/folder_one_file"
-    hf.create_zip(folder_name)
-    result = geoextent.fromDirectory(folder_name+'.zip', bbox=True, tbox=True)
-    os.remove(folder_name + '.zip')
-    assert result["bbox"] == [7.60168075561523, 51.9488147720619, 7.64725685119629, 51.9746240298775]
-    assert result["tbox"] == ['2018-11-14', '2018-11-14']
+    with tempfile.NamedTemporaryFile(suffix=".zip") as tmp:
+        create_zip(folder_name,tmp)
+        result = geoextent.fromDirectory(tmp.name, bbox=True, tbox=True)
+        assert result["bbox"] == [7.60168075561523, 51.9488147720619, 7.64725685119629, 51.9746240298775]
+        assert result["tbox"] == ['2018-11-14', '2018-11-14']
 
 def test_zipfile_nested_folders():
     folder_name = "tests/testdata/folders/nested_folder"
-    hf.create_zip(folder_name)
-    result = geoextent.fromDirectory(folder_name+'.zip', bbox=True, tbox=True)
-    os.remove(folder_name + '.zip')
-    assert result["bbox"] == [7.60168075561523, 34.7, 142.0, 51.9746240298775]
-    assert result["tbox"] == ['2017-04-08', '2020-02-06']
+    with tempfile.NamedTemporaryFile(suffix=".zip") as tmp:
+        create_zip(folder_name,tmp)
+        result = geoextent.fromDirectory(tmp.name, bbox=True, tbox=True)
+        assert result["bbox"] == [7.60168075561523, 34.7, 142.0, 51.9746240298775]
+        assert result["tbox"] == ['2017-04-08', '2020-02-06']
 
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_extract_time():

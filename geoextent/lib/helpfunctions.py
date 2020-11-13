@@ -208,33 +208,20 @@ def extract_zip(zippedFile):
     with zipfile.ZipFile(abs_path) as zipf:
         zipf.extractall(zip_folder_path)
 
-def create_zip(folder):
-    '''
-    Function purpose: create a zip file
-    Input: filepath
-    Source: https://thispointer.com/python-how-to-create-a-zip-archive-from-multiple-files-or-directory/
-    '''
-
-    with zipfile.ZipFile(folder +'.zip', 'w') as zipObj:
-        # Iterate over all the files in directory
-        for folderName, subfolders, filenames in os.walk(folder):
-            for filename in filenames:
-                # create complete filepath of file in directory
-                file_root = os.path.abspath(folderName)
-                filePath = os.path.join(file_root, filename)
-                zipObj.write(filePath)
-
-
-def bbox_merge(metadata):
+def bbox_merge(metadata,path):
     boxes_extent = []
+
+    num_files = len(metadata.items())
     for x, y in metadata.items():
         if isinstance(y, dict):
             try:
                 bbox_extent = [y['bbox'], y['crs']]
                 boxes_extent.append(bbox_extent)
             except:
+                logger.debug("File {} does not have identifiable geographical extent (CRS+bbox)".format(x))
                 pass
     if len(boxes_extent) == 0:
+        logger.debug(" ** Directory {} does not have files with identifiable geographical extent (CRS+bbox)".format(path))
         return None
     elif len(boxes_extent) > 0:
 
@@ -255,7 +242,7 @@ def bbox_merge(metadata):
                 box.AddPoint(bbox[0][0], bbox[0][1])
 
                 if bbox[1] != "4326":
-                    logger.warning("Transforming bbox CRS from EPSG [{}] to [{}] ".format(bbox[1], WGS84_EPSG_ID))
+
                     source = osr.SpatialReference()
                     source.ImportFromEPSG(int(bbox[1]))
                     transform = osr.CoordinateTransformation(source, des_srs)
@@ -265,22 +252,25 @@ def bbox_merge(metadata):
                 polygon.AddGeometry(box)
                 multipolygon.AddGeometry(polygon)
 
-            except:
-
+            except Exception as e:
+                logger.debug("Error extracting geographic extent of file {}. CRS {} may be invalid. Error: {}".format(x,bbox[1],e))
                 continue
 
-        if multipolygon.GetGeometryCount() > 0:
+        num_geo_files = multipolygon.GetGeometryCount()/4
+        if num_geo_files > 0:
+            logger.debug("Folder {} contains {} files out of {} with identifiable geographic extent".format(path,int(num_geo_files),num_files))
             env = multipolygon.GetEnvelope()
             metadata_merge = [env[0], env[2], env[1], env[3]]
         else:
+            logger.debug(" ** Directory {} does not have files with identifiable geographical extent (CRS+bbox)".format(path))
             metadata_merge = None
 
     return metadata_merge
 
-def tbox_merge(metadata):
+def tbox_merge(metadata,path):
 
     boxes = []
-    time_ext = []
+    num_files = len(metadata.items())
     for x, y in metadata.items():
         if isinstance(y, dict):
             try:
@@ -289,15 +279,17 @@ def tbox_merge(metadata):
             except:
                 pass
 
-    if len(boxes) == 0:
-        time_ext = None
+    num_time_files = len(boxes)
+    if num_time_files == 0:
+        logger.debug(" ** Directory {} does not have files with identifiable temporal extent".format(path))
+        return None
 
-    elif len(boxes) >= 1:
-        logger.info("Boxes to compare {}".format(boxes))
+    else:
         for i in range(0, len(boxes)):
             boxes[i] = datetime.datetime.strptime(boxes[i], '%Y-%m-%d')
         min_date = min(boxes).strftime('%Y-%m-%d')
         max_date = max(boxes).strftime('%Y-%m-%d')
+        logger.debug("Folder {} contains {} files out of {} with identifiable geographic extent".format(path, int(num_time_files),num_files))
         time_ext = [min_date, max_date]
 
     return time_ext
