@@ -53,8 +53,6 @@ def getBoundingBox(filePath):
 
         spatialLonExtent= hf.searchForParameters(elements, search['longitude'], exp_data= 'numeric')
 
-        minlon= None
-        maxlon= None
         if spatialLonExtent is None:
             raise Exception('The csv file from ' + filePath + ' has no BoundingBox')
         else:

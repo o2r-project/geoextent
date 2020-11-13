@@ -134,27 +134,27 @@ def getCRS(filePath):
         gjsonContent = pygeoj.load(filePath)
         crsCode = gjsonContent.crs 
         if not crsCode:
-            return hf.WGS84_EPSG_ID
+            return str(hf.WGS84_EPSG_ID)
         else: 
             for key, value in crsCode.items():
                 if key == "properties":
                     try:
                         if value["name"] == "urn:ogc:def:crs:OGC:2:84":
-                            return hf.WGS84_EPSG_ID
+                            return str(hf.WGS84_EPSG_ID)
                         elif value["name"]:
                             splittedCrs = value["name"].split(":")
                             for elem in splittedCrs:
                                 try:
                                     if int(elem) is not None:
                                         crsCode = int(elem)
-                                        return crsCode
+                                        return str(crsCode)
                                 except:
                                     pass
                     except:
                         pass
                 #formats like urn:ogc:def:crs:EPSG::25832
             
-        return hf.WGS84_EPSG_ID
+        return str(hf.WGS84_EPSG_ID)
     except:
         gjsonContent = extractContentFromPath(filePath)
     
@@ -165,7 +165,7 @@ def getCRS(filePath):
         if len(extracted) != 0:
             if type(extracted[0]) == dict and "properties" in extracted[0] and "code" in extracted[0]["properties"]:
                         crsCode = extracted[0]["properties"]["code"]
-        return crsCode
+        return str(crsCode)
 
 def getTemporalExtent (filePath):
     ''' extract time extent from json string \n

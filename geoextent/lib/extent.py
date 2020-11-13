@@ -1,10 +1,12 @@
-import sys, os, threading
 import logging
+import os
+import threading
+import zipfile
 
 from . import handleCSV
 from . import handleGeojson
-from . import handleShapefile
 from . import handleGeotiff
+from . import handleShapefile
 from . import helpfunctions as hf
 
 logger = logging.getLogger("geoextent")
@@ -40,6 +42,59 @@ def fromDirectory(path, bbox=False, tbox=False):
     ''' TODO: implement
     '''
 
+    logger.info("Extracting bbox={} tbox={} from Directory {}".format(bbox, tbox, path))
+
+    if not bbox and not tbox:
+        logger.error("Require at least one of extraction options, but bbox is {} and tbox is {}".format(bbox, tbox))
+        raise Exception("No extraction options enabled!")
+    metadata = {}
+    # initialization of later output dict
+    metadata_directory = {}
+
+    isZip = zipfile.is_zipfile(path)
+
+    if isZip:
+        logger.info("Inspecting zipfile {}".format(path))
+        hf.extract_zip(path)
+        extract_folder = path[:-4]
+        logger.info("Extract_folder zipfile {}".format(extract_folder))
+        path = extract_folder
+
+    for filename in os.listdir(path):
+        logger.info("path {}, folder/zipfile {}".format(path,filename))
+        isZip = zipfile.is_zipfile(os.path.join(path, filename))
+        if isZip:
+            logger.info("**Inspecting folder {}, is zip ? {}**".format(filename, str(isZip)))
+            metadata_directory[filename] = fromDirectory(os.path.join(path,filename),bbox,tbox)
+        else:
+            logger.info("Inspecting folder {}, is zip ? {}".format(filename, str(isZip)))
+            if os.path.isdir(os.path.join(path,filename)):
+                metadata_directory[filename] = fromDirectory(os.path.join(path, filename), bbox, tbox)
+            else:
+                metadata_file = fromFile(os.path.join(path, filename), bbox, tbox)
+                metadata_directory[str(filename)] = metadata_file
+
+    file_format = "zip" if isZip else 'folder'
+    metadata['format'] = file_format
+
+    if bbox:
+        bbox_ext = hf.bbox_merge(metadata_directory,path)
+        if bbox_ext is not None:
+            metadata['crs'] = "4326"
+            metadata['bbox'] = bbox_ext
+        else:
+            logger.warning("The {} {} has no identifiable bbox - Coordinate reference system (CRS) may be missing".format(file_format,path))
+
+    if tbox:
+        tbox_ext = hf.tbox_merge(metadata_directory,path)
+        if tbox_ext is not None:
+            metadata['tbox'] = tbox_ext
+        else:
+            logger.warning("The {} {} has no identifiable time extent".format(file_format,path))
+
+    #metadata['details'] = metadata_directory
+
+    return metadata
 
 def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     ''' TODO: update these docs
@@ -74,6 +129,7 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     # If file format is not supported
     if not usedModule:
         logger.info("Did not find a compatible module for file format {} of file {}".format(fileFormat, filePath))
+
         return None
 
     # Only extract metadata if the file content is valid
@@ -89,9 +145,11 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
             self.task = task
 
         def run(self):
+
             metadata["format"] = usedModule.fileType
 
             # with lock:
+
             logger.debug("Starting  thread {} on file {}".format(self.task, filePath))
             if self.task == "bbox":
                 try:

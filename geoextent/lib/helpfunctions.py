@@ -1,5 +1,6 @@
 import sys, os, platform, datetime, math, random
-import getopt
+import zipfile, re
+from os.path import basename
 import pandas as pd
 import re
 from pandas.core.tools.datetimes import _guess_datetime_format_for_array as time_format
@@ -9,13 +10,13 @@ from osgeo import osr
 import logging
 from pyproj import Proj, transform
 import csv
-
 PREFERRED_SAMPLE_SIZE = 30
+
 WGS84_EPSG_ID = 4326
 logger = logging.getLogger("geoextent")
 
-
 def getAllRowElements(rowname, elements, exp_data=None):
+
     '''
     Function purpose: help-function to get all row elements for a specific string \n
     Input: rowname, elements, exp_format \n
@@ -67,7 +68,6 @@ def searchForParameters(elements, paramArray, exp_data=None):
         return None
 
     return matching_elements
-
 
 def transformingIntoWGS84(crs, coordinate):
     '''
@@ -193,3 +193,106 @@ def date_parser(datetime_list, num_sample=None):
         parse_time = None
 
     return parse_time
+
+def extract_zip(zippedFile):
+    '''
+    Function purpose: unzip file (always inside a new folder)
+    Input: filepath
+    '''
+
+    abs_path = os.path.abspath(zippedFile)
+    root_folder = os.path.split(abs_path)[0]
+    zip_name = os.path.split(abs_path)[1][:-4]
+    zip_folder_path = os.path.join(root_folder, zip_name)
+
+    with zipfile.ZipFile(abs_path) as zipf:
+        zipf.extractall(zip_folder_path)
+
+def bbox_merge(metadata,path):
+    boxes_extent = []
+
+    num_files = len(metadata.items())
+    for x, y in metadata.items():
+        if isinstance(y, dict):
+            try:
+                bbox_extent = [y['bbox'], y['crs']]
+                boxes_extent.append(bbox_extent)
+            except:
+                logger.debug("File {} does not have identifiable geographical extent (CRS+bbox)".format(x))
+                pass
+    if len(boxes_extent) == 0:
+        logger.debug(" ** Directory {} does not have files with identifiable geographical extent (CRS+bbox)".format(path))
+        return None
+    elif len(boxes_extent) > 0:
+
+        multipolygon = ogr.Geometry(ogr.wkbMultiPolygon)
+        des_srs = ogr.osr.SpatialReference()
+        des_srs.ImportFromEPSG(WGS84_EPSG_ID)
+        multipolygon.AssignSpatialReference(des_srs)
+
+        for bbox in boxes_extent:
+
+            try:
+
+                box = ogr.Geometry(ogr.wkbLinearRing)
+                box.AddPoint(bbox[0][0], bbox[0][1])
+                box.AddPoint(bbox[0][2], bbox[0][1])
+                box.AddPoint(bbox[0][2], bbox[0][3])
+                box.AddPoint(bbox[0][0], bbox[0][3])
+                box.AddPoint(bbox[0][0], bbox[0][1])
+
+                if bbox[1] != "4326":
+
+                    source = osr.SpatialReference()
+                    source.ImportFromEPSG(int(bbox[1]))
+                    transform = osr.CoordinateTransformation(source, des_srs)
+                    box.Transform(transform)
+
+                polygon = ogr.Geometry(ogr.wkbPolygon)
+                polygon.AddGeometry(box)
+                multipolygon.AddGeometry(polygon)
+
+            except Exception as e:
+                logger.debug("Error extracting geographic extent of file {}. CRS {} may be invalid. Error: {}".format(x,bbox[1],e))
+                continue
+
+        num_geo_files = multipolygon.GetGeometryCount()/4
+        if num_geo_files > 0:
+            logger.debug("Folder {} contains {} files out of {} with identifiable geographic extent".format(path,int(num_geo_files),num_files))
+            env = multipolygon.GetEnvelope()
+            metadata_merge = [env[0], env[2], env[1], env[3]]
+        else:
+            logger.debug(" ** Directory {} does not have files with identifiable geographical extent (CRS+bbox)".format(path))
+            metadata_merge = None
+
+    return metadata_merge
+
+def tbox_merge(metadata,path):
+
+    boxes = []
+    num_files = len(metadata.items())
+    for x, y in metadata.items():
+        if isinstance(y, dict):
+            try:
+                boxes.append(y['tbox'][0])
+                boxes.append(y['tbox'][1])
+            except:
+                pass
+
+    num_time_files = len(boxes)
+    if num_time_files == 0:
+        logger.debug(" ** Directory {} does not have files with identifiable temporal extent".format(path))
+        return None
+
+    else:
+        for i in range(0, len(boxes)):
+            boxes[i] = datetime.datetime.strptime(boxes[i], '%Y-%m-%d')
+        min_date = min(boxes).strftime('%Y-%m-%d')
+        max_date = max(boxes).strftime('%Y-%m-%d')
+        logger.debug("Folder {} contains {} files out of {} with identifiable geographic extent".format(path, int(num_time_files),num_files))
+        time_ext = [min_date, max_date]
+
+    return time_ext
+
+
+
