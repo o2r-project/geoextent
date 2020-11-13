@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Command-Line Interface (CLI) &#8212; geoextent 0.3.1 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <title>Command-Line Interface (CLI) &#8212; geoextent 0.4.0 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -158,11 +158,11 @@ Supported formats:
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
- &#39;crs&#39;: 4326,
  &#39;bbox&#39;: [7.60168075561523,
   51.9488147720619,
   7.64725685119629,
-  51.9746240298775]}
+  51.9746240298775],
+ &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
@@ -182,7 +182,7 @@ Supported formats:
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
  &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;],
- &#39;crs&#39;: 4326}
+ &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
@@ -205,11 +205,35 @@ Supported formats:
   7.64725685119629,
   51.9746240298775],
  &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;],
- &#39;crs&#39;: 4326}
+ &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="section" id="folders-or-zip-files-s">
+<h2>Folders or ZIP files(s)<a class="headerlink" href="#folders-or-zip-files-s" title="Permalink to this headline">¶</a></h2>
+<p>Geoextent also supports queries for multiple files inside <strong>folders</strong> or <strong>ZIP file(s)</strong>.</p>
+<div class="section" id="extract-both-bounding-box-and-time-interval-from-a-folder-or-zipfile">
+<h3>Extract both bounding box and time interval from a folder or zipfile<a class="headerlink" href="#extract-both-bounding-box-and-time-interval-from-a-folder-or-zipfile" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">t</span> <span class="n">folder_two_files</span>
+</pre></div>
+</div>
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;folder&#39;,
+ &#39;crs&#39;: &#39;4326&#39;,
+ &#39;bbox&#39;: [2.05233338763921,
+  41.3170385224048,
+  7.64725685119629,
+  51.9746240298775],
+ &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2019-09-11&#39;]}
+</pre></div>
+</div>
+</div>
+</div>
+<p>The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: <a class="reference internal" href="../supportedformats/index_supportedformats.html"><span class="doc">Supported file formats</span></a>) inside the folder or zipfile. The resulting coordinate reference system  <code class="docutils literal notranslate"><span class="pre">CRS</span></code> of the combined bbox is always in the <a class="reference external" href="https://epsg.io/4326">EPSG: 4326</a> system.</p>
 </div>
 <div class="section" id="debugging">
 <h3>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h3>
@@ -292,7 +316,7 @@ Supported formats:
       &copy;2020, o2r-project.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
