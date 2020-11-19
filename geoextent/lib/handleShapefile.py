@@ -1,60 +1,58 @@
-
-import shapefile
-import sys
-import os
 import logging
-from . import helpfunctions as hf
+from osgeo import ogr
+from osgeo import osr
 
 fileType = "application/shp"
 
 logger = logging.getLogger("geoextent")
 
-def checkFileValidity(filePath):
-    '''Checks whether it is valid shapefile or not. \n
+def checkFileValidity(filepath):
+    '''Checks whether it is valid vector file or not. \n
     input "path": type string, path to file which shall be extracted \n
     raise exception if not valid
     '''
-    logger.info("Checking validity of {} \n".format(filePath))
+    logger.info("Checking validity of {} \n".format(filepath))
     
     try:
-        sf = shapefile.Reader(filePath)
+        dataset = ogr.Open(filepath)
+        dataset.GetLayer()
     except Exception as e:
-        logger.error("File {} is invalid!".format(filePath))
-        raise Exception("The Shapefile {} is not valid:\n{}".format(filePath, str(e)))
+        logger.error("File {} is invalid!".format(filepath))
+        raise Exception("The file {} is not valid:\n{}".format(filepath, str(e)))
+
+def getCRS(filepath):
+
+    dataset = ogr.Open(filepath)
+    layer = dataset.GetLayer()
+
+    try:
+        spatialRef = layer.GetSpatialRef().GetAttrValue("GEOGCS|AUTHORITY", 1)
+    except:
+        logger.debug("File {} does not have a coordinate reference system !".format(filepath))
+        spatialRef = None
+
+    return spatialRef
 
 
-def getCRS(path):
-    ''' gets the coordinate reference systems from the shapefile \n
-    input "path": type string, file path to shapefile 
-    '''
-    
-    return 'None'
-
-
-def getTemporalExtent(filePath):
-    ''' extracts temporal extent of the shapefile \n
-    input "path": type string, file path to shapefile file
+def getTemporalExtent(filepath):
+    ''' extracts temporal extent of the vector file \n
+    input "path": type string, file path to vector file
     '''
 
     return None
 
-
-def getBoundingBox(filePath):
-    ''' extracts bounding box from shapfile \n
-    input "path": type string, file path to shapefile \n
+def getBoundingBox(filepath):
+    ''' extracts bounding box from vector file \n
+    input "path": type string, file path to vector \n
     returns bounding box of the file: type list, length = 4
     '''
-    bbox = None
-    
-    sf = shapefile.Reader(filePath)
-    bbox = sf.bbox
-    bbox_list =[]
-    
-    # To get list of bbox instead of shapefile type 
-    for x in bbox:
-        bbox_list.append(x)
-
-    if not bbox_list:
-        raise Exception("Bounding box could not be extracted")
+    dataset = ogr.Open(filepath)
+    layer = dataset.GetLayer()
+    try:
+        ext = layer.GetExtent()
+        bbox_list= [ext[0],ext[2],ext[1],ext[3]]
+    except:
+        logger.debug("File {} does not have features".format(filepath))
+        bbox_list = None
 
     return bbox_list

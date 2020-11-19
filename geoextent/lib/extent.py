@@ -12,8 +12,8 @@ from . import helpfunctions as hf
 logger = logging.getLogger("geoextent")
 
 modulesSupported = {'geojson': handleGeojson, 'json': handleGeojson, 'csv': handleCSV,
-                    'shp': handleShapefile, 'dbf': handleShapefile, 'geotiff': handleGeotiff, 'tif': handleGeotiff}
-
+                    'shp': handleShapefile, 'dbf': handleShapefile, 'geotiff': handleGeotiff, 'tif': handleGeotiff,
+                    'gml': handleShapefile}
 
 def computeBboxInWGS84(module, path):
     ''' 
@@ -129,14 +129,14 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     # If file format is not supported
     if not usedModule:
         logger.info("Did not find a compatible module for file format {} of file {}".format(fileFormat, filePath))
-
         return None
 
     # Only extract metadata if the file content is valid
     try:
         usedModule.checkFileValidity(filePath)
     except Exception as e:
-        raise Exception(os.getcwd() + " The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
+        logger.info(" The file {} is not valid (e.g. empty):".format(filePath))
+        return None
 
     # get Bbox, Temporal Extent, Vector representation and crs parallel with threads
     class thread(threading.Thread):
