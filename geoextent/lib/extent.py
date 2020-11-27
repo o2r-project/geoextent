@@ -2,18 +2,17 @@ import logging
 import os
 import threading
 import zipfile
+from osgeo import ogr
+from osgeo import gdal
 
 from . import handleCSV
-from . import handleGeojson
-from . import handleGeotiff
-from . import handleShapefile
+from . import handleVector
+from . import handleRaster
 from . import helpfunctions as hf
 
 logger = logging.getLogger("geoextent")
 
-modulesSupported = {'geojson': handleGeojson, 'json': handleGeojson, 'csv': handleCSV,
-                    'shp': handleShapefile, 'dbf': handleShapefile, 'geotiff': handleGeotiff, 'tif': handleGeotiff,
-                    'gml': handleShapefile}
+special_modules = {'CSV': handleCSV}
 
 def computeBboxInWGS84(module, path):
     ''' 
@@ -121,10 +120,8 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     metadata = {}
 
     # get the module that will be called (depending on the format of the file)
-    for key in modulesSupported.keys():
-        if key == fileFormat:
-            logger.info("Module used: {}".format(key))
-            usedModule = modulesSupported.get(key)
+
+    usedModule = get_module(filePath)
 
     # If file format is not supported
     if not usedModule:
@@ -136,6 +133,7 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
         usedModule.checkFileValidity(filePath)
     except Exception as e:
         logger.info(" The file {} is not valid (e.g. empty):".format(filePath))
+        raise Exception(os.getcwd() + " The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
         return None
 
     # get Bbox, Temporal Extent, Vector representation and crs parallel with threads
@@ -202,3 +200,23 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
 
     logger.debug("Extraction finished: {}".format(str(metadata)))
     return metadata
+
+def get_module(path):
+    logger.info(path)
+    try:
+        file = gdal.OpenEx(path)
+        driver = file.GetDriver().ShortName
+    except:
+        logger.info("No module")
+        return None
+
+    if file.RasterCount != 0:
+        module = handleRaster
+    else:
+        try:
+            module = special_modules[driver]
+        except:
+            module = handleVector
+
+    return module
+
