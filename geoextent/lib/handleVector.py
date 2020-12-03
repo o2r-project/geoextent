@@ -52,6 +52,7 @@ def getTemporalExtent(filepath):
     input "path": type string, file path to vector file
     '''
 
+    global parsed_time
     dataset = ogr.Open(filepath)
     layer = dataset.GetLayer()
     layerDefinition = layer.GetLayerDefn()
@@ -68,23 +69,28 @@ def getTemporalExtent(filepath):
             if match is not None:
                 match_list.append(j)
 
-    timelist = []
-    
-    for time_feature in match_list:
-        for feat in layer:
-            time = feat.GetField(time_feature)
-            if time is not None:
-                timelist.append(time)
+    if len(match_list) == 0:
+        logger.debug('The file {} has no TemporalExtent'.format(filepath))
+        return None
+    else:
+        timelist = []
+        for time_feature in match_list:
+            for feat in layer:
+                time = feat.GetField(time_feature)
+                if time is not None:
+                    timelist.append(time)
 
     if len(timelist) == 0:
+        logger.debug('The file {} has no TemporalExtent'.format(filepath))
         return None
     else:
         parsed_time = hf.date_parser(timelist)
 
-    if parsed_time is not None:
-        tbox = [min(parsed_time).strftime('%Y-%m-%d'), max(parsed_time).strftime('%Y-%m-%d')]
+    if parsed_time is None:
+        logger.debug('The file {} has no recognizable TemporalExtent'.format(filepath))
+        return None
     else:
-        raise Exception('The file from ' + filepath + ' has no recognizable TemporalExtent')
+        tbox = [min(parsed_time).strftime('%Y-%m-%d'), max(parsed_time).strftime('%Y-%m-%d')]
 
     return tbox
 
