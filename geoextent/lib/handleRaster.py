@@ -8,7 +8,10 @@ fileType = "image/tiff"
 
 logger = logging.getLogger("geoextent")
 
-def checkFileValidity(filepath):
+def get_handler_name():
+    return "handleRaster"
+
+def checkFileSupported(filepath):
     '''Checks whether it is valid raster file or not. \n
     input "path": type string, path to file which shall be extracted \n
     raise exception if not valid

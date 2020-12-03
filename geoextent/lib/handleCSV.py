@@ -10,8 +10,10 @@ logger = logging.getLogger("geoextent")
 search = { "longitude" : ["(.)*longitude","(.)*long(.)*", "^lon","lon$","(.)*lng(.)*", "^x","x$"],
                    "latitude" : ["(.)*latitude(.)*", "^lat","lat$", "^y","y$"],
            "time":["(.)*timestamp(.)*", "(.)*datetime(.)*", "(.)*time(.)*", "date$","^date"]}
+def get_handler_name():
+    return "handleCSV"
 
-def checkFileValidity(filepath):
+def checkFileSupported(filepath):
     '''Checks whether it is valid CSV or not. \n
     input "path": type string, path to file which shall be extracted \n
     raise exception if not valid

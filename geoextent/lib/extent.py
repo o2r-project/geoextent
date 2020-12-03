@@ -122,9 +122,10 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     # get the module that will be called (depending on the format of the file)
 
     for i in handle_modules:
-        valid = handle_modules[i].checkFileValidity(filePath)
+        valid = handle_modules[i].checkFileSupported(filePath)
         if valid == True:
             usedModule = handle_modules[i]
+            logger.info("{} is being used to inspect {} file".format(usedModule.get_handler_name(),filePath))
             break
 
     # If file format is not supported

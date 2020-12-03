@@ -9,7 +9,10 @@ fileType = "application/shp"
 search = { "time":["(.)*timestamp(.)*", "(.)*datetime(.)*", "(.)*time(.)*", "date$","^date"]}
 logger = logging.getLogger("geoextent")
 
-def checkFileValidity(filepath):
+def get_handler_name():
+    return "handleVector"
+
+def checkFileSupported(filepath):
     '''Checks whether it is valid vector file or not. \n
     input "path": type string, path to file which shall be extracted \n
     '''
