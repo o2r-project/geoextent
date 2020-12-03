@@ -8,26 +8,29 @@ fileType = "image/tiff"
 
 logger = logging.getLogger("geoextent")
 
-def checkFileValidity(filePath):
-    '''Checks whether it is valid geotiff or not.
-    input filepath: type string, path to file which shall be extracted
+def checkFileValidity(filepath):
+    '''Checks whether it is valid raster file or not. \n
+    input "path": type string, path to file which shall be extracted \n
     raise exception if not valid
     '''
-    logger.info("Checking validity of {} \n".format(filePath))
 
-    # Enable exceptions
-    gdal.UseExceptions()
-
+    logger.info(filepath)
     try:
-        gtiffContent = gdal.Open(filePath)
-        
-        width = gtiffContent.RasterXSize
-        height = gtiffContent.RasterYSize
-    except Exception as e:
-        logger.error("File {} is invalid!".format(filePath))
-        raise Exception("The GeoTIFF file {} is not valid:\n{}".format(filePath, str(e)))
+        file = gdal.OpenEx(filepath)
+        driver = file.GetDriver().ShortName
+    except:
+        logger.debug("File {} is NOT supported by HandleRaster module".format(filepath))
+        return False
+
+    if file.RasterCount > 0:
+        logger.debug("File {} is supported by HandleRaster module".format(filepath))
+        return True
+    else:
+        logger.debug("File {} is NOT supported by HandleRaster module".format(filepath))
+        return False
 
 def getBoundingBox(filePath):
+
     ''' extracts bounding box from geotiff \n
     input "filepath": type string, file path to geotiff file \n
     returns bounding box of the file: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)] 

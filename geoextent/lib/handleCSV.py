@@ -1,5 +1,6 @@
 import csv
 import logging
+from osgeo import gdal
 from . import helpfunctions as hf
 
 fileType = "text/csv"
@@ -10,18 +11,31 @@ search = { "longitude" : ["(.)*longitude","(.)*long(.)*", "^lon","lon$","(.)*lng
                    "latitude" : ["(.)*latitude(.)*", "^lat","lat$", "^y","y$"],
            "time":["(.)*timestamp(.)*", "(.)*datetime(.)*", "(.)*time(.)*", "date$","^date"]}
 
-def checkFileValidity(filePath):
+def checkFileValidity(filepath):
     '''Checks whether it is valid CSV or not. \n
     input "path": type string, path to file which shall be extracted \n
     raise exception if not valid
     '''
-    logger.info("Checking validity of {} \n".format(filePath))
-    
-    with open(filePath) as csv_file:
-        daten = csv.reader(csv_file.readlines())
-        if daten is None:
-            logger.error("File {} is invalid!".format(filePath))
-            raise Exception("The file {} has no valid csv Attributes".format(filePath))
+
+    logger.info(filepath)
+    try:
+        file = gdal.OpenEx(filepath)
+        driver = file.GetDriver().ShortName
+    except:
+        logger.debug("File {} is NOT supported by HandleCSV module".format(filepath))
+        return False
+
+    if driver == "CSV":
+        with open(filepath) as csv_file:
+            daten = csv.reader(csv_file.readlines())
+            if daten is None:
+                logger.debug("File {} is NOT supported by HandleCSV module".format(filepath))
+                return False
+            else:
+                logger.debug("File {} is supported by HandleCSV module".format(filepath))
+                return True
+    else:
+        return False
 
 def getBoundingBox(filePath):
     '''

@@ -12,7 +12,7 @@ from . import helpfunctions as hf
 
 logger = logging.getLogger("geoextent")
 
-special_modules = {'CSV': handleCSV}
+handle_modules = {'CSV': handleCSV,"raster":handleRaster,"vector":handleVector}
 
 def computeBboxInWGS84(module, path):
     ''' 
@@ -121,19 +121,15 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
 
     # get the module that will be called (depending on the format of the file)
 
-    usedModule = get_module(filePath)
+    for i in handle_modules:
+        valid = handle_modules[i].checkFileValidity(filePath)
+        if valid == True:
+            usedModule = handle_modules[i]
+            break
 
     # If file format is not supported
     if not usedModule:
         logger.info("Did not find a compatible module for file format {} of file {}".format(fileFormat, filePath))
-        return None
-
-    # Only extract metadata if the file content is valid
-    try:
-        usedModule.checkFileValidity(filePath)
-    except Exception as e:
-        logger.info(" The file {} is not valid (e.g. empty):".format(filePath))
-        raise Exception(os.getcwd() + " The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
         return None
 
     # get Bbox, Temporal Extent, Vector representation and crs parallel with threads
@@ -201,22 +197,4 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     logger.debug("Extraction finished: {}".format(str(metadata)))
     return metadata
 
-def get_module(path):
-    logger.info(path)
-    try:
-        file = gdal.OpenEx(path)
-        driver = file.GetDriver().ShortName
-    except:
-        logger.info("No module")
-        return None
-
-    if file.RasterCount != 0:
-        module = handleRaster
-    else:
-        try:
-            module = special_modules[driver]
-        except:
-            module = handleVector
-
-    return module
 

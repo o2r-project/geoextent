@@ -1,5 +1,6 @@
 import logging
 from osgeo import ogr
+from osgeo import gdal
 from osgeo import osr
 
 fileType = "application/shp"
@@ -9,16 +10,23 @@ logger = logging.getLogger("geoextent")
 def checkFileValidity(filepath):
     '''Checks whether it is valid vector file or not. \n
     input "path": type string, path to file which shall be extracted \n
-    raise exception if not valid
     '''
-    logger.info("Checking validity of {} \n".format(filepath))
-    
+
+    logger.debug(filepath)
     try:
-        dataset = ogr.Open(filepath)
-        dataset.GetLayer()
-    except Exception as e:
-        logger.error("File {} is invalid!".format(filepath))
-        raise Exception("The file {} is not valid:\n{}".format(filepath, str(e)))
+        file = gdal.OpenEx(filepath)
+        driver = file.GetDriver().ShortName
+    except:
+        logger.debug("File {} is NOT supported by HandleVector module".format(filepath))
+        return False
+    logger.debug("Layer count: {} ".format(file.GetLayerCount()))
+    if file.GetLayerCount() > 0:
+        if driver != "CSV":
+            logger.debug("File {} is supported by HandleVector module".format(filepath))
+            return True
+    else:
+        logger.debug("File {} is NOT supported by HandleVector module".format(filepath))
+        return False
 
 def getCRS(filepath):
 
