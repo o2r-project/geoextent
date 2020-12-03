@@ -79,7 +79,7 @@ def test_geojson_bbox_long_name(script_runner):
     ret = script_runner.run('geoextent',
         '--bounding-box', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
     assert ret.success, "process should return success"
-    assert "[7.60168075561523, 51.9488147720619, 7.64725685119629, 51.9746240298775]" in ret.stdout, "bbox is printed to console"
+    assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout, "bbox is printed to console"
 
 def test_geojson_bbox_invalid_coordinates(script_runner):
     ret = script_runner.run('geoextent',
@@ -245,7 +245,7 @@ def test_folder(script_runner):
                             '-b','-t', 'tests/testdata/folders/folder_two_files')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "[2.05233338763921, 41.3170385224048, 7.64725685119629, 51.9746240298775]" in ret.stdout,"merge bbox of folder files, is printed to console"
+    assert "[2.052333387639205, 41.31703852240476, 7.647256851196289, 51.974624029877454]" in ret.stdout,"merge bbox of folder files, is printed to console"
     assert "['2018-11-14', '2019-09-11']" in ret.stdout,"merge time value of folder files, is printed to console"
 
 def test_zipfile(script_runner):
@@ -255,7 +255,7 @@ def test_zipfile(script_runner):
         create_zip(folder_name, tmp)
         ret = script_runner.run('geoextent','-b','-t', tmp.name)
         assert ret.success, "process should return success"
-        assert "[7.60168075561523, 51.9488147720619, 7.64725685119629, 51.9746240298775]" in ret.stdout
+        assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout
         assert "['2018-11-14', '2018-11-14']" in ret.stdout
 
 @pytest.mark.skip(reason="director input not implemented yet")

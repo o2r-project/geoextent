@@ -1,10 +1,12 @@
 import logging
 from osgeo import ogr
 from osgeo import gdal
+from . import helpfunctions as hf
+import re
 from osgeo import osr
 
 fileType = "application/shp"
-
+search = { "time":["(.)*timestamp(.)*", "(.)*datetime(.)*", "(.)*time(.)*", "date$","^date"]}
 logger = logging.getLogger("geoextent")
 
 def checkFileValidity(filepath):
@@ -47,7 +49,41 @@ def getTemporalExtent(filepath):
     input "path": type string, file path to vector file
     '''
 
-    return None
+    dataset = ogr.Open(filepath)
+    layer = dataset.GetLayer()
+    layerDefinition = layer.GetLayerDefn()
+
+    field_names = []
+    for i in range(layerDefinition.GetFieldCount()):
+        field_names.append(layerDefinition.GetFieldDefn(i).GetName())
+
+    match_list = []
+    for x in search["time"]:
+        for j in field_names:
+            term = re.compile(x, re.IGNORECASE)
+            match = term.search(j)
+            if match is not None:
+                match_list.append(j)
+
+    timelist = []
+    
+    for time_feature in match_list:
+        for feat in layer:
+            time = feat.GetField(time_feature)
+            if time is not None:
+                timelist.append(time)
+
+    if len(timelist) == 0:
+        return None
+    else:
+        parsed_time = hf.date_parser(timelist)
+
+    if parsed_time is not None:
+        tbox = [min(parsed_time).strftime('%Y-%m-%d'), max(parsed_time).strftime('%Y-%m-%d')]
+    else:
+        raise Exception('The file from ' + filepath + ' has no recognizable TemporalExtent')
+
+    return tbox
 
 def getBoundingBox(filepath):
     ''' extracts bounding box from vector file \n
