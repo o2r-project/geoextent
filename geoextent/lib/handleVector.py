@@ -131,7 +131,7 @@ def getBoundingBox(filepath):
         geo_dict[layer_name] = {"bbox": bbox, "crs": crs}
 
         if bbox == null_island or crs is None:
-            logger.debug("Layer {} does not have identifiable geographic extent. CRS may be missing.")
+            logger.debug("Layer {} does not have identifiable geographic extent. CRS may be missing.".format(layer_name))
             del geo_dict[layer_name]["crs"]
 
     bbox_merge = hf.bbox_merge(geo_dict, filepath)

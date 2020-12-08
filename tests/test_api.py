@@ -135,7 +135,7 @@ def test_kml_extract_bbox():
 
 def test_gpkg_extract_bboxs():
     result = geoextent.fromFile("tests/testdata/geopackage/nc.gpkg", bbox=True)
-    assert result['bbox'] == [-178.2176055908203, 18.921783446686177, -66.96926879882812, 71.40624237003613]
+    assert result['bbox'] == [-84.32383511101011, 33.882102865417494, -75.4565859451531, 36.589757993328675]
 
 def test_gml_extract_bbox_time():
     result = geoextent.fromFile("tests/testdata/gml/clc_1000_PT.gml", bbox=True, tbox=True)
