@@ -243,7 +243,6 @@ def test_folder(script_runner):
     assert "['2018-11-14', '2019-09-11']" in ret.stdout,"merge time value of folder files, is printed to console"
 
 def test_zipfile(script_runner):
-
     folder_name = "tests/testdata/folders/folder_one_file"
     with tempfile.NamedTemporaryFile(suffix=".zip") as tmp:
         create_zip(folder_name, tmp)
@@ -252,7 +251,7 @@ def test_zipfile(script_runner):
         assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout
         assert "['2018-11-14', '2018-11-14']" in ret.stdout
 
-@pytest.mark.skip(reason="director input not implemented yet")
+@pytest.mark.skip(reason="multiple input directories not implemented yet")
 def test_multiple_folders(script_runner):
     ret = script_runner.run('python', 'geoextent',
         '-b', 'tests/testdata/shapefile', 'tests/testdata/geojson', 'tests/testdata/nc')
