@@ -22,34 +22,29 @@ def test_defaults():
     assert "temporal_extent" not in result
     assert "crs" not in result
 
-
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_extract_bbox():
     assert geoextent.fromFile("tests/testdata/nc/ECMWF_ERA-40_subset.nc") == [-90.0, 0.0, 90.0, 357.5]
-
 
 def test_kml_extract_bbox():
     result = geoextent.fromFile("tests/testdata/kml/aasee.kml", bbox=True)
     assert "bbox" in result
     assert result["bbox"] == [7.594213485717774, 51.94246595679555, 7.61824607849121, 51.95727846118796]
 
-
 def test_gpkg_extract_bbox():
     result = geoextent.fromFile("tests/testdata/nc/nc.gpkg", bbox=True)
     assert result['bbox'] == [-84.32383511101011, 33.882102865417494, -75.4565859451531, 36.589757993328675]
 
-
+    
 def test_gml_extract_bbox():
     result = geoextent.fromFile("tests/testdata/gml/clc_1000_PT.gml", bbox=True)
     assert "bbox" in result
     assert result["bbox"] == [32.39669, -17.5420699994571, 39.30113999999999, -6.959389999772738]
 
-
 def test_gpx_extract_bbox():
     result = geoextent.fromFile("tests/testdata/gpx/gpx1.1_with_all_fields.gpx", bbox=True)
     assert "bbox" in result
     assert result["bbox"] == [-20.2, 10.0, 46.7, 14.0]
-
 
 def test_gpx_extract_tbox():
     result = geoextent.fromFile("tests/testdata/gpx/gpx1.1_with_all_fields.gpx", tbox=True)
@@ -61,7 +56,6 @@ def test_gpx_format_error_file():
     assert result == None
 
 def test_empty_folder():
-
     with tempfile.TemporaryDirectory() as temp:
         result = geoextent.fromDirectory(temp, bbox=True, tbox=True)
         assert "bbox" not in result
@@ -127,7 +121,6 @@ def test_gml_extract_time():
 def test_netcdf_extract_bbox_time():
     assert geoextent.fromFile("tests/testdata/nc/ECMWF_ERA-40_subset.nc", bbox=True, tbox=True) == [
         [-90.0, 0.0, 90.0, 357.5], ['2002-07-01', '2002-07-31']]
-
 
 def test_kml_extract_bbox():
     result = geoextent.fromFile("tests/testdata/kml/aasee.kml", bbox=True)
