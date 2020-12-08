@@ -48,7 +48,7 @@ The file used in the example can be in the code repository: `muenster_ring_zeit.
    get_showcase_file(dir_name, file_url)
 
    geoextent.fromFile('showcase_folder/muenster_ring_zeit.geojson', True, True)
-   
+
 CSV
 ^^^
 
@@ -61,7 +61,7 @@ Supported column names, by using `Regular expressions operations <https://docs.p
   - ``lat$``
   - ``^y``
   - ``y$``
-  
+
 - Longitude
   - ``(.)*longitude"``
   - ``(.)*long(.)``
@@ -78,7 +78,7 @@ Supported column names, by using `Regular expressions operations <https://docs.p
   - ``date$``
 
 
-The file used in the example can be obtained from `Zenodo Sandbox record 256820 <https://sandbox.zenodo.org/record/256820#.XeGcJJko85k>`_. 
+The file used in the example can be obtained from `Zenodo Sandbox record 256820 <https://sandbox.zenodo.org/record/256820#.XeGcJJko85k>`_.
 
 ::
 
@@ -134,6 +134,25 @@ The file used in the example can be found at Geofabrik: `shapefiles_toulouse.zip
    get_showcase_file(dir_name, file_url, 'shapefiles_toulouse.zip')
 
    geoextent.fromFile('showcase_folder/gis_osm_buildings_a_07_1.shp', True, False)
+
+Geopackage
+^^^^^^^
+
+The file used in the example is available online: `sample1_2.gpkg <http://www.geopackage.org/guide/implementation_guide.html#_level_1_4>`_.
+
+::
+
+   geoextent -b sample1_2.gpkg
+
+.. jupyter-execute::
+   :hide-code:
+
+   import geoextent.lib.extent as geoextent
+
+   dir_name = 'showcase_geopackage'
+   file_url = 'http://www.geopackage.org/data/sample1_2.gpkg'
+   get_showcase_file(dir_name, file_url)
+   geoextent.fromFile('showcase_folder/sample1_2.gpkg', True, False)
 
 .. jupyter-execute::
    :hide-code:

@@ -27,21 +27,20 @@ def test_defaults():
 def test_netcdf_extract_bbox():
     assert geoextent.fromFile("tests/testdata/nc/ECMWF_ERA-40_subset.nc") == [-90.0, 0.0, 90.0, 357.5]
 
-
-@pytest.mark.skip(reason="file format not implemented yet")
 def test_kml_extract_bbox():
-    assert geoextent.fromFile("tests/testdata/kml/aasee.kml", bbox=True) == [7.594213, 51.942466, 7.618246, 51.957278]
-
+    result = geoextent.fromFile("tests/testdata/kml/aasee.kml", bbox=True)
+    assert "bbox" in result
+    assert result["bbox"] == [7.594213485717774, 51.94246595679555, 7.61824607849121, 51.95727846118796]
 
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_gpkg_extract_bbox():
     assert geoextent.fromFile("tests/testdata/nc/nc.gpkg", bbox=True) == [33.882, -84.3239, 36.5896, -75.457]
 
 
-@pytest.mark.skip(reason="file format not implemented yet")
 def test_gml_extract_bbox():
-    assert geoextent.fromFile("tests/testdata/gml/clc_1000_PT.gml", bbox=True) == [-17.5420724159224, 32.3966928193202,
-                                                                                   -6.95938792923511, 39.3011352746141]
+    result = geoextent.fromFile("tests/testdata/gml/clc_1000_PT.gml", bbox=True)
+    assert "bbox" in result
+    assert result["bbox"] == [32.39669, -17.5420699994571, 39.30113999999999, -6.959389999772738]
 
 def test_empty_folder():
 
@@ -106,6 +105,7 @@ def test_netcdf_extract_time():
 def test_gml_extract_time():
     result = geoextent.fromFile("tests/testdata/gml/clc_1000_PT.gml", tbox=True)
     assert result["tbox"] == ['2013-11-30','2013-11-30']
+
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_extract_bbox_time():
     assert geoextent.fromFile("tests/testdata/nc/ECMWF_ERA-40_subset.nc", bbox=True, tbox=True) == [

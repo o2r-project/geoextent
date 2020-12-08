@@ -2,6 +2,14 @@
 Changelog
 =========
 
+0.5.0
+^^^^^
+- Add support for ``osgeo`` files (OGR/GDAL) (:pr:`87`)
+
+0.4.0
+^^^^^
+- Add support for ZIP files and folders (:pr:`79`)
+
 0.3.0
 ^^^^^
 

@@ -10,13 +10,14 @@ from osgeo import osr
 import logging
 from pyproj import Proj, transform
 import csv
-PREFERRED_SAMPLE_SIZE = 30
 
+output_time_format = '%Y-%m-%d'
+PREFERRED_SAMPLE_SIZE = 30
 WGS84_EPSG_ID = 4326
 logger = logging.getLogger("geoextent")
 
-def getAllRowElements(rowname, elements, exp_data=None):
 
+def getAllRowElements(rowname, elements, exp_data=None):
     '''
     Function purpose: help-function to get all row elements for a specific string \n
     Input: rowname, elements, exp_format \n
@@ -69,6 +70,7 @@ def searchForParameters(elements, paramArray, exp_data=None):
 
     return matching_elements
 
+
 def transformingIntoWGS84(crs, coordinate):
     '''
     Function purpose: transforming SRS into WGS84 (EPSG:4978; used by the GPS satellite navigation system) \n
@@ -80,7 +82,7 @@ def transformingIntoWGS84(crs, coordinate):
     source.ImportFromEPSG(int(crs))
 
     target = osr.SpatialReference()
-    target.ImportFromEPSG(4326)
+    target.ImportFromEPSG(WGS84_EPSG_ID)
 
     transform = osr.CoordinateTransformation(source, target)
 
@@ -115,7 +117,7 @@ def transformingArrayIntoWGS84(crs, pointArray):
 
 def validate(date_text):
     try:
-        if datetime.datetime.strptime(date_text, '%Y-%m-%d'):
+        if datetime.datetime.strptime(date_text, output_time_format):
             return True
     except:
         return False
@@ -141,9 +143,9 @@ def get_time_format(time_list, num_sample):
     if num_sample is None:
         num_sample = PREFERRED_SAMPLE_SIZE
         logger.info("num_sample not provided, num_sample modified to SAMPLE_SIZE {}".format(PREFERRED_SAMPLE_SIZE))
-    elif (type(num_sample) is not int):
+    elif type(num_sample) is not int:
         raise Exception('num_sample parameter  must be an integer')
-    elif (num_sample <= 0):
+    elif num_sample <= 0:
         raise Exception('num_sample parameter: {} must be greater than 0'.format(num_sample))
 
     if len(time_list) < num_sample:
@@ -153,9 +155,8 @@ def get_time_format(time_list, num_sample):
                 len(time_list)))
     else:
         # Selects first and last element
-        time_sample = [[time_list[1], time_list[-1]]]
+        time_sample = [[time_list[1], time_list[-1]], random.sample(time_list[1:-1], num_sample - 2)]
         # Selects num_sample-2 elements
-        time_sample.append(random.sample(time_list[1:-1], num_sample - 2))
         time_sample = sum(time_sample, [])
 
     format_list = []
@@ -180,7 +181,7 @@ def get_time_format(time_list, num_sample):
 
 def date_parser(datetime_list, num_sample=None):
     '''
-    Function purpose: transform list of strings into ISO8601 ('%Y-%m-%d')
+    Function purpose: transform list of strings into date-time format
     datetime_list: list of date-times (strings) \n
     Output: list of DatetimeIndex
     '''
@@ -188,11 +189,13 @@ def date_parser(datetime_list, num_sample=None):
     datetime_format = get_time_format(datetime_list, num_sample)
 
     if datetime_format is not None:
-        parse_time = pd.to_datetime(datetime_list, format=datetime_format, errors='coerce')
+        parse_time_input_format = pd.to_datetime(datetime_list, format=datetime_format, errors='coerce')
+        parse_time = pd.to_datetime(parse_time_input_format, format=output_time_format, errors='coerce')
     else:
         parse_time = None
 
     return parse_time
+
 
 def extract_zip(zippedFile):
     '''
@@ -208,9 +211,11 @@ def extract_zip(zippedFile):
     with zipfile.ZipFile(abs_path) as zipf:
         zipf.extractall(zip_folder_path)
 
-def bbox_merge(metadata,path):
-    boxes_extent = []
 
+def bbox_merge(metadata, origin):
+    logger.debug("medatada {}".format(metadata))
+    boxes_extent = []
+    metadata_merge = []
     num_files = len(metadata.items())
     for x, y in metadata.items():
         if isinstance(y, dict):
@@ -218,10 +223,11 @@ def bbox_merge(metadata,path):
                 bbox_extent = [y['bbox'], y['crs']]
                 boxes_extent.append(bbox_extent)
             except:
-                logger.debug("File {} does not have identifiable geographical extent (CRS+bbox)".format(x))
+                logger.debug("{} does not have identifiable geographical extent (CRS+bbox)".format(x))
                 pass
     if len(boxes_extent) == 0:
-        logger.debug(" ** Directory {} does not have files with identifiable geographical extent (CRS+bbox)".format(path))
+        logger.debug(
+            " ** {} does not have geometries with identifiable geographical extent (CRS+bbox)".format(origin))
         return None
     elif len(boxes_extent) > 0:
 
@@ -233,7 +239,6 @@ def bbox_merge(metadata,path):
         for bbox in boxes_extent:
 
             try:
-
                 box = ogr.Geometry(ogr.wkbLinearRing)
                 box.AddPoint(bbox[0][0], bbox[0][1])
                 box.AddPoint(bbox[0][2], bbox[0][1])
@@ -241,8 +246,7 @@ def bbox_merge(metadata,path):
                 box.AddPoint(bbox[0][0], bbox[0][3])
                 box.AddPoint(bbox[0][0], bbox[0][1])
 
-                if bbox[1] != "4326":
-
+                if bbox[1] != str(WGS84_EPSG_ID):
                     source = osr.SpatialReference()
                     source.ImportFromEPSG(int(bbox[1]))
                     transform = osr.CoordinateTransformation(source, des_srs)
@@ -253,22 +257,23 @@ def bbox_merge(metadata,path):
                 multipolygon.AddGeometry(polygon)
 
             except Exception as e:
-                logger.debug("Error extracting geographic extent of file {}. CRS {} may be invalid. Error: {}".format(x,bbox[1],e))
+                logger.debug("Error extracting geographic extent of {}. CRS {} may be invalid. Error: {}".format(x,bbox[1], e))
                 continue
 
-        num_geo_files = multipolygon.GetGeometryCount()/4
+        num_geo_files = multipolygon.GetGeometryCount() / 4
         if num_geo_files > 0:
-            logger.debug("Folder {} contains {} files out of {} with identifiable geographic extent".format(path,int(num_geo_files),num_files))
+            logger.debug('{} contains {} geometries out of {} with identifiable geographic extent'.format(origin, int(
+                num_geo_files), num_files))
             env = multipolygon.GetEnvelope()
             metadata_merge = [env[0], env[2], env[1], env[3]]
         else:
-            logger.debug(" ** Directory {} does not have files with identifiable geographical extent (CRS+bbox)".format(path))
+            logger.debug(" {} does not have geometries with identifiable geographical extent (CRS+bbox)".format(origin))
             metadata_merge = None
 
     return metadata_merge
 
-def tbox_merge(metadata,path):
 
+def tbox_merge(metadata, path):
     boxes = []
     num_files = len(metadata.items())
     for x, y in metadata.items():
@@ -286,13 +291,11 @@ def tbox_merge(metadata,path):
 
     else:
         for i in range(0, len(boxes)):
-            boxes[i] = datetime.datetime.strptime(boxes[i], '%Y-%m-%d')
-        min_date = min(boxes).strftime('%Y-%m-%d')
-        max_date = max(boxes).strftime('%Y-%m-%d')
-        logger.debug("Folder {} contains {} files out of {} with identifiable geographic extent".format(path, int(num_time_files),num_files))
+            boxes[i] = datetime.datetime.strptime(boxes[i], output_time_format)
+        min_date = min(boxes).strftime(output_time_format)
+        max_date = max(boxes).strftime(output_time_format)
+        logger.debug("Folder {} contains {} files out of {} with identifiable temporal extent".format(path, int(
+            num_time_files), num_files))
         time_ext = [min_date, max_date]
 
     return time_ext
-
-
-

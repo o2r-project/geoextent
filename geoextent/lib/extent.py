@@ -11,7 +11,6 @@ from . import handleRaster
 from . import helpfunctions as hf
 
 logger = logging.getLogger("geoextent")
-
 handle_modules = {'CSV': handleCSV,"raster":handleRaster,"vector":handleVector}
 
 def computeBboxInWGS84(module, path):
@@ -123,7 +122,7 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
 
     for i in handle_modules:
         valid = handle_modules[i].checkFileSupported(filePath)
-        if valid == True:
+        if valid:
             usedModule = handle_modules[i]
             logger.info("{} is being used to inspect {} file".format(usedModule.get_handler_name(),filePath))
             break

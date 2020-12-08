@@ -28,7 +28,12 @@ supported_formats = '''
 Supported formats:
 - GeoJSON (.geojson)
 - Tabular data (.csv)
+- GeoTIFF (.geotiff, .tif)
 - Shapefile (.shp)
+- Geopackage (.pkga)
+- GPS Exchange Format (.gpx)
+- Keyhole Markup Language (.kml)
+- Geography Markup Language (.gml)
 - GeoTIFF (.geotiff, .tif)
 '''
 
