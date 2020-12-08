@@ -32,9 +32,9 @@ Supported formats:
 - Shapefile (.shp)
 - Geopackage (.pkga)
 - GPS Exchange Format (.gpx)
-- Keyhole Markup Language (.kml)
 - Geography Markup Language (.gml)
-- GeoTIFF (.geotiff, .tif)
+- Keyhole Markup Language (.kml)
+
 '''
 
 

@@ -8,8 +8,8 @@ def test_shapefile_withCRS_extract_bbox():
 
 def test_shapefile_without_CRS_extract_bbox():
     result = geoextent.fromFile('tests/testdata/shapefile/Abgrabungen_Kreis_Kleve_Shape.shp', bbox=True, tbox=False)
-    assert "temporal_extent" not in result
-    assert result["bbox"] == [295896.274870878, 5694747.64703736, 325999.79578122497, 5747140.98659967]
+    assert "tbox " not in result
+    assert result["bbox"] is None
 
 def test_shapefile_extract_bbox_with_CRS():
     result = geoextent.fromFile('tests/testdata/shapefile/gis_osm_buildings_a_free_1.shp', bbox=True, tbox=False)

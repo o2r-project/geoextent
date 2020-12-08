@@ -4,7 +4,7 @@ Changelog
 
 0.5.0
 ^^^^^
-- Add support for ``osgeo`` files (OGR/GDAL) (:pr:`87`)
+- Add support for ``osgeo`` files (OGR/GDAL) as handleVector and handleRaster (:pr:`87`)
 
 0.4.0
 ^^^^^

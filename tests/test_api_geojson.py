@@ -8,9 +8,8 @@ def test_geojson_extract_bbox():
     assert result["bbox"] == [7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]
 
 def test_invalid_coordinate_geojson_extract_bbox():
-    with pytest.raises(Exception) as excinfo:
-        geoextent.fromFile('tests/testdata/geojson/invalid_coordinate.geojson')
-    assert "is not valid" in str(excinfo.value)
+    result = geoextent.fromFile('tests/testdata/geojson/invalid_coordinate.geojson', bbox=True)
+    assert result["bbox"] is None
 
 def test_one_point_geojson_extract_bbox():
     result = geoextent.fromFile('tests/testdata/geojson/onePoint.geojson', bbox=True)

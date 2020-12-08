@@ -99,7 +99,7 @@ def test_geojson_time_invalid(script_runner):
     ret = script_runner.run('geoextent',
         '-t', 'tests/testdata/geojson/invalid_time.geojson')
     assert ret.success, "process should return success"
-    ret.stderr is not None
+    assert ret.stderr is not None
     assert 'Invalid time format' in ret.stderr, "stderr should not be empty"
 
 def test_print_supported_formats(script_runner):
@@ -132,21 +132,16 @@ def test_netcdf_time_invalid(script_runner):
     assert ret.stderr is not None
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
 
-@pytest.mark.skip(reason="file format not implemented yet")
 def test_kml_bbox(script_runner):
-    ret = script_runner.run('python', 'geoextent',
-        '-b', 'tests/testdata/kml/aasee.kml')
-    assert ret.success, "process should return success"
-    assert ret.stderr == '', "stderr should be empty"
-    assert "[7.594213, 51.942466, 7.618246, 51.957278]" in ret.stdout, "bbox is printed to console"
+    ret = script_runner.run('geoextent', '-b', 'tests/testdata/kml/aasee.kml')
+    print(ret.stdout)
+    assert "[7.594213485717774, 51.94246595679555, 7.61824607849121, 51.95727846118796]" in ret.stdout, "bbox is printed to console"
 
-@pytest.mark.skip(reason="file format not implemented yet")
 def test_kml_time(script_runner):
-    ret = script_runner.run('python', 'geoextent',
-        '-t', '-input', 'tests/testdata/kml/aasee.kml')
+    ret = script_runner.run('geoextent', '-t', 'tests/testdata/kml/aasee.kml')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "[None]" in ret.stdout,  "time value is printed to console"
+    assert "'tbox': None" in ret.stdout,  "time value is printed to console"
 
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_kml_time_invalid(script_runner):
@@ -161,7 +156,6 @@ def test_geotiff_bbox(script_runner):
     ret = script_runner.run('geoextent',
         '-b', 'tests/testdata/tif/wf_100m_klas.tif')
     assert ret.success, "process should return success"
-    print(ret.stderr)
     assert ret.stderr == '', "stderr should be empty"
     result = ret.stdout
     assert '4326' in result
