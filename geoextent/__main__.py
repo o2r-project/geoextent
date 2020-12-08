@@ -30,7 +30,7 @@ Supported formats:
 - Tabular data (.csv)
 - GeoTIFF (.geotiff, .tif)
 - Shapefile (.shp)
-- Geopackage (.pkga)
+- GeoPackage (.gpkg)
 - GPS Exchange Format (.gpx)
 - Geography Markup Language (.gml)
 - Keyhole Markup Language (.kml)

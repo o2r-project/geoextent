@@ -135,7 +135,7 @@ The file used in the example can be found at Geofabrik: `shapefiles_toulouse.zip
 
    geoextent.fromFile('showcase_folder/gis_osm_buildings_a_07_1.shp', True, False)
 
-Geopackage
+GeoPackage
 ^^^^^^^^^^
 
 The file used in the example is available online: `sample1_2.gpkg <http://www.geopackage.org/guide/implementation_guide.html#_level_1_4>`_.

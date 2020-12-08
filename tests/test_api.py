@@ -45,6 +45,21 @@ def test_gml_extract_bbox():
     assert result["bbox"] == [32.39669, -17.5420699994571, 39.30113999999999, -6.959389999772738]
 
 
+def test_gpx_extract_bbox():
+    result = geoextent.fromFile("tests/testdata/gpx/gpx1.1_with_all_fields.gpx", bbox=True)
+    assert "bbox" in result
+    assert result["bbox"] == [-20.2, 10.0, 46.7, 14.0]
+
+
+def test_gpx_extract_tbox():
+    result = geoextent.fromFile("tests/testdata/gpx/gpx1.1_with_all_fields.gpx", tbox=True)
+    assert "tbox" in result
+    assert result["tbox"] == ['2013-01-01', '2013-01-01']
+
+def test_gpx_format_error_file():
+    result = geoextent.fromFile("tests/testdata/gpx/gpx1.1_with_all_fields_error_format.gpx", tbox=True)
+    assert result == None
+
 def test_empty_folder():
 
     with tempfile.TemporaryDirectory() as temp:
