@@ -183,7 +183,6 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     thread_temp_except = thread("tbox")
     thread_crs_except = thread("crs")
 
-    # lock = threading.Lock()
     logger.debug("Starting 3 threads for extraction.")
 
     thread_bbox_except.start()
@@ -196,5 +195,3 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
 
     logger.debug("Extraction finished: {}".format(str(metadata)))
     return metadata
-
-
