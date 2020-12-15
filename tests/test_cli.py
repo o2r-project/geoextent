@@ -75,14 +75,20 @@ def test_geojson_invalid_second_input(script_runner):
 def test_geojson_bbox(script_runner):
     ret = script_runner.run('geoextent', '-b','tests/testdata/geojson/muenster_ring_zeit.geojson')
     assert ret.success, "process should return success"
-    assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout
+    result = ret.stdout
+    bboxStr = result[result.find("[") + 1:result.find("]")]
+    bboxList = [float(i) for i in bboxStr.split(',')]
+    assert bboxList == pytest.approx([7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454])
 
 
 def test_geojson_bbox_long_name(script_runner):
     ret = script_runner.run('geoextent',
         '--bounding-box', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
     assert ret.success, "process should return success"
-    assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout, "bbox is printed to console"
+    result = ret.stdout
+    bboxStr = result[result.find("[") + 1:result.find("]")]
+    bboxList = [float(i) for i in bboxStr.split(',')]
+    assert bboxList == pytest.approx([7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454])
 
 
 def test_geojson_bbox_invalid_coordinates(script_runner):
@@ -97,7 +103,6 @@ def test_geojson_time(script_runner):
     ret = script_runner.run('geoextent',
         '-t', 'tests/testdata/geojson/muenster_ring_zeit.geojson')
     assert ret.success, "process should return success"
-    #assert ret.stderr == '', "stderr should be empty"
     assert "['2018-11-14', '2018-11-14']" in ret.stdout,  "time value is printed to console"
 
 
@@ -121,8 +126,10 @@ def test_netcdf_bbox(script_runner):
         '-b', 'tests/testdata/nc/ECMWF_ERA-40_subset.nc')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "[-90.0, 0.0, 90.0, 357.5]" in ret.stdout, "bbox is printed to console"
-
+    result = ret.stdout
+    bboxStr = result[result.find("[") + 1:result.find("]")]
+    bboxList = [float(i) for i in bboxStr.split(',')]
+    assert bboxList == pytest.approx([-90.0, 0.0, 90.0, 357.5])
 
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_time(script_runner):
@@ -144,8 +151,10 @@ def test_netcdf_time_invalid(script_runner):
 
 def test_kml_bbox(script_runner):
     ret = script_runner.run('geoextent', '-b', 'tests/testdata/kml/aasee.kml')
-    print(ret.stdout)
-    assert "[7.594213485717774, 51.94246595679555, 7.61824607849121, 51.95727846118796]" in ret.stdout, "bbox is printed to console"
+    result = ret.stdout
+    bboxStr = result[result.find("[") + 1:result.find("]")]
+    bboxList = [float(i) for i in bboxStr.split(',')]
+    assert bboxList == pytest.approx([7.594213485717774, 51.94246595679555, 7.61824607849121, 51.95727846118796])
 
 
 def test_kml_time(script_runner):
@@ -172,24 +181,27 @@ def test_geotiff_bbox(script_runner):
     assert '4326' in result
     bboxStr = result[result.find("[")+1:result.find("]")]
     bboxList = [float(i) for i in bboxStr.split(',')]
-
     assert bboxList == pytest.approx([50.310252, 5.9153008, 52.5307755, 9.4683987])
 
 
 def test_gpkg_bbox(script_runner):
     ret = script_runner.run('geoextent','-b', 'tests/testdata/nc/nc.gpkg')
+    result = ret.stdout
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "[-84.32383511101011, 33.882102865417494, -75.4565859451531, 36.589757993328675]" in ret.stdout, "bbox is printed to console"
+    bboxStr = result[result.find("[")+1:result.find("]")]
+    bboxList = [float(i) for i in bboxStr.split(',')]
+    assert bboxList == pytest.approx([-84.32383511101011, 33.882102865417494, -75.4565859451531, 36.589757993328675])
 
 
 def test_csv_bbox(script_runner, tmpdir):
     ret = script_runner.run('geoextent', 
         '-b', 'tests/testdata/csv/cities_NL.csv')
     assert ret.success, "process should return success"
-    #assert ret.stderr == '', "stderr should be empty"
-    assert "[4.3175, 51.434444, 6.574722, 53.217222]" in ret.stdout, "bbox is printed to console"
-
+    result = ret.stdout
+    bboxStr = result[result.find("[") + 1:result.find("]")]
+    bboxList = [float(i) for i in bboxStr.split(',')]
+    assert bboxList == pytest.approx([4.3175, 51.434444, 6.574722, 53.217222])
 
 def test_csv_time(script_runner, tmpdir):
     ret = script_runner.run('geoextent',
@@ -211,7 +223,10 @@ def test_gml_bbox(script_runner):
     ret = script_runner.run('geoextent', '-b', 'tests/testdata/gml/clc_1000_PT.gml')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "[32.39669, -17.5420699994571, 39.30113999999999, -6.959389999772738]" in ret.stdout, "bbox is printed to console"
+    result = ret.stdout
+    bboxStr = result[result.find("[") + 1:result.find("]")]
+    bboxList = [float(i) for i in bboxStr.split(',')]
+    assert bboxList == pytest.approx([32.39669, -17.5420699994571, 39.30113999999999, -6.959389999772738])
 
 
 def test_gml_time(script_runner):
@@ -249,8 +264,11 @@ def test_folder(script_runner):
                             '-b','-t', 'tests/testdata/folders/folder_two_files')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "[2.052333387639205, 41.31703852240476, 7.647256851196289, 51.974624029877454]" in ret.stdout,"merge bbox of folder files, is printed to console"
-    assert "['2018-11-14', '2019-09-11']" in ret.stdout,"merge time value of folder files, is printed to console"
+    result = ret.stdout
+    bboxStr = result[result.find("[") + 1:result.find("]")]
+    bboxList = [float(i) for i in bboxStr.split(',')]
+    assert bboxList == pytest.approx([2.052333387639205, 41.31703852240476, 7.647256851196289, 51.974624029877454])
+    assert "['2018-11-14', '2019-09-11']" in result,"merge time value of folder files, is printed to console"
 
 
 def test_zipfile(script_runner):
@@ -259,8 +277,11 @@ def test_zipfile(script_runner):
         create_zip(folder_name, tmp)
         ret = script_runner.run('geoextent','-b','-t', tmp.name)
         assert ret.success, "process should return success"
-        assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout
-        assert "['2018-11-14', '2018-11-14']" in ret.stdout
+        result = ret.stdout
+        bboxStr = result[result.find("[") + 1:result.find("]")]
+        bboxList = [float(i) for i in bboxStr.split(',')]
+        assert bboxList == pytest.approx([7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454])
+        assert "['2018-11-14', '2018-11-14']" in result
 
 
 @pytest.mark.skip(reason="multiple input directories not implemented yet")
