@@ -5,7 +5,7 @@ from osgeo import gdal
 def test_geotiff_extract_bbox():
     result = geoextent.fromFile('tests/testdata/tif/wf_100m_klas.tif', bbox=True)
     assert "bbox" in result
-    assert result["bbox"] == pytest.approx([5.91530075647532, 50.3102519741084, 9.46839871248415, 52.5307755328733])
+    assert result["bbox"] == pytest.approx([5.915300, 50.310251, 9.468398, 52.530775])
 
 def test_geotiff_extract_time():
     result = geoextent.fromFile('tests/testdata/tif/wf_100m_klas.tif', bbox=True)

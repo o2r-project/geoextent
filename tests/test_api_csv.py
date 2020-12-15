@@ -23,10 +23,8 @@ def test_csv_extract_bbox_and_tbox():
     assert result["tbox"] == ['2017-08-01', '2019-09-30']
 
 def test_empty_csv_file():
-    result = geoextent.fromFile('tests/testdata/csv/empty_csv.csv', bbox=True, tbox=True)
-    assert "bbox" not in result
-    assert "tbox" not in result
-    assert "crs" not in result
+    result = geoextent.fromFile('tests/testdata/csv/empty_csv.csv', bbox=True)
+    assert result is None
 
 def test_csv_extract_bbox_and_tbox_semicolon_delimiter():
     result = geoextent.fromFile('tests/testdata/csv/csv_semicolon_delimiter.csv', bbox=True, tbox=True)
