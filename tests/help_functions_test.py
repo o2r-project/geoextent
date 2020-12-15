@@ -1,7 +1,7 @@
 import zipfile
 import os
 
-
+tolerance = 1e-4
 def create_zip(folder, zipfile_temp):
     '''
     Function purpose: create a zip file
