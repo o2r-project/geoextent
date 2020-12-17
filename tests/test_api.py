@@ -142,6 +142,9 @@ def test_gpkg_extract_bboxs():
     result = geoextent.fromFile("tests/testdata/geopackage/nc.gpkg", bbox=True)
     assert result['bbox'] == pytest.approx([-84.323835, 33.882102, -75.456585, 36.589757], abs=tolerance)
 
+
+@pytest.mark.skipif("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true",
+                    reason="Travis GDAL version outdated")
 def test_gml_extract_bbox_time():
     result = geoextent.fromFile("tests/testdata/gml/clc_1000_PT.gml", bbox=True, tbox=True)
     assert result['bbox'] == pytest.approx([32.39669, -17.542069, 39.301139, -6.959389], abs=tolerance)
