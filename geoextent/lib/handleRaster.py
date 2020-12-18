@@ -1,5 +1,5 @@
+import osgeo
 import osgeo.gdal as gdal
-import osgeo.gdalconst as gdalconst
 import osgeo.osr as osr
 import logging
 from . import helpfunctions as hf
@@ -46,6 +46,11 @@ def getBoundingBox(filePath):
     # get the existing coordinate system
     old_cs = osr.SpatialReference()
     old_cs.ImportFromWkt(geotiffContent.GetProjectionRef())
+    if int(osgeo.__version__[0]) >= 3:
+        # GDAL 3 changes axis order: https://github.com/OSGeo/gdal/issues/1546
+        old_cs.SetAxisMappingStrategy(osgeo.osr.OAMS_TRADITIONAL_GIS_ORDER)
+
+    logger.debug("old_cs {}".format(old_cs))
 
     # create the new coordinate system
 
@@ -64,6 +69,7 @@ def getBoundingBox(filePath):
     miny = gt[3] + width * gt[4] + height * gt[5]
     maxx = gt[0] + width * gt[1] + height * gt[2]
     maxy = gt[3]
+    logger.debug("DELETE ME :  MINX: {} MINY: {} MAXX: {} MAXY: {}".format(minx,miny,maxx,maxy))
 
     # get the coordinates in lat long
     latlongmin = transform.TransformPoint(minx, miny)
