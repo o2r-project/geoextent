@@ -44,7 +44,7 @@ def test_gpkg_extract_bbox():
 def test_gml_extract_bbox():
     result = geoextent.fromFile("tests/testdata/gml/clc_1000_PT.gml", bbox=True)
     assert "bbox" in result
-    assert result["bbox"] == pytest.approx([32.39669, -17.542069, 39.301139, -6.959389], abs=tolerance)
+    assert result["bbox"] == pytest.approx([-17.542069, 32.39669, -6.959389, 39.301139], abs=tolerance)
 
 
 def test_gpx_extract_bbox():
@@ -138,6 +138,7 @@ def test_kml_extract_bbox():
     result = geoextent.fromFile("tests/testdata/kml/aasee.kml", bbox=True)
     assert result['bbox'] == pytest.approx([7.594213, 51.942465, 7.618246, 51.957278], abs=tolerance)
 
+
 def test_gpkg_extract_bboxs():
     result = geoextent.fromFile("tests/testdata/geopackage/nc.gpkg", bbox=True)
     assert result['bbox'] == pytest.approx([-84.323835, 33.882102, -75.456585, 36.589757], abs=tolerance)
@@ -147,7 +148,7 @@ def test_gpkg_extract_bboxs():
                     reason="Travis GDAL version outdated")
 def test_gml_extract_bbox_time():
     result = geoextent.fromFile("tests/testdata/gml/clc_1000_PT.gml", bbox=True, tbox=True)
-    assert result['bbox'] == pytest.approx([32.39669, -17.542069, 39.301139, -6.959389], abs=tolerance)
+    assert result['bbox'] == pytest.approx([-17.542069, 32.39669, -6.959389, 39.301139], abs=tolerance)
     assert result['tbox'] == ['2005-12-31', '2013-11-30']
 
 def test_not_found_file():

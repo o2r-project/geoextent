@@ -220,7 +220,7 @@ def test_gml_bbox(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     result = ret.stdout
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([32.39669, -17.542069, 39.301139, -6.959389])
+    assert bboxList == pytest.approx([-17.542069, 32.39669, -6.959389, 39.301139])
 
 
 def test_gml_time(script_runner):
