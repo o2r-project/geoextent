@@ -1,7 +1,7 @@
 import os           # used to get the location of the testdata
 import pytest
 import tempfile
-from help_functions_test import create_zip, parse_coordinates
+from help_functions_test import create_zip, parse_coordinates, tolerance
 from osgeo import gdal
 
 def test_helptext_direct(script_runner):
@@ -77,7 +77,7 @@ def test_geojson_bbox(script_runner):
     assert ret.success, "process should return success"
     result = ret.stdout
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([7.601680, 51.948814, 7.647256, 51.974624])
+    assert bboxList == pytest.approx([7.601680, 51.948814, 7.647256, 51.974624], abs=tolerance)
 
 
 def test_geojson_bbox_long_name(script_runner):
@@ -86,7 +86,7 @@ def test_geojson_bbox_long_name(script_runner):
     assert ret.success, "process should return success"
     result = ret.stdout
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([7.601680, 51.948814, 7.6472568, 51.974624])
+    assert bboxList == pytest.approx([7.601680, 51.948814, 7.6472568, 51.974624], abs=tolerance)
 
 
 def test_geojson_bbox_invalid_coordinates(script_runner):
@@ -126,7 +126,7 @@ def test_netcdf_bbox(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     result = ret.stdout
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([-90.0, 0.0, 90.0, 357.5])
+    assert bboxList == pytest.approx([-90.0, 0.0, 90.0, 357.5], abs=tolerance)
 
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_time(script_runner):
@@ -150,7 +150,7 @@ def test_kml_bbox(script_runner):
     ret = script_runner.run('geoextent', '-b', 'tests/testdata/kml/aasee.kml')
     result = ret.stdout
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([7.594213, 51.942465, 7.618246, 51.957278])
+    assert bboxList == pytest.approx([7.594213, 51.942465, 7.618246, 51.957278], abs=tolerance)
 
 
 def test_kml_time(script_runner):
@@ -176,16 +176,16 @@ def test_geotiff_bbox(script_runner):
     result = ret.stdout
     assert '4326' in result
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([50.310252, 5.915300, 52.530775, 9.468398])
+    assert bboxList == pytest.approx([5.915300, 50.310251, 9.468398, 52.530775], abs=tolerance)
 
 
 def test_gpkg_bbox(script_runner):
-    ret = script_runner.run('geoextent','-b', 'tests/testdata/nc/nc.gpkg')
+    ret = script_runner.run('geoextent','-b', 'tests/testdata/geopackage/nc.gpkg')
     result = ret.stdout
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([-84.32383, 33.882102, -75.456585, 36.589757])
+    assert bboxList == pytest.approx([-84.32383, 33.882102, -75.456585, 36.589757], abs=tolerance)
 
 
 def test_csv_bbox(script_runner, tmpdir):
@@ -194,7 +194,7 @@ def test_csv_bbox(script_runner, tmpdir):
     assert ret.success, "process should return success"
     result = ret.stdout
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([4.3175, 51.434444, 6.574722, 53.217222])
+    assert bboxList == pytest.approx([4.3175, 51.434444, 6.574722, 53.217222], abs=tolerance)
 
 def test_csv_time(script_runner, tmpdir):
     ret = script_runner.run('geoextent',
