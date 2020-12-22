@@ -1,4 +1,5 @@
 import logging
+import osgeo
 from osgeo import ogr
 from osgeo import gdal
 from . import helpfunctions as hf
@@ -125,6 +126,9 @@ def getBoundingBox(filepath):
 
         try:
             crs = layer.GetSpatialRef().GetAttrValue("GEOGCS|AUTHORITY", 1)
+            if int(osgeo.__version__[0]) >= 3:
+                if layer.GetSpatialRef().GetAxisMappingStrategy() == 1:
+                    bbox = [ext[2], ext[0], ext[3], ext[1]]
         except Exception:
             crs = None
 
@@ -135,5 +139,8 @@ def getBoundingBox(filepath):
             del geo_dict[layer_name]["crs"]
 
     bbox_merge = hf.bbox_merge(geo_dict, filepath)
+
+
+
 
     return bbox_merge
