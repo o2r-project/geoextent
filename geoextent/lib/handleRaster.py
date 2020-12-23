@@ -24,14 +24,14 @@ def checkFileSupported(filepath):
         file = gdal.OpenEx(filepath)
         driver = file.GetDriver().ShortName
     except:
-        logger.debug("File {} is NOT supported by HandleRaster module".format(filepath))
+        logger.debug("File {} is NOT supported by handleRaster module".format(filepath))
         return False
 
     if file.RasterCount > 0:
-        logger.debug("File {} is supported by HandleRaster module".format(filepath))
+        logger.debug("File {} is supported by handleRaster module".format(filepath))
         return True
     else:
-        logger.debug("File {} is NOT supported by HandleRaster module".format(filepath))
+        logger.debug("File {} is NOT supported by handleRaster module".format(filepath))
         return False
 
 
