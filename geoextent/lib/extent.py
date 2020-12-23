@@ -11,7 +11,7 @@ from . import handleRaster
 from . import helpfunctions as hf
 
 logger = logging.getLogger("geoextent")
-handle_modules = {'CSV': handleCSV,"raster":handleRaster,"vector":handleVector}
+handle_modules = {'CSV': handleCSV, "raster":handleRaster, "vector":handleVector}
 
 def computeBboxInWGS84(module, path):
     ''' 
