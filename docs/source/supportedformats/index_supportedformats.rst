@@ -48,7 +48,7 @@ The file used in the example can be in the code repository: `muenster_ring_zeit.
    get_showcase_file(dir_name, file_url)
 
    geoextent.fromFile('showcase_folder/muenster_ring_zeit.geojson', True, True)
-   
+
 CSV
 ^^^
 
@@ -61,7 +61,7 @@ Supported column names, by using `Regular expressions operations <https://docs.p
   - ``lat$``
   - ``^y``
   - ``y$``
-  
+
 - Longitude
   - ``(.)*longitude"``
   - ``(.)*long(.)``
@@ -78,7 +78,7 @@ Supported column names, by using `Regular expressions operations <https://docs.p
   - ``date$``
 
 
-The file used in the example can be obtained from `Zenodo Sandbox record 256820 <https://sandbox.zenodo.org/record/256820#.XeGcJJko85k>`_. 
+The file used in the example can be obtained from `Zenodo Sandbox record 256820 <https://sandbox.zenodo.org/record/256820#.XeGcJJko85k>`_.
 
 ::
 
@@ -134,6 +134,83 @@ The file used in the example can be found at Geofabrik: `shapefiles_toulouse.zip
    get_showcase_file(dir_name, file_url, 'shapefiles_toulouse.zip')
 
    geoextent.fromFile('showcase_folder/gis_osm_buildings_a_07_1.shp', True, False)
+
+GeoPackage
+^^^^^^^^^^
+
+The file used in the example is available online: `sample1_2.gpkg <http://www.geopackage.org/guide/implementation_guide.html#_level_1_4>`_.
+
+::
+
+   geoextent -b sample1_2.gpkg
+
+.. jupyter-execute::
+   :hide-code:
+
+   import geoextent.lib.extent as geoextent
+
+   dir_name = 'showcase_geopackage'
+   file_url = 'http://www.geopackage.org/data/sample1_2.gpkg'
+   get_showcase_file(dir_name, file_url)
+   geoextent.fromFile('showcase_folder/sample1_2.gpkg', True, False)
+
+GPS Exchange Format
+^^^^^^^^^^^^^^^^^^^
+
+The file used in the example is available online: `run.gpx <https://docs.mapbox.com/help/data/run.gpx>`_.
+
+::
+
+   geoextent -b run.gpx
+
+.. jupyter-execute::
+   :hide-code:
+
+   import geoextent.lib.extent as geoextent
+
+   dir_name = 'showcase_gpx'
+   file_url = 'https://docs.mapbox.com/help/data/run.gpx'
+   get_showcase_file(dir_name, file_url)
+   geoextent.fromFile('showcase_folder/run.gpx', True, False)
+
+Geography Markup Language
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The file used in the example is available online: `clc_1000_PT.gml <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/gml/clc_1000_PT.gml>`_.
+
+::
+
+   geoextent -b clc_1000_PT.gml
+
+.. jupyter-execute::
+   :hide-code:
+
+   import geoextent.lib.extent as geoextent
+
+   dir_name = 'showcase_gml'
+   file_url = 'https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/gml/clc_1000_PT.gml'
+   get_showcase_file(dir_name, file_url)
+   geoextent.fromFile('showcase_folder/clc_1000_PT.gml', True, False)
+
+Keyhole Markup Language
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The file used in the example is available online: `KML_Samples.kml <https://developers.google.com/kml/documentation/KML_Samples.kml>`_.
+
+::
+
+   geoextent -b KML_Samples.kml
+
+.. jupyter-execute::
+   :hide-code:
+
+   import geoextent.lib.extent as geoextent
+
+   dir_name = 'showcase_kml'
+   file_url = 'https://developers.google.com/kml/documentation/KML_Samples.kml'
+   get_showcase_file(dir_name, file_url)
+   geoextent.fromFile('showcase_folder/KML_Samples.kml', True, False)
+
 
 .. jupyter-execute::
    :hide-code:

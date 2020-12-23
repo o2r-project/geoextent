@@ -2,18 +2,16 @@ import logging
 import os
 import threading
 import zipfile
+from osgeo import ogr
+from osgeo import gdal
 
 from . import handleCSV
-from . import handleGeojson
-from . import handleGeotiff
-from . import handleShapefile
+from . import handleVector
+from . import handleRaster
 from . import helpfunctions as hf
 
 logger = logging.getLogger("geoextent")
-
-modulesSupported = {'geojson': handleGeojson, 'json': handleGeojson, 'csv': handleCSV,
-                    'shp': handleShapefile, 'dbf': handleShapefile, 'geotiff': handleGeotiff, 'tif': handleGeotiff}
-
+handle_modules = {'CSV': handleCSV, "raster":handleRaster, "vector":handleVector}
 
 def computeBboxInWGS84(module, path):
     ''' 
@@ -121,22 +119,18 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     metadata = {}
 
     # get the module that will be called (depending on the format of the file)
-    for key in modulesSupported.keys():
-        if key == fileFormat:
-            logger.info("Module used: {}".format(key))
-            usedModule = modulesSupported.get(key)
+
+    for i in handle_modules:
+        valid = handle_modules[i].checkFileSupported(filePath)
+        if valid:
+            usedModule = handle_modules[i]
+            logger.info("{} is being used to inspect {} file".format(usedModule.get_handler_name(),filePath))
+            break
 
     # If file format is not supported
     if not usedModule:
         logger.info("Did not find a compatible module for file format {} of file {}".format(fileFormat, filePath))
-
         return None
-
-    # Only extract metadata if the file content is valid
-    try:
-        usedModule.checkFileValidity(filePath)
-    except Exception as e:
-        raise Exception(os.getcwd() + " The file {} is not valid (e.g. empty):\n{}".format(filePath, str(e)))
 
     # get Bbox, Temporal Extent, Vector representation and crs parallel with threads
     class thread(threading.Thread):
@@ -189,7 +183,6 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     thread_temp_except = thread("tbox")
     thread_crs_except = thread("crs")
 
-    # lock = threading.Lock()
     logger.debug("Starting 3 threads for extraction.")
 
     thread_bbox_except.start()

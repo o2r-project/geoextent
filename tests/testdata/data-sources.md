@@ -17,6 +17,9 @@
 | [geoextent]         | invalid_coordinate                | geojson   | PDDL                               |
 | [geoextent]         | onePoint                          | geojson   | PDDL                               |
 | [Carto BCN / martgnz]         | Barcelona districts                          | geojson   | CC-BY 4.0                              |
+| [Google]         | abstractviews_timeprimitive_example                         | kml   | CC-BY 4.0                              |
+| [Tkrajina]        | gpx1.1_with_all_fields.gpx                         | gpx   | Apache License 2.0                             |
+
 
 [sf]: https://github.com/r-spatial/sf
 [geoextent]: https://github.com/o2r-project/geoextent
@@ -25,4 +28,6 @@
 [unidata]: https://www.unidata.ucar.edu/software/netcdf/examples/files.html
 [geojson.io]: http://geojson.io 
 [govdata]: https://www.govdata.de/web/guest/daten/-/details/abgrabungen
-[Carto BCN]: https://github.com/martgnz/bcn-geodata/tree/master/districtes
+[Carto BCN / martgnz]: https://github.com/martgnz/bcn-geodata/tree/master/districtes
+[Google]: https://developers.google.com/kml/documentation/time#gps
+[Tkrajina]: https://github.com/tkrajina/gpxpy/blob/dev/test_files/gpx1.1_with_all_fields.gpx
