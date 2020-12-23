@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Changelog &#8212; geoextent 0.4.0 documentation</title>
+    <title>Changelog &#8212; geoextent 0.5.0 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/jupyter-sphinx.css" />
@@ -14,7 +14,6 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script src="_static/thebelab-helper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
@@ -42,22 +41,34 @@
   <div class="section" id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>0.3.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>0.5.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Add support for spatial extent for <code class="docutils literal notranslate"><span class="pre">osgeo</span></code> files (via OGR/GDAL) with generic vector (GeoPackage, Shapefile, GeoJSON, GML, GPX, KML) and raster handling (GeoTIFF) (<a class="reference external" href="https://github.com/o2r-project/geoextent/pull/87">#87</a>, <a class="reference external" href="https://github.com/o2r-project/geoextent/pull/99">#99</a>)</p></li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>0.4.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Add support for ZIP files and folders (<a class="reference external" href="https://github.com/o2r-project/geoextent/pull/79">#79</a>)</p></li>
+</ul>
+<p>nice
+0.3.0
+^^^^^</p>
 <ul class="simple">
 <li><p>Add debug option <code class="docutils literal notranslate"><span class="pre">--debug</span></code> and environment variable <code class="docutils literal notranslate"><span class="pre">GEOEXTENT_DEBUG</span></code> (<a class="reference external" href="https://github.com/o2r-project/geoextent/pull/73">#73</a>)</p></li>
 <li><p>Remove need for <code class="docutils literal notranslate"><span class="pre">-input=</span></code> for passing input paths in CLI (<a class="reference external" href="https://github.com/o2r-project/geoextent/pull/73">#73</a>)</p></li>
 <li><p>Switch to <code class="docutils literal notranslate"><span class="pre">pygdal</span></code> and update docs (<a class="reference external" href="https://github.com/o2r-project/geoextent/pull/73">#73</a>)</p></li>
 </ul>
 </div>
-<div class="section" id="id2">
-<h2>0.2.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>0.2.0<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Add dependencies to required software (<a class="reference external" href="https://github.com/o2r-project/geoextent/pull/59">#59</a>, <a class="reference external" href="https://github.com/o2r-project/geoextent/commit/364692964fc34c467c21a7072e1eefb9d354fbb8">3646929</a>)</p></li>
 <li><p>Update documentation, now uses Sphinx and is online at <a class="reference external" href="https://o2r.info/geoextent/">https://o2r.info/geoextent/</a> (<a class="reference external" href="https://github.com/o2r-project/geoextent/pull/67">#67</a>, <a class="reference external" href="https://github.com/o2r-project/geoextent/pull/65">#65</a>, <a class="reference external" href="https://github.com/o2r-project/geoextent/pull/64">#64</a>, <a class="reference external" href="https://github.com/o2r-project/geoextent/pull/62">#62</a>)</p></li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h2>0.1.0<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>0.1.0<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Initial release with core functionality</p></li>
 </ul>
@@ -89,9 +100,10 @@
 <li class="toctree-l1"><a class="reference internal" href="howto/index_howto.html">How-to Guides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="supportedformats/index_supportedformats.html">Supported file formats</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">0.3.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">0.2.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">0.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">0.5.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">0.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">0.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">0.1.0</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
@@ -132,7 +144,7 @@
       &copy;2020, o2r-project.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

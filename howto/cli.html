@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Command-Line Interface (CLI) &#8212; geoextent 0.4.0 documentation</title>
+    <title>Command-Line Interface (CLI) &#8212; geoextent 0.5.0 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
@@ -14,7 +14,6 @@
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/thebelab-helper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
@@ -137,8 +136,13 @@ geoextent -b -t path/to/geospatial_files
 Supported formats:
 - GeoJSON (.geojson)
 - Tabular data (.csv)
-- Shapefile (.shp)
 - GeoTIFF (.geotiff, .tif)
+- Shapefile (.shp)
+- GeoPackage (.gpkg)
+- GPS Exchange Format (.gpx)
+- Geography Markup Language (.gml)
+- Keyhole Markup Language (.kml)
+
 
 </pre></div>
 </div>
@@ -157,11 +161,11 @@ Supported formats:
 <p>Output:</p>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
- &#39;bbox&#39;: [7.60168075561523,
-  51.9488147720619,
-  7.64725685119629,
-  51.9746240298775],
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
+ &#39;bbox&#39;: [7.6016807556152335,
+  51.94881477206191,
+  7.647256851196289,
+  51.974624029877454],
  &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
@@ -180,7 +184,7 @@ Supported formats:
 <p>Output:</p>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
  &#39;crs&#39;: &#39;4326&#39;,
  &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
 </pre></div>
@@ -199,13 +203,13 @@ Supported formats:
 </div>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/geojson&#39;,
- &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;],
- &#39;bbox&#39;: [7.60168075561523,
-  51.9488147720619,
-  7.64725685119629,
-  51.9746240298775],
- &#39;crs&#39;: &#39;4326&#39;}
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
+ &#39;bbox&#39;: [7.6016807556152335,
+  51.94881477206191,
+  7.647256851196289,
+  51.974624029877454],
+ &#39;crs&#39;: &#39;4326&#39;,
+ &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
 </pre></div>
 </div>
 </div>
@@ -224,10 +228,10 @@ Supported formats:
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;folder&#39;,
  &#39;crs&#39;: &#39;4326&#39;,
- &#39;bbox&#39;: [2.05233338763921,
-  41.3170385224048,
-  7.64725685119629,
-  51.9746240298775],
+ &#39;bbox&#39;: [2.052333387639205,
+  41.31703852240476,
+  7.647256851196289,
+  51.974624029877454],
  &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2019-09-11&#39;]}
 </pre></div>
 </div>
@@ -316,7 +320,7 @@ Supported formats:
       &copy;2020, o2r-project.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
