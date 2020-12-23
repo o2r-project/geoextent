@@ -4,12 +4,12 @@ Changelog
 
 0.5.0
 ^^^^^
-- Add support for ``osgeo`` files (OGR/GDAL) as handleVector and handleRaster (:pr:`87`)
+- Add support for spatial extent for ``osgeo`` files (via OGR/GDAL) with generic vector (GeoPackage, Shapefile, GeoJSON, GML, GPX, KML) and raster handling (GeoTIFF) (:pr:`87`, :pr:`99`)
 
 0.4.0
 ^^^^^
 - Add support for ZIP files and folders (:pr:`79`)
-
+nice
 0.3.0
 ^^^^^
 
