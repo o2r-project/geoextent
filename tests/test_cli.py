@@ -154,7 +154,6 @@ def test_netcdf_time_invalid(script_runner):
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
 
 
-@pytest.mark.skipif(sys.platform == "darwin", reason="MacOS does not load the file properly")
 def test_kml_bbox(script_runner):
     ret = script_runner.run('geoextent', '-b', 'tests/testdata/kml/aasee.kml')
     result = ret.stdout
@@ -163,6 +162,7 @@ def test_kml_bbox(script_runner):
     assert "4326" in result
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="MacOS does not load the file properly")
 def test_kml_time(script_runner):
     ret = script_runner.run('geoextent', '-t', 'tests/testdata/kml/TimeStamp_example.kml')
     assert ret.success, "process should return success"
