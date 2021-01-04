@@ -52,32 +52,32 @@ def getBoundingBox(filePath):
         elements = []
         for x in daten:
             elements.append(x)
-           
-        spatialExtent= []
-        spatialLatExtent=[]
-        spatialLonExtent=[]
 
-        spatialLatExtent= hf.searchForParameters(elements, search['latitude'], exp_data= 'numeric')
+        spatialLatExtent = hf.searchForParameters(elements, search['latitude'], exp_data= 'numeric')
 
-        minlat= None
-        maxlat= None
+        minlat = None
+        maxlat = None
         if spatialLatExtent is None:
             pass
         else:
-            minlat= (min(spatialLatExtent))
-            maxlat= (max(spatialLatExtent))
+            minlat = (min(spatialLatExtent))
+            maxlat = (max(spatialLatExtent))
 
-        spatialLonExtent= hf.searchForParameters(elements, search['longitude'], exp_data= 'numeric')
+        spatialLonExtent = hf.searchForParameters(elements, search['longitude'], exp_data='numeric')
 
         if spatialLonExtent is None:
             raise Exception('The csv file from ' + filePath + ' has no BoundingBox')
         else:
-            minlon= (min(spatialLonExtent))
-            maxlon= (max(spatialLonExtent))
+            minlon = (min(spatialLonExtent))
+            maxlon = (max(spatialLonExtent))
 
-        spatialExtent= [minlon,minlat,maxlon,maxlat]
-        if not spatialExtent:
+        bbox = [minlon, minlat, maxlon, maxlat]
+        crs = getCRS(filePath)
+        spatialExtent = {"bbox": bbox, "crs": crs}
+        logger.debug(bbox)
+        if not bbox or not crs:
             raise Exception("Bounding box could not be extracted")
+
         return spatialExtent
 
 def getTemporalExtent(filePath, num_sample):
@@ -85,7 +85,6 @@ def getTemporalExtent(filePath, num_sample):
     input "filePath": type string, file path to csv File \n
     returns temporal extent of the file: type list, length = 2, both entries have the type str, temporalExtent[0] <= temporalExtent[1]
     '''
-
 
     with open(filePath) as csv_file:
         # To get delimiter either comma or simecolon

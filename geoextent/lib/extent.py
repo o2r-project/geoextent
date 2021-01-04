@@ -19,21 +19,19 @@ def computeBboxInWGS84(module, path):
     input "path": type string, path to file \n
     returns a bounding box, type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)], the boudning box has either its original crs or WGS84 (transformed).
     '''
-    bbox_in_orig_crs = module.getBoundingBox(path)
+    spatial_extent_org = module.getBoundingBox(path)
     try:
-        # TODO: Add function using to reproject coordinates system
-        if module.fileType == "application/shp":
-            crs = 'None'
-            return bbox_in_orig_crs
+
+        if spatial_extent_org['crs'] != str(hf.WGS84_EPSG_ID):
+            bbox_WGS84 = hf.transformingArrayIntoWGS84(spatial_extent_org['crs'], spatial_extent_org['bbox'])
         else:
-            crs = module.getCRS(path)
+            bbox_WGS84 = spatial_extent_org['bbox']
     except:
-        pass
-    if 'crs' in locals() and crs and bbox_in_orig_crs:
-        bbox_transformed = hf.transformingArrayIntoWGS84(crs, bbox_in_orig_crs)
-        return bbox_transformed
-    else:
         raise Exception("The bounding box could not be related to a CRS")
+
+    spatial_extent = {'bbox': bbox_WGS84, 'crs': str(hf.WGS84_EPSG_ID)}
+
+    return spatial_extent
 
 
 def fromDirectory(path, bbox=False, tbox=False):
@@ -148,7 +146,9 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
             if self.task == "bbox":
                 try:
                     if bbox:
-                        metadata["bbox"] = computeBboxInWGS84(usedModule, filePath)
+                        spatial_extent = computeBboxInWGS84(usedModule, filePath)
+                        metadata["bbox"] = spatial_extent['bbox']
+                        metadata["crs"] = spatial_extent['crs']
                 except Exception as e:
                     logger.warning("Error for {} extracting bbox:\n{}".format(filePath, str(e)))
             elif self.task == "tbox":
@@ -163,17 +163,6 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
                         metadata["tbox"] = extract_tbox
                 except Exception as e:
                     logger.warning("Error extracting tbox, time format not found \n {}:".format(str(e)))
-            elif self.task == "crs":
-                try:
-                    # the CRS is not necessarily required
-                    if bbox and hasattr(usedModule, 'getCRS'):
-                        metadata["crs"] = usedModule.getCRS(filePath)
-                    elif tbox and hasattr(usedModule, 'getCRS'):
-                        metadata["crs"] = usedModule.getCRS(filePath)
-                    else:
-                        logger.debug("The CRS cannot be extracted from the file {}".format(filePath))
-                except Exception as e:
-                    logger.warning("Error for {} extracting CRS:\n{}".format(filePath, str(e)))
             else:
                 raise Exception("Unsupported thread task {}".format(self.task))
 
@@ -181,17 +170,14 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
 
     thread_bbox_except = thread("bbox")
     thread_temp_except = thread("tbox")
-    thread_crs_except = thread("crs")
 
     logger.debug("Starting 3 threads for extraction.")
 
     thread_bbox_except.start()
     thread_temp_except.start()
-    thread_crs_except.start()
 
     thread_bbox_except.join()
     thread_temp_except.join()
-    thread_crs_except.join()
 
     logger.debug("Extraction finished: {}".format(str(metadata)))
     return metadata

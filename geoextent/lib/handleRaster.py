@@ -75,7 +75,9 @@ def getBoundingBox(filePath):
         if old_cs.GetAxisMappingStrategy() == 1:
             bbox = [latlongmin[1], latlongmin[0], latlongmax[1], latlongmax[0]]
 
-    return bbox
+    spatialExtent = {"bbox": bbox, "crs": str(hf.WGS84_EPSG_ID)}
+
+    return spatialExtent
 
 
 def getCRS(filePath):

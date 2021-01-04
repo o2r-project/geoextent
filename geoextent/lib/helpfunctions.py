@@ -38,8 +38,8 @@ def getAllRowElements(rowname, elements, exp_data=None):
 
     elif exp_data == 'numeric':
         try:
-            list(map(float, values))
-            return values
+            values_num = list(map(float, values))
+            return values_num
         except:
             return None
 
@@ -92,6 +92,7 @@ def transformingIntoWGS84(crs, coordinate):
     point = ogr.CreateGeometryFromWkt(point)
 
     point.Transform(transform)
+
     return [point.GetX(), point.GetY()]
 
 
