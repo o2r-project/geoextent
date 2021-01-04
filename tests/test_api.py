@@ -37,6 +37,7 @@ def test_kml_extract_bbox():
     assert result["crs"] == "4326"
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="MacOS does not load the file properly")
 def test_kml_extract_tbox():
     result = geoextent.fromFile("tests/testdata/kml/TimeStamp_example.kml", bbox=True)
     assert "tbox" in result

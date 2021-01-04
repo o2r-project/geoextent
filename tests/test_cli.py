@@ -1,4 +1,5 @@
 import os  # used to get the location of the testdata
+import sys
 import pytest
 import tempfile
 from help_functions_test import create_zip, parse_coordinates, tolerance
@@ -153,6 +154,7 @@ def test_netcdf_time_invalid(script_runner):
     assert ret.stderr == 'invalid time format', "stderr should not be empty"
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="MacOS does not load the file properly")
 def test_kml_bbox(script_runner):
     ret = script_runner.run('geoextent', '-b', 'tests/testdata/kml/aasee.kml')
     result = ret.stdout
