@@ -8,7 +8,7 @@ from osgeo import osr
 
 null_island = [0] * 4
 fileType = "application/shp"
-search = {"time": ["(.)*timestamp(.)*", "(.)*datetime(.)*", "(.)*time(.)*", "date$", "^date","^begin"]}
+search = {"time": ["(.)*timestamp(.)*", "(.)*datetime(.)*", "(.)*time(.)*", "date$", "^date", "^begin"]}
 logger = logging.getLogger("geoextent")
 
 
@@ -38,19 +38,6 @@ def checkFileSupported(filepath):
         return False
 
 
-def getCRS(filepath):
-    dataset = ogr.Open(filepath)
-    layer = dataset.GetLayer()
-
-    try:
-        spatialRef = layer.GetSpatialRef().GetAttrValue("GEOGCS|AUTHORITY", 1)
-    except:
-        logger.debug("File {} does not have a coordinate reference system !".format(filepath))
-        spatialRef = None
-
-    return spatialRef
-
-
 def getTemporalExtent(filepath):
     ''' extracts temporal extent of the vector file \n
     input "path": type string, file path to vector file
@@ -58,15 +45,19 @@ def getTemporalExtent(filepath):
 
     datasource = ogr.Open(filepath)
     layer_count = datasource.GetLayerCount()
-    logger.debug("{} contains {} layers".format(filepath,layer_count))
+    logger.debug("{} contains {} layers".format(filepath, layer_count))
     datetime_list = []
+
     for layer in datasource:
 
         logger.debug("{} : Extracting temporal extent from layer {} ".format(filepath, layer))
         layerDefinition = layer.GetLayerDefn()
         field_names = []
+
         for i in range(layerDefinition.GetFieldCount()):
             field_names.append(layerDefinition.GetFieldDefn(i).GetName())
+
+        logger.debug("Found {} fields : {}".format(layerDefinition.GetFieldCount(), str(field_names)))
 
         match_list = []
         for x in search["time"]:
@@ -75,16 +66,16 @@ def getTemporalExtent(filepath):
                 match = term.search(j)
                 if match is not None:
                     match_list.append(j)
-        logger.debug(match_list)
+
+        logger.debug("Features name match: {}".format(match_list))
 
         if len(match_list) == 0:
-            logger.debug("File:{} /Layer: {}: No matched fields for temporal extent".format(filepath,layer))
+            logger.debug("File:{} /Layer: {}: No matched fields for temporal extent".format(filepath, layer))
             pass
         else:
             datetime_list = []
             for time_feature in match_list:
                 time_list = []
-                logger.debug(time_feature)
                 for feat in layer:
                     time = feat.GetField(time_feature)
                     if time is not None:
@@ -96,13 +87,14 @@ def getTemporalExtent(filepath):
                     if parsed_time is not None:
                         datetime_list.extend(parsed_time)
                     else:
-                        logger.debug('File:{} /Layer: {}: : Matched temporal extent "{}" field do not have recognizable time format'.format(filepath,layer,time_feature))
+                        logger.debug('File {} / Layer {}  \n'
+                                     '  {} feature do not have recognizable time format'.format(filepath, layer, time_feature))
                         pass
                 else:
-                    logger.debug("File:{} / Layer: {}: No values found in {} fields.".format(filepath,layer, time_feature))
+                    logger.debug('File {} / Layer {} \n'
+                                 ' No values found in {} field'.format(filepath, layer, time_feature))
                     pass
 
-        logger.debug(match_list)
     if len(datetime_list) == 0:
         logger.debug("File {} do not have recognizable temporal extent".format(filepath))
         return None
@@ -119,6 +111,8 @@ def getBoundingBox(filepath):
     """
     datasource = ogr.Open(filepath)
     geo_dict = {}
+    crs_output = hf.WGS84_EPSG_ID
+
     for layer in datasource:
         layer_name = layer.GetDescription()
         ext = layer.GetExtent()
@@ -141,7 +135,10 @@ def getBoundingBox(filepath):
 
     bbox_merge = hf.bbox_merge(geo_dict, filepath)
 
+    if bbox_merge is not None:
+        if len(bbox_merge) != 0:
+            spatialExtent = bbox_merge
+    else:
+        spatialExtent = None
 
-
-
-    return bbox_merge
+    return spatialExtent

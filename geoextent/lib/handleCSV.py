@@ -7,11 +7,14 @@ fileType = "text/csv"
 
 logger = logging.getLogger("geoextent")
 
-search = { "longitude" : ["(.)*longitude","(.)*long(.)*", "^lon","lon$","(.)*lng(.)*", "^x","x$"],
-                   "latitude" : ["(.)*latitude(.)*", "^lat","lat$", "^y","y$"],
-           "time":["(.)*timestamp(.)*", "(.)*datetime(.)*", "(.)*time(.)*", "date$","^date"]}
+search = {"longitude": ["(.)*longitude", "(.)*long(.)*", "^lon", "lon$", "(.)*lng(.)*", "^x", "x$"],
+          "latitude": ["(.)*latitude(.)*", "^lat", "lat$", "^y", "y$"],
+          "time": ["(.)*timestamp(.)*", "(.)*datetime(.)*", "(.)*time(.)*", "date$", "^date"]}
+
+
 def get_handler_name():
     return "handleCSV"
+
 
 def checkFileSupported(filepath):
     '''Checks whether it is valid CSV or not. \n
@@ -19,7 +22,6 @@ def checkFileSupported(filepath):
     raise exception if not valid
     '''
 
-    logger.info(filepath)
     try:
         file = gdal.OpenEx(filepath)
         driver = file.GetDriver().ShortName
@@ -45,6 +47,7 @@ def getBoundingBox(filePath):
     input "filepath": type string, file path to csv file \n
     returns spatialExtent: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)] 
     '''
+
     with open(filePath) as csv_file:
         # To get delimiter either comma or simecolon
         daten = hf.getDelimiter(csv_file)
@@ -52,33 +55,35 @@ def getBoundingBox(filePath):
         elements = []
         for x in daten:
             elements.append(x)
-           
-        spatialExtent= []
-        spatialLatExtent=[]
-        spatialLonExtent=[]
 
-        spatialLatExtent= hf.searchForParameters(elements, search['latitude'], exp_data= 'numeric')
+        spatialLatExtent = hf.searchForParameters(elements, search['latitude'], exp_data='numeric')
 
-        minlat= None
-        maxlat= None
+        minlat = None
+        maxlat = None
+
         if spatialLatExtent is None:
             pass
         else:
-            minlat= (min(spatialLatExtent))
-            maxlat= (max(spatialLatExtent))
+            minlat = (min(spatialLatExtent))
+            maxlat = (max(spatialLatExtent))
 
-        spatialLonExtent= hf.searchForParameters(elements, search['longitude'], exp_data= 'numeric')
+        spatialLonExtent = hf.searchForParameters(elements, search['longitude'], exp_data='numeric')
 
         if spatialLonExtent is None:
             raise Exception('The csv file from ' + filePath + ' has no BoundingBox')
         else:
-            minlon= (min(spatialLonExtent))
-            maxlon= (max(spatialLonExtent))
+            minlon = (min(spatialLonExtent))
+            maxlon = (max(spatialLonExtent))
 
-        spatialExtent= [minlon,minlat,maxlon,maxlat]
-        if not spatialExtent:
+        bbox = [minlon, minlat, maxlon, maxlat]
+        logger.debug("Extracted Bounding box (without projection): {}".format(bbox))
+        crs = getCRS(filePath)
+        logger.debug("Extracted CRS: {}".format(crs))
+        spatialExtent = {"bbox": bbox, "crs": crs}
+        if not bbox or not crs:
             raise Exception("Bounding box could not be extracted")
-        return spatialExtent
+
+    return spatialExtent
 
 def getTemporalExtent(filePath, num_sample):
     ''' extract time extent from csv string \n
@@ -86,7 +91,6 @@ def getTemporalExtent(filePath, num_sample):
     returns temporal extent of the file: type list, length = 2, both entries have the type str, temporalExtent[0] <= temporalExtent[1]
     '''
 
-
     with open(filePath) as csv_file:
         # To get delimiter either comma or simecolon
         daten = hf.getDelimiter(csv_file)
@@ -94,9 +98,8 @@ def getTemporalExtent(filePath, num_sample):
         elements = []
         for x in daten:
             elements.append(x)
-        logger.info("Elements {}".format(elements))
 
-        all_temporal_extent = hf.searchForParameters(elements, search['time'], exp_data = "time" )
+        all_temporal_extent = hf.searchForParameters(elements, search['time'], exp_data="time")
         if all_temporal_extent is None:
             raise Exception('The csv file from ' + filePath + ' has no TemporalExtent')
         else:
@@ -115,13 +118,15 @@ def getCRS(filePath):
     '''extracts coordinatesystem from csv File \n
     input "filepath": type string, file path to csv file \n
     returns the epsg code of the used coordinate reference system, type list, contains extracted coordinate system of content from csv file
-    ''' 
+    '''
+
     with open(filePath) as csv_file:
         daten = csv.reader(csv_file.readlines())
         elements = []
         for x in daten:
             elements.append(x)
-        if hf.searchForParameters(elements,search['latitude']+search['longitude']) is None:
+
+        if hf.searchForParameters(elements, search['latitude'] + search['longitude']) is None:
             if hf.searchForParameters(elements, ["crs","srsID"]) is None:
                 raise Exception('The csv file from ' + filePath + ' has no CRS')
             if hf.searchForParameters(elements, ["crs","srsID"]) == "WGS84":
