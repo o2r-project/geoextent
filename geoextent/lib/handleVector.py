@@ -47,14 +47,17 @@ def getTemporalExtent(filepath):
     layer_count = datasource.GetLayerCount()
     logger.debug("{} contains {} layers".format(filepath, layer_count))
     datetime_list = []
+
     for layer in datasource:
 
         logger.debug("{} : Extracting temporal extent from layer {} ".format(filepath, layer))
         layerDefinition = layer.GetLayerDefn()
         field_names = []
-        logger.debug(layerDefinition.GetFieldCount())
+
         for i in range(layerDefinition.GetFieldCount()):
             field_names.append(layerDefinition.GetFieldDefn(i).GetName())
+
+        logger.debug("Found {} fields : {}".format(layerDefinition.GetFieldCount(), str(field_names)))
 
         match_list = []
         for x in search["time"]:
@@ -63,6 +66,7 @@ def getTemporalExtent(filepath):
                 match = term.search(j)
                 if match is not None:
                     match_list.append(j)
+
         logger.debug("Features name match: {}".format(match_list))
 
         if len(match_list) == 0:
@@ -72,29 +76,25 @@ def getTemporalExtent(filepath):
             datetime_list = []
             for time_feature in match_list:
                 time_list = []
-                logger.debug("Time feature: {}".format(time_feature))
                 for feat in layer:
                     time = feat.GetField(time_feature)
-                    logger.debug("time {}".format(time))
                     if time is not None:
                         time_list.append(time)
                 layer.ResetReading()
 
                 if len(time_list) != 0:
-                    logger.debug("Time_list: {}".format(time_list))
                     parsed_time = hf.date_parser(time_list)
                     if parsed_time is not None:
                         datetime_list.extend(parsed_time)
                     else:
-                        logger.debug('File:{} /Layer: {}: : Matched temporal extent "{}"'
-                                     'field do not have recognizable time format'.format(filepath, layer, time_feature))
+                        logger.debug('File {} / Layer {}  \n'
+                                     '  {} feature do not have recognizable time format'.format(filepath, layer, time_feature))
                         pass
                 else:
-                    logger.debug("File:{} / Layer: {}: No values found in {} fields."
-                                 .format(filepath, layer, time_feature))
+                    logger.debug('File {} / Layer {} \n'
+                                 ' No values found in {} field'.format(filepath, layer, time_feature))
                     pass
 
-        logger.debug(match_list)
     if len(datetime_list) == 0:
         logger.debug("File {} do not have recognizable temporal extent".format(filepath))
         return None
@@ -111,6 +111,7 @@ def getBoundingBox(filepath):
     """
     datasource = ogr.Open(filepath)
     geo_dict = {}
+    crs_output = hf.WGS84_EPSG_ID
 
     for layer in datasource:
         layer_name = layer.GetDescription()
@@ -135,10 +136,9 @@ def getBoundingBox(filepath):
     bbox_merge = hf.bbox_merge(geo_dict, filepath)
 
     if bbox_merge is not None:
-        crs = str(hf.WGS84_EPSG_ID)
+        if len(bbox_merge) != 0:
+            spatialExtent = bbox_merge
     else:
-        crs = None
-
-    spatialExtent = {"bbox": bbox_merge, "crs": crs}
+        spatialExtent = None
 
     return spatialExtent

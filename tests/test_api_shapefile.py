@@ -25,5 +25,8 @@ def test_shapefile_extract_bbox_with_crs():
 
 
 def test_shapefile_extract_time():
-    result = geoextent.fromFile('tests/testdata/shapefile/Abgrabungen_Kreis_Kleve_Shape.shp', bbox=False, tbox=True)
+    result = geoextent.fromFile('tests/testdata/shapefile/ifgi_denkpause.shp', bbox=False, tbox=True)
     assert "bbox" not in result
+    assert "crs" not in result
+    assert "tbox" in result
+    assert result['tbox'] == ['2021-01-01', '2021-01-01']

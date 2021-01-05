@@ -29,8 +29,12 @@ def getAllRowElements(rowname, elements, exp_data=None):
             indexOf = idx
             values = []
             for x in elements:
-                if x[indexOf] != rowname:
-                    values.append(x[indexOf].replace(" ", ""))
+                try:
+                    if x[indexOf] != rowname:
+                        values.append(x[indexOf].replace(" ", ""))
+                except IndexError as e:
+                    logger.info("Row skipped,file might be corrupted. Error {}".format(e))
+                    pass
 
     if exp_data == 'time':
         if get_time_format(values, 30) is not None:
@@ -38,13 +42,24 @@ def getAllRowElements(rowname, elements, exp_data=None):
 
     elif exp_data == 'numeric':
         try:
-            values_num = list(map(float, values))
-            return values_num
-        except:
+            values_num = list(map(float_convert, values))
+            values_num_none = [i for i in values_num if i]
+            if len(values_num_none) == 0:
+                return None
+            else:
+                return values_num_none
+        except Exception as e:
+            logger.debug(e)
             return None
-
     else:
         return values
+
+
+def float_convert(val):
+    try:
+        return float(val)
+    except ValueError:
+        pass
 
 
 def searchForParameters(elements, paramArray, exp_data=None):
@@ -54,7 +69,6 @@ def searchForParameters(elements, paramArray, exp_data=None):
     Input: paramArray, elements \n
     Output: getAllRowElements(x,elements)
     '''
-
     matching_elements = []
     for x in paramArray:
         for row in elements[0]:
@@ -216,7 +230,7 @@ def extract_zip(zippedFile):
 def bbox_merge(metadata, origin):
     logger.debug("medatada {}".format(metadata))
     boxes_extent = []
-    metadata_merge = []
+    metadata_merge = {}
     num_files = len(metadata.items())
     for x, y in metadata.items():
         if isinstance(y, dict):
@@ -233,9 +247,9 @@ def bbox_merge(metadata, origin):
     elif len(boxes_extent) > 0:
 
         multipolygon = ogr.Geometry(ogr.wkbMultiPolygon)
-        des_srs = ogr.osr.SpatialReference()
-        des_srs.ImportFromEPSG(WGS84_EPSG_ID)
-        multipolygon.AssignSpatialReference(des_srs)
+        des_crs = ogr.osr.SpatialReference()
+        des_crs.ImportFromEPSG(WGS84_EPSG_ID)
+        multipolygon.AssignSpatialReference(des_crs)
 
         for bbox in boxes_extent:
 
@@ -250,7 +264,7 @@ def bbox_merge(metadata, origin):
                 if bbox[1] != str(WGS84_EPSG_ID):
                     source = osr.SpatialReference()
                     source.ImportFromEPSG(int(bbox[1]))
-                    transform = osr.CoordinateTransformation(source, des_srs)
+                    transform = osr.CoordinateTransformation(source, des_crs)
                     box.Transform(transform)
 
                 polygon = ogr.Geometry(ogr.wkbPolygon)
@@ -258,7 +272,8 @@ def bbox_merge(metadata, origin):
                 multipolygon.AddGeometry(polygon)
 
             except Exception as e:
-                logger.debug("Error extracting geographic extent of {}. CRS {} may be invalid. Error: {}".format(x,bbox[1], e))
+                logger.debug(
+                    "Error extracting geographic extent of {}. CRS {} may be invalid. Error: {}".format(x, bbox[1], e))
                 continue
 
         num_geo_files = multipolygon.GetGeometryCount() / 4
@@ -266,7 +281,8 @@ def bbox_merge(metadata, origin):
             logger.debug('{} contains {} geometries out of {} with identifiable geographic extent'.format(origin, int(
                 num_geo_files), num_files))
             env = multipolygon.GetEnvelope()
-            metadata_merge = [env[0], env[2], env[1], env[3]]
+            metadata_merge['bbox'] = [env[0], env[2], env[1], env[3]]
+            metadata_merge['crs'] = str(WGS84_EPSG_ID)
         else:
             logger.debug(" {} does not have geometries with identifiable geographical extent (CRS+bbox)".format(origin))
             metadata_merge = None

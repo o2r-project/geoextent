@@ -246,10 +246,17 @@ def test_gml_only_one_time_feature_valid(script_runner):
     assert "'tbox': ['2012-04-15', '2012-04-15']" in ret.stdout, "time value is printed to console"
 
 
-def test_shp_bbox(script_runner):
+def test_shp_bbox_no_crs(script_runner):
     ret = script_runner.run('geoextent', '-b', 'tests/testdata/shapefile/Abgrabungen_Kreis_Kleve_Shape.shp')
     assert ret.success, "process should return success"
     assert "'bbox'" not in ret.stdout
+
+
+def test_shp_tbox(script_runner):
+    ret = script_runner.run('geoextent', '-t', 'tests/testdata/shapefile/ifgi_denkpause.shp')
+    assert ret.success, "process should return success"
+    assert "'tbox'" in ret.stdout
+    assert "['2021-01-01', '2021-01-01']" in ret.stdout
 
 
 @pytest.mark.skip(reason="multiple input files not implemented yet")

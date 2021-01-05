@@ -11,7 +11,8 @@ from . import handleRaster
 from . import helpfunctions as hf
 
 logger = logging.getLogger("geoextent")
-handle_modules = {'CSV': handleCSV, "raster":handleRaster, "vector":handleVector}
+handle_modules = {'CSV': handleCSV, "raster": handleRaster, "vector": handleVector}
+
 
 def computeBboxInWGS84(module, path):
     ''' 
@@ -19,24 +20,29 @@ def computeBboxInWGS84(module, path):
     input "path": type string, path to file \n
     returns a bounding box, type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)], the boudning box has either its original crs or WGS84 (transformed).
     '''
-    spatial_extent_org = module.getBoundingBox(path)
+    logger.debug("computeBboxInWGS84: {}".format(path))
+    spatial_extent_origin = module.getBoundingBox(path)
+
     try:
-
-        if spatial_extent_org['crs'] != str(hf.WGS84_EPSG_ID):
-            bbox_WGS84 = hf.transformingArrayIntoWGS84(spatial_extent_org['crs'], spatial_extent_org['bbox'])
+        if spatial_extent_origin['crs'] == str(hf.WGS84_EPSG_ID):
+            spatial_extent = spatial_extent_origin
         else:
-            bbox_WGS84 = spatial_extent_org['bbox']
-    except:
-        raise Exception("The bounding box could not be related to a CRS")
-
-    spatial_extent = {'bbox': bbox_WGS84, 'crs': str(hf.WGS84_EPSG_ID)}
+            spatial_extent = {'bbox': hf.transformingArrayIntoWGS84(spatial_extent_origin['crs'],
+                                                                    spatial_extent_origin['bbox']),
+                              'crs': str(hf.WGS84_EPSG_ID)}
+    except Exception as e:
+        raise Exception("The bounding box could not be transformed to the target CRS epsg:{}".format(hf.WGS84_EPSG_ID))
 
     return spatial_extent
 
 
 def fromDirectory(path, bbox=False, tbox=False):
-    ''' TODO: implement
-    '''
+    """ Extracts geoextent from a directory/ZipFile
+    Keyword arguments:
+    path -- directory/ZipFile path
+    bbox -- True if bounding box is requested (default False)
+    tbox -- True if time box is requested (default False)
+    """
 
     logger.info("Extracting bbox={} tbox={} from Directory {}".format(bbox, tbox, path))
 
@@ -57,14 +63,14 @@ def fromDirectory(path, bbox=False, tbox=False):
         path = extract_folder
 
     for filename in os.listdir(path):
-        logger.info("path {}, folder/zipfile {}".format(path,filename))
+        logger.info("path {}, folder/zipfile {}".format(path, filename))
         isZip = zipfile.is_zipfile(os.path.join(path, filename))
         if isZip:
             logger.info("**Inspecting folder {}, is zip ? {}**".format(filename, str(isZip)))
-            metadata_directory[filename] = fromDirectory(os.path.join(path,filename),bbox,tbox)
+            metadata_directory[filename] = fromDirectory(os.path.join(path, filename), bbox, tbox)
         else:
             logger.info("Inspecting folder {}, is zip ? {}".format(filename, str(isZip)))
-            if os.path.isdir(os.path.join(path,filename)):
+            if os.path.isdir(os.path.join(path, filename)):
                 metadata_directory[filename] = fromDirectory(os.path.join(path, filename), bbox, tbox)
             else:
                 metadata_file = fromFile(os.path.join(path, filename), bbox, tbox)
@@ -74,35 +80,36 @@ def fromDirectory(path, bbox=False, tbox=False):
     metadata['format'] = file_format
 
     if bbox:
-        bbox_ext = hf.bbox_merge(metadata_directory,path)
+        bbox_ext = hf.bbox_merge(metadata_directory, path)
         if bbox_ext is not None:
-            metadata['crs'] = "4326"
-            metadata['bbox'] = bbox_ext
+            if len(bbox_ext) != 0:
+                metadata['crs'] = bbox_ext['crs']
+                metadata['bbox'] = bbox_ext['bbox']
         else:
-            logger.warning("The {} {} has no identifiable bbox - Coordinate reference system (CRS) may be missing".format(file_format,path))
+            logger.warning(
+                "The {} {} has no identifiable bbox - Coordinate reference system (CRS) may be missing".format(
+                    file_format, path))
 
     if tbox:
-        tbox_ext = hf.tbox_merge(metadata_directory,path)
+        tbox_ext = hf.tbox_merge(metadata_directory, path)
         if tbox_ext is not None:
             metadata['tbox'] = tbox_ext
         else:
-            logger.warning("The {} {} has no identifiable time extent".format(file_format,path))
+            logger.warning("The {} {} has no identifiable time extent".format(file_format, path))
 
-    #metadata['details'] = metadata_directory
+    # metadata['details'] = metadata_directory
 
     return metadata
 
+
 def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
-    ''' TODO: update these docs
-    
-    function is called when filePath is included in commandline (with tag 'b')
-    how this is done depends on the file format - the function calls the handler for each supported format \n
-    extracted data are bounding box, temporal extent and crs, a seperate thread is dedicated to each extraction process \n
-    input "filePath": type string, path to file from which the metadata shall be extracted \n
-    input "whatMetadata": type string, specifices which metadata should be extracted  \n
-    returns None if the format is not supported, else returns the metadata of the file as a dict 
-    (possible) keys of the dict: 'temporal_extent', 'bbox', 'vector_reps', 'crs'
-    '''
+    """ Extracts geoextent from a file
+    Keyword arguments:
+    path -- filepath
+    bbox -- True if bounding box is requested (default False)
+    tbox -- True if time box is requested (default False)
+    num_sample -- sample size to determine time format (Only required for csv files)
+    """
     logger.info("Extracting bbox={} tbox={} from file {}".format(bbox, tbox, filePath))
 
     if bbox == False and tbox == False:
@@ -122,7 +129,7 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
         valid = handle_modules[i].checkFileSupported(filePath)
         if valid:
             usedModule = handle_modules[i]
-            logger.info("{} is being used to inspect {} file".format(usedModule.get_handler_name(),filePath))
+            logger.info("{} is being used to inspect {} file".format(usedModule.get_handler_name(), filePath))
             break
 
     # If file format is not supported
@@ -171,7 +178,7 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     thread_bbox_except = thread("bbox")
     thread_temp_except = thread("tbox")
 
-    logger.debug("Starting 3 threads for extraction.")
+    logger.debug("Starting 2 threads for extraction.")
 
     thread_bbox_except.start()
     thread_temp_except.start()

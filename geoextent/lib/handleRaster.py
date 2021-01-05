@@ -41,18 +41,20 @@ def getBoundingBox(filePath):
     returns bounding box of the file: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)] 
     '''
     # Enable exceptions
+
+    crs_output = hf.WGS84_EPSG_ID
     gdal.UseExceptions()
 
     geotiffContent = gdal.Open(filePath)
 
     # get the existing coordinate system
-    old_cs = osr.SpatialReference()
-    old_cs.ImportFromWkt(geotiffContent.GetProjectionRef())
+    old_crs = osr.SpatialReference()
+    old_crs.ImportFromWkt(geotiffContent.GetProjectionRef())
 
     # create the new coordinate system
 
-    new_cs = osr.SpatialReference()
-    new_cs.ImportFromEPSG(hf.WGS84_EPSG_ID)
+    new_crs = osr.SpatialReference()
+    new_crs.ImportFromEPSG(crs_output)
 
     # get the point to transform, pixel (0,0) in this case
     width = geotiffContent.RasterXSize
@@ -64,7 +66,7 @@ def getBoundingBox(filePath):
     maxx = gt[0] + width * gt[1] + height * gt[2]
     maxy = gt[3]
 
-    transform = osr.CoordinateTransformation(old_cs, new_cs)
+    transform = osr.CoordinateTransformation(old_crs, new_crs)
     # get the coordinates in lat long
     latlongmin = transform.TransformPoint(minx, miny)
     latlongmax = transform.TransformPoint(maxx, maxy)
@@ -72,21 +74,12 @@ def getBoundingBox(filePath):
     bbox = [latlongmin[0], latlongmin[1], latlongmax[0], latlongmax[1]]
 
     if int(osgeo.__version__[0]) >= 3:
-        if old_cs.GetAxisMappingStrategy() == 1:
+        if old_crs.GetAxisMappingStrategy() == 1:
             bbox = [latlongmin[1], latlongmin[0], latlongmax[1], latlongmax[0]]
 
-    spatialExtent = {"bbox": bbox, "crs": str(hf.WGS84_EPSG_ID)}
+    spatialExtent = {"bbox": bbox, "crs": str(crs_output)}
 
     return spatialExtent
-
-
-def getCRS(filePath):
-    ''' gets the coordinate reference systems from the geotiff file \n
-    input "filepath": type string, file path to geotiff file \n
-    return epsg code of the used coordiante reference system: type int
-    '''
-
-    return "4326"
 
 
 def getTemporalExtent(filePath):
