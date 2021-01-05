@@ -167,10 +167,9 @@ def test_netcdf_extract_bbox_time():
         [-90.0, 0.0, 90.0, 357.5], ['2002-07-01', '2002-07-31']]
 
 
-def test_gpkg_extract_bboxs():
-    result = geoextent.fromFile("tests/testdata/geopackage/nc.gpkg", bbox=True)
-    assert result['bbox'] == pytest.approx([-84.323835, 33.882102, -75.456585, 36.589757], abs=tolerance)
-    assert result["crs"] == "4326"
+def test_gpkg_extract_tbox():
+    result = geoextent.fromFile("tests/testdata/geopackage/wandelroute_maastricht.gpkg", tbox=True)
+    assert result['tbox'] == ['2021-01-05', '2021-01-05']
 
 
 @pytest.mark.skipif("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true",

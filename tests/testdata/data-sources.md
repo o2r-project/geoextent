@@ -19,7 +19,8 @@
 | [Carto BCN / martgnz]         | Barcelona districts                          | geojson   | CC-BY 4.0                              |
 | [Google]         | abstractviews_timeprimitive_example                         | kml   | CC-BY 4.0                              |
 | [Tkrajina]        | gpx1.1_with_all_fields.gpx                         | gpx   | Apache License 2.0                             |
-
+| [geoextent]        | ifgi_to_denkpause.sph                        | shp   | PDDL    |
+| [geoextent]        | wandelroute_maastricht.gpkg                        | gpkg   | PDDL    |
 
 [sf]: https://github.com/r-spatial/sf
 [geoextent]: https://github.com/o2r-project/geoextent

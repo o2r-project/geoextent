@@ -199,6 +199,14 @@ def test_gpkg_bbox(script_runner):
     assert "4326" in result
 
 
+def test_gpkg_tbox(script_runner):
+    ret = script_runner.run('geoextent', '-t', 'tests/testdata/geopackage/wandelroute_maastricht.gpkg')
+    result = ret.stdout
+    assert ret.success, "process should return success"
+    assert ret.stderr == '', "stderr should be empty"
+    assert "['2021-01-05', '2021-01-05']" in result
+
+
 def test_csv_bbox(script_runner):
     ret = script_runner.run('geoextent', '-b', 'tests/testdata/csv/cities_NL.csv')
     assert ret.success, "process should return success"
