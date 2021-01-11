@@ -7,7 +7,6 @@ import re
 from osgeo import osr
 
 null_island = [0] * 4
-fileType = "application/shp"
 search = {"time": ["(.)*timestamp(.)*", "(.)*datetime(.)*", "(.)*time(.)*", "date$", "^date", "^begin"]}
 logger = logging.getLogger("geoextent")
 
@@ -120,7 +119,8 @@ def getBoundingBox(filepath):
 
         try:
             crs = layer.GetSpatialRef().GetAttrValue("GEOGCS|AUTHORITY", 1)
-        except Exception:
+        except Exception as e:
+            logger.debug("Error extracting EPSG CODE from layer {}: \n {}".format(layer_name, e))
             crs = None
 
         # Patch GDAL > 3.2 for GML  https://github.com/OSGeo/gdal/issues/2195
@@ -135,10 +135,11 @@ def getBoundingBox(filepath):
 
     bbox_merge = hf.bbox_merge(geo_dict, filepath)
 
+    spatial_extent = None
+
     if bbox_merge is not None:
         if len(bbox_merge) != 0:
-            spatialExtent = bbox_merge
-    else:
-        spatialExtent = None
+            spatial_extent = bbox_merge
 
-    return spatialExtent
+    return spatial_extent
+

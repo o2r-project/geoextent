@@ -4,8 +4,6 @@ import osgeo.osr as osr
 import logging
 from . import helpfunctions as hf
 
-fileType = "image/tiff"
-
 logger = logging.getLogger("geoextent")
 
 
@@ -90,3 +88,4 @@ def getTemporalExtent(filePath):
 
     print('There is no time value for GeoTIFF files')
     return 'None'
+

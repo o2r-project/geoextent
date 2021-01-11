@@ -9,7 +9,7 @@ Changelog
 0.4.0
 ^^^^^
 - Add support for ZIP files and folders (:pr:`79`)
-nice
+
 0.3.0
 ^^^^^
 
