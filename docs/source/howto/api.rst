@@ -92,23 +92,24 @@ Folders or ZIP file(s)
 
 ::
 
-   geoextent.fromDirectory(input, bbox, time)
+   geoextent.fromDirectory(input, bbox, time, details)
 
 **Parameters:**   
    - ``input``: a string value of directory of zipfile path    
    - ``bbox``: a boolean value to extract spatial extent (bounding box)
    - ``time``: a boolean value to extract temporal extent ( at "day" precision '%Y-%m-%d')
+   - ``details``: a boolean value to return details (geoextent) of individual files (default **False**)
 
 The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: :doc:`../supportedformats/index_supportedformats`) inside the folder or zipfile. The resulting coordinate reference system  ``CRS`` of the combined bbox is always in the `EPSG: 4326 <https://epsg.io/4326>`_ system.
 
-Extracting both bounding box and time interval from a folder
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Extracting both bounding box and time interval from a folder (with details)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Code:
 
 ::
 
-   geoextent.fromDirectory('folder_two_files', True, True)
+   geoextent.fromDirectory('folder_one_file', True, True, True)
 
 Output:
 
@@ -117,6 +118,6 @@ Output:
    :stderr:
 
    import geoextent.lib.extent as geoextent
-   geoextent.fromDirectory('../tests/testdata/folders/folder_two_files', True, True)
+   geoextent.fromDirectory('../tests/testdata/folders/folder_one_file', True, True, True)
 
 `folder_two_files <https://github.com/o2r-project/geoextent/blob/master/tests/testdata/folders/folder_two_files>`_

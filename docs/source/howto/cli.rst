@@ -7,7 +7,7 @@ Basics
 
 ``geoextent`` can be called on the command line with this command :
    
-.. autoprogram:: geoextent.__main__:argparser
+.. autoprogram:: geoextent.__main__:arg_parser
    :prog: \
 
 Examples
@@ -118,3 +118,23 @@ You can enable detailed logs by passing the ``--debug`` option, or by setting th
    geoextent --debug -b -t muenster_ring_zeit.geojson
 
    GEOEXTENT_DEBUG=1 geoextent -b -t muenster_ring_zeit.geojson
+
+Details
+^^^^^^^
+You can enable details for folders and ZIP files by passing the ``--details`` option, this option allows you to access
+to the geoextent of the individual files inside the folders/ ZIP files used to compute the aggregated bounding box (bbox)
+or time box (tbox).
+
+::
+
+   geoextent --details -b -t folder_one_file
+
+.. jupyter-execute::
+   :hide-code:
+   :stderr:
+
+   import geoextent.lib.extent as geoextent
+   geoextent.fromDirectory('../tests/testdata/folders/folder_one_file', True, True,True)
+
+
+

@@ -3,7 +3,6 @@ import logging
 from osgeo import gdal
 from . import helpfunctions as hf
 
-fileType = "text/csv"
 
 logger = logging.getLogger("geoextent")
 
