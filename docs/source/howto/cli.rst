@@ -122,7 +122,7 @@ You can enable detailed logs by passing the ``--debug`` option, or by setting th
 Details
 ^^^^^^^
 You can enable details for folders and ZIP files by passing the ``--details`` option, this option allows you to access
-to the geoextent of the individual files inside the folders/ ZIP files used to compute the total bounding box (bbox)
+to the geoextent of the individual files inside the folders/ ZIP files used to compute the aggregated bounding box (bbox)
 or time box (tbox).
 
 ::

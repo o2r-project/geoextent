@@ -2,6 +2,10 @@
 Changelog
 =========
 
+0.6.0
+^^^^^
+- Add details option ``--details`` for folders and ZIP files (:pr:`116`)
+
 0.5.0
 ^^^^^
 - Add support for spatial extent for ``osgeo`` files (via OGR/GDAL) with generic vector (GeoPackage, Shapefile, GeoJSON, GML, GPX, KML) and raster handling (GeoTIFF) (:pr:`87`, :pr:`99`)
