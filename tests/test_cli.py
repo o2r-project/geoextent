@@ -20,6 +20,20 @@ def test_help_text_no_args(script_runner):
     assert "geoextent [-h]" in ret.stdout, "usage instructions are printed to console"
 
 
+def test_details_folder(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', '--details', 'tests/testdata/folders/folder_one_file')
+    assert ret.success, "process should return success"
+    result = ret.stdout
+    assert "'details'" in result
+
+
+def test_no_details_folder(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', 'tests/testdata/folders/folder_one_file')
+    assert ret.success, "process should return success"
+    result = ret.stdout
+    assert "'details'" not in result
+
+
 def test_error_no_file(script_runner):
     ret = script_runner.run('geoextent', 'doesntexist')
     assert not ret.success, "process should return failure"

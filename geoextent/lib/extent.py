@@ -2,8 +2,6 @@ import logging
 import os
 import threading
 import zipfile
-from osgeo import ogr
-from osgeo import gdal
 
 from . import handleCSV
 from . import handleVector
@@ -14,13 +12,15 @@ logger = logging.getLogger("geoextent")
 handle_modules = {'CSV': handleCSV, "raster": handleRaster, "vector": handleVector}
 
 
-def computeBboxInWGS84(module, path):
-    ''' 
+def compute_bbox_wgs84(module, path):
+    """
     input "module": type module, module from which methods shall be used \n
     input "path": type string, path to file \n
-    returns a bounding box, type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)], the boudning box has either its original crs or WGS84 (transformed).
-    '''
-    logger.debug("computeBboxInWGS84: {}".format(path))
+    returns a bounding box, type list, length = 4 , type = float,
+        schema = [min(longs), min(lats), max(longs), max(lats)],
+        the bounding box has either its original crs or WGS84(transformed).
+    """
+    logger.debug("compute_bbox_wgs84: {}".format(path))
     spatial_extent_origin = module.getBoundingBox(path)
 
     try:
@@ -31,12 +31,13 @@ def computeBboxInWGS84(module, path):
                                                                     spatial_extent_origin['bbox']),
                               'crs': str(hf.WGS84_EPSG_ID)}
     except Exception as e:
-        raise Exception("The bounding box could not be transformed to the target CRS epsg:{}".format(hf.WGS84_EPSG_ID))
+        raise Exception("The bounding box could not be transformed to the target CRS epsg:{} \n error {}"
+                        .format(hf.WGS84_EPSG_ID, e))
 
     return spatial_extent
 
 
-def fromDirectory(path, bbox=False, tbox=False):
+def fromDirectory(path, bbox=False, tbox=False, details=False):
     """ Extracts geoextent from a directory/ZipFile
     Keyword arguments:
     path -- directory/ZipFile path
@@ -67,11 +68,11 @@ def fromDirectory(path, bbox=False, tbox=False):
         isZip = zipfile.is_zipfile(os.path.join(path, filename))
         if isZip:
             logger.info("**Inspecting folder {}, is zip ? {}**".format(filename, str(isZip)))
-            metadata_directory[filename] = fromDirectory(os.path.join(path, filename), bbox, tbox)
+            metadata_directory[filename] = fromDirectory(os.path.join(path, filename), bbox, tbox, details=True)
         else:
             logger.info("Inspecting folder {}, is zip ? {}".format(filename, str(isZip)))
             if os.path.isdir(os.path.join(path, filename)):
-                metadata_directory[filename] = fromDirectory(os.path.join(path, filename), bbox, tbox)
+                metadata_directory[filename] = fromDirectory(os.path.join(path, filename), bbox, tbox, details=True)
             else:
                 metadata_file = fromFile(os.path.join(path, filename), bbox, tbox)
                 metadata_directory[str(filename)] = metadata_file
@@ -97,12 +98,13 @@ def fromDirectory(path, bbox=False, tbox=False):
         else:
             logger.warning("The {} {} has no identifiable time extent".format(file_format, path))
 
-    # metadata['details'] = metadata_directory
+    if details:
+        metadata['details'] = metadata_directory
 
     return metadata
 
 
-def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
+def fromFile(filepath, bbox=True, tbox=True, num_sample=None):
     """ Extracts geoextent from a file
     Keyword arguments:
     path -- filepath
@@ -110,13 +112,13 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     tbox -- True if time box is requested (default False)
     num_sample -- sample size to determine time format (Only required for csv files)
     """
-    logger.info("Extracting bbox={} tbox={} from file {}".format(bbox, tbox, filePath))
+    logger.info("Extracting bbox={} tbox={} from file {}".format(bbox, tbox, filepath))
 
-    if bbox == False and tbox == False:
+    if not bbox and not tbox:
         logger.error("Require at least one of extraction options, but bbox is {} and tbox is {}".format(bbox, tbox))
         raise Exception("No extraction options enabled!")
 
-    fileFormat = os.path.splitext(filePath)[1][1:]
+    file_format = os.path.splitext(filepath)[1][1:]
 
     usedModule = None
 
@@ -126,15 +128,15 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
     # get the module that will be called (depending on the format of the file)
 
     for i in handle_modules:
-        valid = handle_modules[i].checkFileSupported(filePath)
+        valid = handle_modules[i].checkFileSupported(filepath)
         if valid:
             usedModule = handle_modules[i]
-            logger.info("{} is being used to inspect {} file".format(usedModule.get_handler_name(), filePath))
+            logger.info("{} is being used to inspect {} file".format(usedModule.get_handler_name(), filepath))
             break
 
     # If file format is not supported
     if not usedModule:
-        logger.info("Did not find a compatible module for file format {} of file {}".format(fileFormat, filePath))
+        logger.info("Did not find a compatible module for file format {} of file {}".format(file_format, filepath))
         return None
 
     # get Bbox, Temporal Extent, Vector representation and crs parallel with threads
@@ -145,35 +147,35 @@ def fromFile(filePath, bbox=True, tbox=True, num_sample=None):
 
         def run(self):
 
-            metadata["format"] = usedModule.fileType
+            metadata["format"] = file_format
+            metadata["geoextent_handler"] = usedModule.get_handler_name()
 
             # with lock:
 
-            logger.debug("Starting  thread {} on file {}".format(self.task, filePath))
+            logger.debug("Starting  thread {} on file {}".format(self.task, filepath))
             if self.task == "bbox":
                 try:
                     if bbox:
-                        spatial_extent = computeBboxInWGS84(usedModule, filePath)
+                        spatial_extent = compute_bbox_wgs84(usedModule, filepath)
                         metadata["bbox"] = spatial_extent['bbox']
                         metadata["crs"] = spatial_extent['crs']
                 except Exception as e:
-                    logger.warning("Error for {} extracting bbox:\n{}".format(filePath, str(e)))
+                    logger.warning("Error for {} extracting bbox:\n{}".format(filepath, str(e)))
             elif self.task == "tbox":
                 try:
                     if tbox:
-                        if usedModule.fileType == 'text/csv':
-                            extract_tbox = usedModule.getTemporalExtent(filePath, num_sample)
+                        if usedModule.get_handler_name() == 'handleCSV':
+                            extract_tbox = usedModule.getTemporalExtent(filepath, num_sample)
                         else:
                             if num_sample is not None:
                                 logger.warning("num_sample parameter is ignored, only applies to CSV files")
-                            extract_tbox = usedModule.getTemporalExtent(filePath)
+                            extract_tbox = usedModule.getTemporalExtent(filepath)
                         metadata["tbox"] = extract_tbox
                 except Exception as e:
                     logger.warning("Error extracting tbox, time format not found \n {}:".format(str(e)))
             else:
                 raise Exception("Unsupported thread task {}".format(self.task))
-
-            logger.debug("Completed thread {} on file {}".format(self.task, filePath))
+            logger.debug("Completed thread {} on file {}".format(self.task, filepath))
 
     thread_bbox_except = thread("bbox")
     thread_temp_except = thread("tbox")
