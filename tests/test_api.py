@@ -114,13 +114,7 @@ def test_folder_one_file_details():
 
 def test_folder_one_file_no_details():
     result = geoextent.fromDirectory('tests/testdata/folders/folder_one_file', bbox=True, tbox=True, details=False)
-    assert "bbox" in result
-    assert "tbox" in result
-    assert "crs" in result
     assert "details" not in result
-    assert result["bbox"] == pytest.approx([7.601680, 51.948814, 7.647256, 51.974624], abs=tolerance)
-    assert result["crs"] == "4326"
-    assert result["tbox"] == ['2018-11-14', '2018-11-14']
 
 
 def test_folder_multiple_files():
