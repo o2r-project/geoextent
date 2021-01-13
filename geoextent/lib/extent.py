@@ -157,8 +157,9 @@ def fromFile(filepath, bbox=True, tbox=True, num_sample=None):
                 try:
                     if bbox:
                         spatial_extent = compute_bbox_wgs84(usedModule, filepath)
-                        metadata["bbox"] = spatial_extent['bbox']
-                        metadata["crs"] = spatial_extent['crs']
+                        if spatial_extent is not None:
+                            metadata["bbox"] = spatial_extent['bbox']
+                            metadata["crs"] = spatial_extent['crs']
                 except Exception as e:
                     logger.warning("Error for {} extracting bbox:\n{}".format(filepath, str(e)))
             elif self.task == "tbox":
@@ -170,7 +171,8 @@ def fromFile(filepath, bbox=True, tbox=True, num_sample=None):
                             if num_sample is not None:
                                 logger.warning("num_sample parameter is ignored, only applies to CSV files")
                             extract_tbox = usedModule.getTemporalExtent(filepath)
-                        metadata["tbox"] = extract_tbox
+                        if extract_tbox is not None:
+                            metadata["tbox"] = extract_tbox
                 except Exception as e:
                     logger.warning("Error extracting tbox, time format not found \n {}:".format(str(e)))
             else:
