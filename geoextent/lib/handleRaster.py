@@ -87,5 +87,5 @@ def getTemporalExtent(filePath):
     '''
 
     print('There is no time value for GeoTIFF files')
-    return 'None'
+    return None
 

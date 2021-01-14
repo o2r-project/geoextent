@@ -128,7 +128,7 @@ def test_geojson_time_invalid(script_runner):
     ret = script_runner.run('geoextent',
                             '-t', 'tests/testdata/geojson/invalid_time.geojson')
     assert ret.success, "process should return success"
-    assert "'tbox': None" in ret.stdout
+    assert "'tbox'" not in ret.stdout
 
 
 def test_print_supported_formats(script_runner):
@@ -188,7 +188,7 @@ def test_kml_time_invalid(script_runner):
     ret = script_runner.run('geoextent', '-t', 'tests/testdata/kml/abstractviews_timeprimitive_example_error.kml')
     assert ret.success, "process should return success"
     assert ret.stderr is not None
-    assert "'tbox': None" in ret.stdout
+    assert "'tbox'" not in ret.stdout
 
 
 @pytest.mark.skipif(gdal.__version__.startswith("2"), reason="coordinate order mismatch for old GDAL versions")
