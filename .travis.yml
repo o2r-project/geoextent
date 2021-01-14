@@ -2,8 +2,8 @@ os: linux
 dist: xenial
 language: python
 python:
-  - "3.7"
-  - "3.7-dev"  # 3.7 development branch
+  - "3.8"
+  - "nightly"
 addons:
   apt:
     sources:
