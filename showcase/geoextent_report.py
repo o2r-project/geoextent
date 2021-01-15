@@ -49,9 +49,8 @@
 # The following method extracts all the zenodo ids from an specific search term.
 
 import requests
+import json
 def get_list_of_records(term,mb_size):
-    
-    size = mb_size*1000000
     
     response_hits = requests.get('https://zenodo.org/api/records/',
                               params={'q':str(term),
@@ -61,23 +60,28 @@ def get_list_of_records(term,mb_size):
     hits = response_hits.json()['hits']['total']
     
     print("{} repositories found for '{}' query search term".format(hits,term))
-    zenodo_ids = []
+    zenodo_search = {}
     
     if hits > 0 :
         
         response = requests.get('https://zenodo.org/api/records/',
-                              params={'q':'geo',"access_right":"open","size" : str(hits),"type":"dataset"})
+                              params={'q':'geo',"access_right":"open","size":str(hits),"type":"dataset"})
         
         content = response.json()
 
     for i in range(0,hits):
-        if content['hits']['hits'][i]['files'][0]['size']<= size:  
-            zenodo_ids.append(content['hits']['hits'][i]['conceptrecid'])
-    
-    print("{} out of {} repositories smaller than {} MB".format(len(zenodo_ids),hits,mb_size))
         
-    return zenodo_ids
+        files = content['hits']['hits'][i]['files']
+        size = round(sum(f['size'] for f in files)/2 **20,1)
+        if size <= mb_size:
+            record_id = content['hits']['hits'][i]['conceptrecid']
+            doi = content['hits']['hits'][i]['doi']
+            title = content['hits']['hits'][i]['metadata']['title']
+            license = content['hits']['hits'][i]['metadata']['license']['id']
+            zenodo_search[record_id] = {"doi":doi,"title":title,"license":license,"size_mb":size}
+    print("{} out of {} repositories smaller than {} MB".format(len(zenodo_search),hits,mb_size))
 
+    return zenodo_search
 
 
 # #### Figshare
@@ -120,35 +124,168 @@ import os
 
 
 def zenodo_geoextent(zenodo_id):
+    
     with tempfile.TemporaryDirectory() as tmp_dir:
-        print(zenodo_id)
-        file = tmp_dir+str(zenodo_id)+".txt"
-        zget.zenodo_get([str(zenodo_id),"-w",file])
-        command = 'wget -i ' + file +" -P " + tmp_dir
-        os.system(command)
-        f = geoextent.fromDirectory(tmp_dir, True, True)
-        geo_extent = {'id':zenodo_id,'geoextent':f}
+        tmp_dir_dest = os.path.join(tmp_dir,str(zenodo_id))
+        zget.zenodo_get([str(zenodo_id),"-e","-o",tmp_dir_dest])
+        f = geoextent.fromDirectory(tmp_dir_dest, True, True, True)
+        geo_extent = f
         
     return geo_extent
 
 
-geo = get_list_of_records("geo",100)
-
-# +
-repository_list = geo[1:10]
-results = {}
-
-for i in repository_list:
-    results[i] = zenodo_geoextent(i)
-    
-# -
-
-results
-
 # ### Geoextent 
 
-#
-#
+# +
+#Get list of records
+geo  = get_list_of_records("geo",mb_size=100)
+
+subset_list = list(geo.keys())[1:5]
+subset = {key: geo[key] for key in geo.keys() if key in subset_list}
+
+for i in subset:
+    if geoextent is not None:
+        subset[i]['geoextent'] = zenodo_geoextent(i)
+
+# +
+import sys
+import pandas as pd
+
+def rep_to_table(dict_geo):
+    
+    repository_id = []
+    title = []
+    doi = []
+    license = []
+    tbox = []
+    bbox = []
+    crs = []
+    
+    for i in dict_geo:
+
+        repository_info = dict_geo[i]
+        repository_id.append(i)
+        title.append(repository_info.get('title'))
+        doi.append(repository_info.get('doi'))
+        license.append(repository_info.get('license'))
+        geoextent = repository_info.get('geoextent')
+        tbox.append(geoextent.get('tbox'))
+        bbox.append(geoextent.get('bbox'))
+        crs.append(geoextent.get('crs'))
+        
+    d = {'repository_id': repository_id, 'title': title, 'doi':doi,'license':license,
+        'bbox':bbox,'tbox':tbox,'crs':crs}
+    
+    repositories = pd.DataFrame(d)
+    
+    return repositories
+        
+
+
+# -
+
+rep_to_table(subset)
+
+# +
+import os
+import itertools
+
+def extract_details(details,repository=1):
+    
+    filename = []
+    file_format = []
+    handler = []
+    bbox = []
+    tbox = []
+    crs = []
+    
+    for i in details:
+    
+        file = details[i]
+        
+        if file is None:
+            filename.append([i])
+            file_format_v = os.path.splitext(i)[1][1:]
+            if file_format_v is '':
+                file_format_v = 'undetected'
+            file_format.append([file_format_v])
+            handler.append([None])
+            bbox.append([None])
+            tbox.append([None])
+            crs.append([None])
+        else:
+            filename.append([i])
+            file_format.append([file.get('format')])    
+            handler_v = file.get('geoextent_handler')
+            bbox_v = file.get('bbox')
+            tbox_v = file.get('tbox')
+            crs_v = file.get('crs')
+            handler.append([handler_v])
+            bbox.append([bbox_v])
+            tbox.append([tbox_v])
+            crs.append([crs_v])
+            
+            if file.get('format')=='folder':
+                dictio = extract_details(file['details'])
+                filename.append(dictio['filename'])
+                file_format.append(dictio['format'])
+                handler.append(dictio['handler'])
+                bbox.append(dictio['bbox'])
+                tbox.append(dictio['tbox'])
+                crs.append(dictio['crs'])
+    
+    if any(isinstance(i, list) for i in filename):
+        filename = list(itertools.chain.from_iterable(filename))
+        file_format=  list(itertools.chain.from_iterable(file_format))
+        handler = list(itertools.chain.from_iterable(handler))
+        bbox= list(itertools.chain.from_iterable(bbox))
+        tbox = list(itertools.chain.from_iterable(tbox))
+        crs = list(itertools.chain.from_iterable(crs))
+        
+    d = {'filename': filename, 'format': file_format, 'handler':handler,'bbox':bbox,'tbox':tbox,'crs':crs}
+    
+    return(d)
+
+
+# -
+
+def file_table(subset):
+    
+    filename = []
+    file_format = []
+    handler = []
+    tbox = []
+    bbox = []
+    crs = []
+    
+    for rep in subset:
+
+        file = subset[rep]['geoextent']['details']
+        repository = extract_details(file,1)
+
+        filename.append(repository.get('filename'))
+        file_format.append(repository.get('format'))
+        handler.append(repository.get('handler'))
+        tbox.append(repository.get('tbox'))
+        bbox.append(repository.get('bbox'))
+        crs.append(repository.get('crs'))
+
+    if any(isinstance(i, list) for i in filename):
+            
+        filename = list(itertools.chain.from_iterable(filename))
+        file_format=  list(itertools.chain.from_iterable(file_format))
+        handler = list(itertools.chain.from_iterable(handler))
+        bbox= list(itertools.chain.from_iterable(bbox))
+        tbox = list(itertools.chain.from_iterable(tbox))
+        crs = list(itertools.chain.from_iterable(crs))
+
+    d = {'filename': filename, 'format': file_format, 'handler':handler,'bbox':bbox,'tbox':tbox,'crs':crs}
+    files = pd.DataFrame(d)
+    return(files)
+   
+
+
+file_table(subset)
 
 # # Results
 
