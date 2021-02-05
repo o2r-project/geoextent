@@ -52,22 +52,48 @@
 import requests
 import json
 
-def get_list_of_records(term,mb_size = False):
+def get_list_of_records(term,mb_size = False,bounds = False):
+    
+    parameters = {'q':str(term),
+              "access_right":"open",
+              "size" : "1",
+              "type":"dataset"}
+    
+    if bounds is not False:
+    
+        try:
+            min_lon,min_lat,max_lon,max_lat = bounds[0],bounds[1],bounds[2],bounds[3]
+            
+            if min_lon < max_lon and min_lat < max_lat:
+                
+                if min_lon in range(-180,181) and min_lat in range(-90,91) and max_lon in range (-180,181) and max_lat in range (-90,91):
+                    bbox = str(bounds[0])+","+str(bounds[1])+","+str(bounds[2])+","+str(bounds[3])
+                    parameters['bounds'] = bbox
+                else:
+                    print("Invalid bounds. Bounds parameter is going to be ignore. >limite")   
+            else:
+                print("Invalid bounds. Bounds parameter is going to be ignore.")
+        except:
+            print("Invalid bounds. Bounds parameter is going to be ignore. Error")
+    
+    if term is False:
+        parameters.pop("q")
     
     response_hits = requests.get('https://zenodo.org/api/records/',
-                              params={'q':str(term),
-                                      "access_right":"open",
-                                      "size" : "1",
-                                     "type":"dataset"})
+                              params=parameters)
+    
+    
     hits = response_hits.json()['hits']['total']
     
-    print("{} repositories found for '{}' query search term".format(hits,term))
+    print("{} repositories found for your query.".format(hits))
     zenodo_search = {}
     
     if hits > 0 :
         
+        parameters["size"]=str(hits)
+        
         response = requests.get('https://zenodo.org/api/records/',
-                              params={'q':'geo',"access_right":"open","size":str(hits),"type":"dataset"})
+                              params=parameters)
         
         content = response.json()
 
@@ -87,8 +113,6 @@ def get_list_of_records(term,mb_size = False):
         print("{} out of {} repositories smaller than {} MB".format(len(zenodo_search),hits,mb_size))
 
     return zenodo_search
-
-
 # -
 
 # #### Figshare
@@ -143,7 +167,11 @@ init_notebook_mode(all_interactive=True)
 
 # This method extracts the repository information from the geoextent 'details' function output. The output is a dataframe with relevant features of each repository.
 
-def rep_to_table(dict_geo):
+def rep_to_table(list_records):
+    """ Extracts repository info from list_records
+    Keyword arguments:
+    list_records -- dictionary with geoextent extraction by repository 
+    """
     
     repository_id = []
     title = []
@@ -155,7 +183,7 @@ def rep_to_table(dict_geo):
     
     for i in dict_geo:
 
-        repository_info = dict_geo[i]
+        repository_info = list_records[i]
         repository_id.append(i)
         title.append(repository_info.get('title'))
         doi.append(repository_info.get('doi'))
@@ -193,7 +221,12 @@ def rep_to_table(dict_geo):
 # This method extracts the file details from the geoextent 'details' function output for a **single folder**.
 
 def extract_details(details,repository=1):
-    
+    """ Extracts details from geoextent extraction
+    Keyword arguments:
+    details -- dictionary with geoextent extraction by repository
+    repository -- Parent repository
+    """
+
     filename = []
     file_format = []
     handler = []
@@ -254,7 +287,12 @@ def extract_details(details,repository=1):
 
 # This method extracts the file details from the geoextent 'details' function output for **multiple folders** by using the _extract_details()_ function. The output is a dataframe with relevant features of each file.
 
-def files_to_table(subset):
+def files_to_table(list_records):
+    
+    """ Extracts file information from list_records
+    Keyword arguments:
+    list_records -- dictionary with geoextent extraction by repository 
+    """
     
     filename = []
     rep_id = []
@@ -264,9 +302,9 @@ def files_to_table(subset):
     bbox = []
     crs = []
 
-    for rep in subset:
+    for rep in list_records:
 
-        geoextent = subset[rep]['geoextent']
+        geoextent = list_records[rep]['geoextent']
         
         if geoextent is not None:
             details = geoextent.get('details')
@@ -320,10 +358,9 @@ def files_to_table(subset):
 from IPython.utils import io
 
 def zenodo_geoextent(zenodo_id):
-    """
-    
-    
-    
+    """Download a zenodo repository and extract the geoextent
+    Keyword arguments:
+    zenodo_id -- zenodo id of repository.
     """
     
     with tempfile.TemporaryDirectory() as tmp_dir:
@@ -342,7 +379,7 @@ def zenodo_geoextent(zenodo_id):
 # +
 #Get list of records
 
-def geoextent_by_search_term_zenodo(term="geo",mb_size = False,output_path="geo_all.gpkg"):
+def geoextent_by_search_term_zenodo(term="geo",mb_size = False,bounds = False,output_path="geo_all.gpkg"):
     """ Extract geoextent of zenodo repositories base on a search term
     Keyword arguments:
     term -- search term (default "geo")
@@ -351,7 +388,7 @@ def geoextent_by_search_term_zenodo(term="geo",mb_size = False,output_path="geo_
 
     """
     
-    list_records = get_list_of_records(term,mb_size)
+    list_records = get_list_of_records(term,mb_size,bounds)
     num_repositories = len(list_records)
     error_ids = []
     counter = 1
@@ -369,8 +406,8 @@ def geoextent_by_search_term_zenodo(term="geo",mb_size = False,output_path="geo_
         files = files_to_table(list_records)
         gdf_repo = gpd.GeoDataFrame(repo, geometry='bbox', crs=CRS("EPSG:4326"))
         gdf_files = gpd.GeoDataFrame(files, geometry='bbox', crs=CRS("EPSG:4326"))
-        gdf_files.to_file(output, layer="files", driver="GPKG")
-        gdf_repo.to_file(output, layer="repositories", driver="GPKG")
+        gdf_files.to_file(output_path, layer="files", driver="GPKG")
+        gdf_repo.to_file(output_path, layer="repositories", driver="GPKG")
 
     except:
         print("Error exporting results into GeoPackage.")
@@ -387,7 +424,7 @@ import logging
 warnings.simplefilter("ignore")
 logging.disable(sys.maxsize)
 
-f = geoextent_by_search_term_zenodo(term="geo",mb_size = 0.1, output_path="geo_p1_mb.gpkg");
+f = geoextent_by_search_term_zenodo(term="geo",mb_size = 0.1,bounds=False, output_path="geo_p1_mb.gpkg");
 logging.disable(logging.NOTSET)
 # -
 
@@ -461,8 +498,6 @@ for i in range(len(rep_valid)):
             "<br><b>  License: </b>" + rep_valid["license"][i]+
             "<br><b> tbox: </b>" + str(rep_valid["tbox"][i])
             ,max_width='250')).add_to(fg)
-
-
     
     for j in range(len(files_valid)):
         
@@ -507,7 +542,7 @@ files_gdf['format'].value_counts().plot(kind='bar',
                                         logy=True,
                                         fontsize=15)
 
-# **GRAPH 4: Ocurrence of fileformat in repositories**
+# **GRAPH 4: Occurrence of fileformat in repositories**
 #
 # Distribution of fileformats in repositories. Percentage of ocurrence of a fileformat in inspected repositories.
 
@@ -590,6 +625,3 @@ plt.show()
 #TODO:
 #list of files with geoextent (potential source osgeo)
 #geofiles = ['cal','csv','dbf','geojson','gff','gmt','gpkg','jpg','json','lyr','pdf','png','prj','shp','shx','tif','tfw','xml']
-# -
-
-
