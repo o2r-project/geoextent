@@ -17,18 +17,14 @@
 
 # Ideas for 'abstract'
 #
-# Academics studies generally include a geographical extent.
-#
-# Academic repositories store all kind of files that allow reasearchers to share information about their investigations. Some of those files include the analyzed datasets or the code used for their analysis. In this regard, the files available in each repositority include not only the information of individual measurements or methods but multiple information as the temporal or spatial extent of the studies. 
-#
-# Temporal and spatial extent are properties that are present in almost all studies, however while searching for public repositories by an spatial component this query is most of the time limited to key words (e.g. name of countries). 
-#
-# Multiple types of data -> hard to define a geographic extension
+# Academic repositories store all kind of files that allow reasearchers to share information about their investigations. Some of those files include the analyzed datasets or the code used for their analysis. In this regard, the files available in each repositority include not only information of individual measurements or methods, but relevant characteristics of the studies as its **temporal** or **spatial extent**. Despite the fact that these characteristics are present in almost all studies (e.g. data is collected in an area during a period of time) searching repositories by these component is limited to keyworkds (e.g. name of countries) or limited tools (**TODO: add source**). For example, in Zenodo (academic repository) __[spatial searchs](https://zenodo.org/api/records/?bounds=-180,-90,180,90)__ are limited to the inclusion of
+# __[locations](https://developers.zenodo.org/#depositions)__ parameter in the metadata of the repository.
 #
 #
-# Objective: 
+# These limitations dificults researchers finding datasets and publications for specific areas or periods of time.
 #
-# Extract geographycal extent of academic repositories.
+# In this sense, the goal of this report is to extract the **spatial** and/or **temporal extent** of available academic repositories by inspecting their content (files) by using the __geoextent__ package. While exploring academic repositories our objective is to understand what are the most common formats to share geographic (spatial) or temporal information used by researchers, and determine in what extent the current version of __geoextent__ is capable to extract these parameters. 
+#
 
 # # Introduction
 
@@ -181,7 +177,7 @@ def rep_to_table(list_records):
     bbox = []
     crs = []
     
-    for i in dict_geo:
+    for i in list_records:
 
         repository_info = list_records[i]
         repository_id.append(i)
@@ -385,7 +381,6 @@ def geoextent_by_search_term_zenodo(term="geo",mb_size = False,bounds = False,ou
     term -- search term (default "geo")
     mb_size -- mb size limit (double) defaul (False) if False there is no size limit
     output_path --  file name to return summary tables from extraction in a geopackage file
-
     """
     
     list_records = get_list_of_records(term,mb_size,bounds)
@@ -417,6 +412,10 @@ def geoextent_by_search_term_zenodo(term="geo",mb_size = False,bounds = False,ou
     
     return data
 
+
+# -
+
+# ### Use example:
 
 # +
 import warnings
@@ -451,9 +450,13 @@ files_gdf.drop(index, inplace=True)
 
 # ##### Results by repository
 
+# Portion of repositories table.
+
 repositories_gdf[0:10]
 
 # ##### Results by files
+
+# Portion of files table.
 
 # +
 from itables import show
@@ -559,6 +562,7 @@ count.plot(kind='bar',
 # +
 d1 = pd.DataFrame({"Total":files_gdf['format'].value_counts()})
 d2 = pd.DataFrame({"geoextent_success":files_valid['format'].value_counts()})
+
 dj = d1.join(d2)
 l = dj.dropna().copy()
 
@@ -614,6 +618,17 @@ ax.legend(loc='center right', bbox_to_anchor=(1.1, 0.5))
 
 plt.show()
 # -
+
+geofiles = l.index.values
+files_no_geoextent = files_gdf[~files_gdf.geometry.is_valid].copy().reset_index(drop=True)
+geofiles_no_geoextent = files_no_geoextent[files_no_geoextent['format'].isin(geofiles)]
+geofiles_no_geoextent = geofiles_no_geoextent.merge(repositories_gdf.loc[:,['repository_id','doi']], left_on='repository', right_on='repository_id')
+
+# **TABLE 1: Filenames of failed geoextractions**
+
+# This table corresponds to the a portion of the files on **graph 6** with no geographical extent detectec by _geoextent_ (i.e "failure"). These files correspond to format files that could be potentially extracted (e.g Shapefiles or Tiff). This table does no include other types of geofiles not present in **graph 6**. 
+
+geofiles_no_geoextent.loc[0:10,["repository","filename","doi"]]
 
 # **GRAPH 6: Distribution of (geo)files in repositories with unsuccessful geospatial extraction (Geoextent)**
 
