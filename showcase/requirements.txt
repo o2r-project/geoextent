@@ -6,3 +6,5 @@ geopandas
 shapely
 pyproj
 itables
+folium
+matplotlib

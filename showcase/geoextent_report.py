@@ -467,16 +467,18 @@ logging.disable(logging.NOTSET)
 # Uncomment and run the following analysis to reproduce the results below.
 #
 
+# + jupyter={"outputs_hidden": true}
 result_data = geoextent_by_search_term_zenodo(term="geo",mb_size = 1024, bounds=False, output_path="geo_1G.gpkg")
 logging.disable(logging.NOTSET)
+# -
 
 # # Results
 
 # After the extraction of geographical and temporal extent of zenodo repositories, the geopackage file is loaded to inspect the results. The geopackage contains two tables, the first one **repositories** and the second one **files**. The two tables are tied together by using the **repository_id** (repositories) and **repository** (for files) property.
 
 # +
-repositories_gdf = gpd.read_file("geo_200.gpkg",layer="repositories")
-files_gdf = gpd.read_file("geo_200.gpkg",layer="files")
+repositories_gdf = gpd.read_file("geo_1G.gpkg",layer="repositories")
+files_gdf = gpd.read_file("geo_1G.gpkg",layer="files")
 
 num_repositories = len(repositories_gdf)
 num_files = len(files_gdf)
@@ -491,13 +493,17 @@ files_gdf.drop(index, inplace=True)
 
 # -
 
-# ##### Results by repository
+num_repositories
+
+num_files
+
+# ### Results by repository
 
 # Portion of repositories table.
 
 repositories_gdf[0:10]
 
-# ##### Results by files
+# ### Results by files
 
 # Portion of files table.
 
@@ -511,7 +517,7 @@ files_gdf[20:30]
 # for more info : # https://mwouts.github.io/itables/#downsampling
 # -
 
-# ##### Bounding box 
+# ### Bounding box 
 
 # Visualization of bounding boxes
 
