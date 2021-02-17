@@ -34,8 +34,8 @@ def checkFileSupported(filepath):
 
 
 def getBoundingBox(filePath):
-    ''' extracts bounding box from geotiff \n
-    input "filepath": type string, file path to geotiff file \n
+    ''' extracts bounding box from raster \n
+    input "filepath": type string, file path to raster file \n
     returns bounding box of the file: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)] 
     '''
     # Enable exceptions
@@ -80,12 +80,10 @@ def getBoundingBox(filePath):
     return spatialExtent
 
 
-def getTemporalExtent(filePath):
-    ''' extracts temporal extent of the geotiff \n
+def getTemporalExtent(filepath):
+    """ extracts temporal extent of the geotiff \n
     input "filepath": type string, file path to geotiff file \n
-    returns None as There is no time value for GeoTIFF files 
-    '''
-
-    print('There is no time value for GeoTIFF files')
+    returns None as There is no time value for GeoTIFF files
+    """
+    logger.debug('{} There is no time value for raster files'.format(filepath))
     return None
-
