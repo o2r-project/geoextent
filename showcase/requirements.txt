@@ -1,0 +1,10 @@
+ipykernel
+jupyterlab
+zenodo_get
+jupytext
+geopandas
+shapely
+pyproj
+itables
+folium
+matplotlib

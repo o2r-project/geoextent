@@ -24,7 +24,7 @@ You must install a suitable version of `pygdal` manually first, see [instruction
 We use `pygdal` for better compatibility with virtual environments.
 
 ```bash
-# pip install pygdal=="`gdal-config --version`.*"
+pip install pygdal=="`gdal-config --version`.*"
 pip install geoextent
 ```
 
@@ -48,6 +48,23 @@ geoextent --help
 
 to see usage instructions.
 
+## Showcases
+
+To run the showcase notebooks, install [JupyterLab](https://jupyter.org/) or the classic Jupyter Notebook and then start a local server as shown below.
+If your IDE has support for the Jupyter format, installing `ipykernel` might be enough.
+We recommend running the below commands in a virtual environment as described [here](https://jupyter-tutorial.readthedocs.io/en/latest/first-steps/install.html).
+
+```bash
+cd showcase
+pip install -r requirements.txt
+
+jupyter lab
+```
+
+Then open the local Jupyter Notebook server using the displayed link and open the notebook, e.g., `geoextent_report.ipynb`.
+The `showcase/` directory contains two files, which are [paired notebooks based on Jupytext](https://github.com/mwouts/jupytext/blob/master/docs/paired-notebooks.md).
+Please check out the Jupytext documentation to make sure how to edit these in parallel.
+
 ## Supported data formats
 
 - GeoJSON (.geojson)
@@ -66,7 +83,7 @@ See [CONTRIBUTING.md](https://github.com/o2r-project/geoextent/blob/master/CONTR
 
 ## How to cite
 
-> Nüst, Daniel and Qamaz, Yousef. (2020, July 1). o2r-project/geoextent (Version v0.3.0). Zenodo. https://doi.org/10.5281/zenodo.3925693
+> Nüst, Daniel, Garzón, Sebastian, and Qamaz, Yousef. (2020, July 1). o2r-project/geoextent (Version v0.3.0). Zenodo. [https://doi.org/10.5281/zenodo.3925693](https://doi.org/10.5281/zenodo.3925693)
 
 See also the `CITATION.cff` and `codemeta.json` files in this repository, which can possibly be imported in the reference manager of your choice.
 

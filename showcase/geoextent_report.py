@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
@@ -6,43 +7,74 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.10.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
 #     name: python3
 # ---
 
-# # Report Geoextent
-
-# Ideas for 'abstract'
+# # Geospatial metadata of records in research data repositories
 #
-# Academic repositories store all kind of files that allow reasearchers to share information about their investigations. Some of those files include the analyzed datasets or the code used for their analysis. In this regard, the files available in each repositority include not only information of individual measurements or methods, but relevant characteristics of the studies as its **temporal** or **spatial extent**. Despite the fact that these characteristics are present in almost all studies (e.g. data is collected in an area during a period of time) searching repositories by these component is limited to keyworkds (e.g. name of countries) or limited tools (**TODO: add source**). For example, in Zenodo (academic repository) __[spatial searchs](https://zenodo.org/api/records/?bounds=-180,-90,180,90)__ are limited to the inclusion of
-# __[locations](https://developers.zenodo.org/#depositions)__ parameter in the metadata of the repository.
+# _Sebastian Garzón, Daniel Nüst, Institute for Geoinformatics, University of Münster, Germany_
 #
+# Contact: daniel.nuest@uni-muenster.de
 #
-# These limitations dificults researchers finding datasets and publications for specific areas or periods of time.
+# Online repository: [https://github.com/o2r-project/geoextent/](https://github.com/o2r-project/geoextent/)
+
+# ## Introduction
 #
-# In this sense, the goal of this report is to extract the **spatial** and/or **temporal extent** of available academic repositories by inspecting their content (files) by using the __geoextent__ package. While exploring academic repositories our objective is to understand what are the most common formats to share geographic (spatial) or temporal information used by researchers, and determine in what extent the current version of __geoextent__ is capable to extract these parameters. 
+# Research data repositories store all kind of files to allow scientists to share data and software for their work.
+# Repositories provide long-term availability even of large datasets, have in part curation policies to ensure quality of data and metadata, and enable data citation, most commonly by assigning [DOIs](https://en.wikipedia.org/wiki/DOI).
+# There are numerous such repositories (cf. [re3data.org](https://www.re3data.org/)), some of which are generic while some a tailored to a specific discipline and their typical data, such as genomes.
+# Repositories' records or projects include both input data as well as generated data or output datasets and visualisations.
+# Quite often, the files available in the records capture data not only with properties, text, or simple numerical values, but also relevant characteristics of observed objects or areas with a specific **temporal** and/or **spatial extent**.
+# This spatio-temporal component to data is especially common in all geoscience, geography, and Earth sciences, but is becomming more and more widespread across all sciences and humanities as geospatial data collection and analysis becomes easier.
+# Despite the fact that these spatio-temporal characteristics of data are present in many research studies (e.g., data is collected in an area during a period of time), only a minority of repositories explicitly supports geospatial and temporal filtering during discovery.
+# Instead, searching repositories is limited to keywords, which rely on manual tagging and description texts to find data from a specific area (e.g., name of countries).
+# These limitations make it difficulf for researchers to explore possibly interesting and related datasets.
+# Geospatial metadata-based search could facilitate discovery of related relevant publications.
+#
+# Therefore, in this notebook, we explore the actual geospatial properties of records stored in widely used research data repositories, to understand the potential of geospatial metadata for research data discovery.
+# This is especially interesting for general purpose data repositories, such as [Zenodo](https://zenodo.org/) or [Figshare](https://figshare.com/).
+#
+# Downloading and automatically extracting the spatial and/or temporal extent of files included in many repository records is achieved with the software **[`geoextent`](https://o2r.info/geoextent/)**.
+# This notebook is a showcase for `geoextent`, a Python library for automatic extraction of geospatial extents from a set of files based on [GDAL](https://gdal.org/).
+# This work is also a testbed for `geoextent` as the tool is exposed to many different files and file types.
+# The successful extractions of geospatial metadata will also build up a database of the most common file formats used to share geographic (spatial) or temporal information used by researchers, and help to determine how well the current version of `geoextent` can handle these files and to define future development tasks. 
+#
+# Based on the lessons learned in this investigation, it may be interesteting to explore using `geoextent` at time of file upload and build a geospatia metadata-powered search index as part of more research data repositories.
 #
 
-# # Introduction
+# In the remainder of this document, we first implement a few functions to search research data repositories and download files one record at a time.
+# Then, the geospatial extent of each record is extracted and stored in a local database.
+# The results of the extraction are then visualised and discussed.
 
-# ## Database extraction
+# ## Harvesting extents from repositories
 
-# These sets of functions download databases by using their DOI from four academic repositories. The functions also extracts the metadata of the database (e.g., location if available).
-
-# ### DOI to repository identification
+# The following functions (a) search repositories and extract the DOIs, which are stored in simple files, and (b) download records based on their DOI from research data repositories.
+# The storing of DOIs ensures reproducibility of the workflows.
+# If available, functions also extract the metadata of the record, e.g., if location information is available already in a given repository for comparison with the extracted extent.
 
 # +
-#TODO
-# This functions use as an input the DOI of a dataset and returns the name of the academic repository where it
-# is hosted (Zenodo,Figshare,GFZ Data Services, Pangaea) and their ID in the corresponding repository.
+### TODO ###
+# Add function to translate the DOI of a dataset to name and repository-specific identifier.
 # -
 
-# #### Zenodo
-# ##### Getting list of records
-# The following method extracts all the zenodo ids from an specific search term.
+# ### Zenodo
+#
+# #### About
+#
+# The very popular [Zenodo](https://zenodo.org/) repository is run by CERN in Switzerland.
+# It is free for use with records up to 50 GB in size.
+#
+# Zenodo allows simple __[spatial search](https://zenodo.org/api/records/?bounds=-180,-90,180,90)__, yet the feature is not well documented and  users cannot seem to create these metadata themselves.
+# The type of geospatial metadata also seems limited to point __[locations](https://developers.zenodo.org/#depositions)__.
+#
+# #### Getting list of records
+#
+# The following method extracts all the Zenodo identifiers from an specific search term, so they can be used later as a basis for downloading and extracting geospatial metadata.
+#
 
 # +
 import requests
@@ -111,7 +143,9 @@ def get_list_of_records(term,mb_size = False,bounds = False):
     return zenodo_search
 # -
 
-# #### Figshare
+# ### Figshare
+#
+# [Figshare](https://figshare.com/) is a popular general purpose research data repository.
 #
 
 # +
@@ -120,7 +154,9 @@ def get_list_of_records(term,mb_size = False,bounds = False):
 # This function downloads a Figshare repository and extracts the available metadata
 # -
 
-# #### GFZ Data Services
+# ### GFZ Data Services
+#
+# The [GFZ Data Services](https://dataservices.gfz-potsdam.de/portal/) archives and publishes data across all geoscientific disciplines and in all sizes, from large dynamic real-time datasets to small long-tail data.
 
 # +
 #TODO
@@ -128,7 +164,11 @@ def get_list_of_records(term,mb_size = False,bounds = False):
 # This function downloads a GFZ Data Services repository and extracts the available metadata
 # -
 
-# #### Pangaea
+# ### Pangaea
+#
+# [Pangaea](https://www.pangaea.de/) is a open library for archiving and publishing georeferenced data from Earth system research.
+#
+# As the data is already georeferenced, ti could be interesting to compare `geoxtent`'s results with the original metadata.
 
 # +
 #TODO
@@ -136,10 +176,10 @@ def get_list_of_records(term,mb_size = False,bounds = False):
 # This function downloads a Pangaea repository and extracts the available metadata
 # -
 
-# ### Geographic extent
-
+# ## Extracting geographic extent
+#
 # These sets of functions iterate through the repositories and extract the geospatial information.
-
+#
 # 1. If an extent is found (or if not = NA), Add record URL, ID, and some record metadata (names of contained files, author, repository URL, license, ...),  and the resulting extent in WKT in a local "database" in GeoPackage format.
 #
 # 2. If not extent is found, store the record as visited and the list of filenames
@@ -159,9 +199,10 @@ from itables import init_notebook_mode
 init_notebook_mode(all_interactive=True)
 
 
-# #### Geographic extent repositories
+# ### Metadata functions
 
-# This method extracts the repository information from the geoextent 'details' function output. The output is a dataframe with relevant features of each repository.
+# This method extracts the repository information from the geoextent 'details' function output.
+# The output is a dataframe with relevant features of each repository.
 
 def rep_to_table(list_records):
     """ Extracts repository info from list_records
@@ -212,11 +253,9 @@ def rep_to_table(list_records):
     return repositories
 
 
-# #### Geographic extract details
+# This method extracts the file details from the geoextent `details` function output for a **single folder**.
 
-# This method extracts the file details from the geoextent 'details' function output for a **single folder**.
-
-def extract_details(details,repository=1):
+def extract_details(details, repository=1):
     """ Extracts details from geoextent extraction
     Keyword arguments:
     details -- dictionary with geoextent extraction by repository
@@ -237,7 +276,7 @@ def extract_details(details,repository=1):
         if file is None:
             filename.append([i])
             file_format_v = os.path.splitext(i)[1][1:]
-            if file_format_v is '':
+            if file_format_v == '':
                 file_format_v = 'undetected'
             file_format.append([file_format_v])
             handler.append([None])
@@ -256,7 +295,7 @@ def extract_details(details,repository=1):
             tbox.append([tbox_v])
             crs.append([crs_v])
             
-            if file.get('format')=='folder':
+            if file.get('format') == 'folder':
                 
                 details_folder = extract_details(file['details'],repository)
                 filename.append(details_folder['filename'])
@@ -279,9 +318,7 @@ def extract_details(details,repository=1):
     return d
 
 
-# #### Geographic extract file details
-
-# This method extracts the file details from the geoextent 'details' function output for **multiple folders** by using the _extract_details()_ function. The output is a dataframe with relevant features of each file.
+# This method extracts the file details from the geoextent 'details' function output for **multiple folders** by using the `extract_details()` function. The output is a dataframe with relevant features of each file.
 
 def files_to_table(list_records):
     
@@ -346,8 +383,6 @@ def files_to_table(list_records):
     return files
 
 
-# ##### Download repository from zenodo and inspect geoextent
-
 # This function downloads a repository by their **zenodo_id**, and then extract the geographical extent and temporal extent by using _geoextent_
 
 # +
@@ -370,7 +405,7 @@ def zenodo_geoextent(zenodo_id):
 
 # -
 
-# ### Geoextent 
+# ### Function to retrieve extents from Zenodo
 
 # +
 #Get list of records
@@ -415,7 +450,7 @@ def geoextent_by_search_term_zenodo(term="geo",mb_size = False,bounds = False,ou
 
 # -
 
-# ### Use example:
+# **Example**
 
 # +
 import warnings
@@ -423,7 +458,17 @@ import logging
 warnings.simplefilter("ignore")
 logging.disable(sys.maxsize)
 
-f = geoextent_by_search_term_zenodo(term="geo",mb_size = 0.1,bounds=False, output_path="geo_p1_mb.gpkg");
+f = geoextent_by_search_term_zenodo(term="geo",mb_size = 200, bounds=False, output_path="geo_p1_mb.gpkg");
+logging.disable(logging.NOTSET)
+# -
+
+# ### Extract extents for repositories up to 1GB for the keyword 'geo'
+#
+# Uncomment and run the following analysis to reproduce the results below.
+#
+
+# + jupyter={"outputs_hidden": true}
+result_data = geoextent_by_search_term_zenodo(term="geo",mb_size = 1024, bounds=False, output_path="geo_1G.gpkg")
 logging.disable(logging.NOTSET)
 # -
 
@@ -432,8 +477,8 @@ logging.disable(logging.NOTSET)
 # After the extraction of geographical and temporal extent of zenodo repositories, the geopackage file is loaded to inspect the results. The geopackage contains two tables, the first one **repositories** and the second one **files**. The two tables are tied together by using the **repository_id** (repositories) and **repository** (for files) property.
 
 # +
-repositories_gdf = gpd.read_file("geo_200.gpkg",layer="repositories")
-files_gdf = gpd.read_file("geo_200.gpkg",layer="files")
+repositories_gdf = gpd.read_file("geo_1G.gpkg",layer="repositories")
+files_gdf = gpd.read_file("geo_1G.gpkg",layer="files")
 
 num_repositories = len(repositories_gdf)
 num_files = len(files_gdf)
@@ -448,13 +493,17 @@ files_gdf.drop(index, inplace=True)
 
 # -
 
-# ##### Results by repository
+num_repositories
+
+num_files
+
+# ### Results by repository
 
 # Portion of repositories table.
 
 repositories_gdf[0:10]
 
-# ##### Results by files
+# ### Results by files
 
 # Portion of files table.
 
@@ -468,7 +517,7 @@ files_gdf[20:30]
 # for more info : # https://mwouts.github.io/itables/#downsampling
 # -
 
-# ##### Bounding box 
+# ### Bounding box 
 
 # Visualization of bounding boxes
 
