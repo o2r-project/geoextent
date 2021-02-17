@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.10.1
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -458,7 +458,7 @@ import logging
 warnings.simplefilter("ignore")
 logging.disable(sys.maxsize)
 
-f = geoextent_by_search_term_zenodo(term="geo",mb_size = 200, bounds=False, output_path="geo_p1_mb.gpkg");
+f = geoextent_by_search_term_zenodo(term="geo",mb_size = 0.1, bounds=False, output_path="geo_p1_mb.gpkg");
 logging.disable(logging.NOTSET)
 # -
 
@@ -468,8 +468,8 @@ logging.disable(logging.NOTSET)
 #
 
 # + jupyter={"outputs_hidden": true}
-result_data = geoextent_by_search_term_zenodo(term="geo",mb_size = 1024, bounds=False, output_path="geo_1G.gpkg")
-logging.disable(logging.NOTSET)
+#result_data = geoextent_by_search_term_zenodo(term="geo",mb_size = 1024, bounds=False, output_path="geo_1G.gpkg")
+#logging.disable(logging.NOTSET)
 # -
 
 # # Results
@@ -492,10 +492,6 @@ index = files_gdf[files_gdf['filename'] == 'md5sums.txt'].index
 files_gdf.drop(index, inplace=True)
 
 # -
-
-num_repositories
-
-num_files
 
 # ### Results by repository
 
@@ -533,37 +529,42 @@ rep_valid = repositories_gdf[repositories_gdf.geometry.is_valid].copy().reset_in
 files_valid = files_gdf[files_gdf.geometry.is_valid].copy().reset_index(drop=True)
 
 m = folium.Map(max_bounds= True,height=500)
-stripes = plugins.pattern.StripePattern(angle=-45,color="#f70707")
-style = {'fillColor': '#f70707', 'color': '#f70707', 'dashArray': 5,'fillPattern' :stripes,'fillOpacity' : 0.6}   
+stripes = plugins.pattern.StripePattern(angle=-45,color="#B22222")
+style = {'fillColor': '#B22222', 'color': '#B22222', 'dashArray': 5,'fillPattern' :stripes,'fillOpacity' : 0.6}   
 
-for i in range(len(rep_valid)):
-    fg = FeatureGroup(name=rep_valid["repository_id"][i]).add_to(m)
+for i in range(0,len(rep_valid)):
+    
+    fg = FeatureGroup(name=rep_valid["repository_id"][i])
     folium.GeoJson(data = rep_valid["geometry"][i],
                    name = rep_valid["repository_id"][i],
                    style_function = lambda x: style,
                   ).add_child(
         folium.Popup(
             "<b> REPOSITORY </b>"+
-            "<br><b> Repository ID: </b> " + rep_valid["repository_id"][i]+
-            "<br><b> Title: </b> " + rep_valid["title"][i] + 
-            "<br><b>   D.O.I: </b> </b>" + rep_valid["doi"][i]+
-            "<br><b>  License: </b>" + rep_valid["license"][i]+
-            "<br><b> tbox: </b>" + str(rep_valid["tbox"][i])
+            "<li><b> Repository ID: </b> " + rep_valid["repository_id"][i]+"</li>"+
+            "<li><b> Title: </b> " + rep_valid["title"][i] + "</li>"+
+            "<li><b>   D.O.I: </b> </b>" + rep_valid["doi"][i]+"</li>"+
+            "<li><b>  License: </b>" + rep_valid["license"][i]+"</li>"+
+            "<li><b> tbox: </b>" + str(rep_valid["tbox"][i])+"</li>"
             ,max_width='250')).add_to(fg)
     
-    for j in range(len(files_valid)):
-        
+    for j in range(0,len(files_valid)):
         if files_valid["repository"][j]==rep_valid["repository_id"][i]:
             folium.GeoJson(data = files_valid["geometry"][j],
                         name = files_valid["repository"][j]).add_child(
                 folium.Popup(
-                    "<b> FILE </b>"+
-                "<br><b> Repository ID of origin: </b> " + files_valid["repository"][j]+
-                "<br><b> Filename: </b> " + files_valid["filename"][j]+  
-                "<br><b> Format: </b> " + files_valid["format"][j] +
-               "<br><b> Geoextent Handler: </b> " + str(files_valid["handler"][j]) 
+                "<b> FILE </b>"+
+                "<li><b> Filename: </b> " + files_valid["filename"][j] + "</li>"+
+                "<li><b> Format: </b> " + files_valid["format"][j] + "</li>"+
+                "<li><b> Geoextent Handler: </b> " + str(files_valid["handler"][j])+ "</li>"+
+                "<br><b> REPOSITORY OF ORIGIN </b>"+
+                "<li><b> Repository ID: </b> " + rep_valid["repository_id"][i]+ "</li>"+
+                "<li><b> Title: </b> " + rep_valid["title"][i] + "</li>"+
+                "<li><b>   D.O.I: </b>" + rep_valid["doi"][i]+ "</li>" +
+                "<li><b>  License: </b>" + rep_valid["license"][i] + "</li>"
                 ,max_width='400')).add_to(fg)
-    
+    m.add_child(fg)
+            
 LayerControl().add_to(m)
 m
 # -
