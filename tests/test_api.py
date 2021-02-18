@@ -213,3 +213,9 @@ def test_bbox_and_tbox_both_false():
     with pytest.raises(Exception) as excinfo:
         geoextent.fromFile('tests/path_does_not_matter', bbox=False, tbox=False)
     assert "No extraction options" in str(excinfo.value)
+
+
+def test_invalid_bbox_and_flip():
+    result = geoextent.fromFile('tests/testdata/csv/cities_NL_case_flip.csv', bbox=True)
+    assert result['bbox'] == pytest.approx([4.3175, 5.0, 95.0, 53.217222], abs=tolerance)
+    assert result['crs'] == "4326"

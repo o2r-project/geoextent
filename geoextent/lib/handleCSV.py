@@ -3,7 +3,6 @@ import logging
 from osgeo import gdal
 from . import helpfunctions as hf
 
-
 logger = logging.getLogger("geoextent")
 
 search = {"longitude": ["(.)*longitude", "(.)*long(.)*", "^lon", "lon$", "(.)*lng(.)*", "^x", "x$"],
@@ -30,8 +29,8 @@ def checkFileSupported(filepath):
 
     if driver == "CSV":
         with open(filepath) as csv_file:
-            daten = csv.reader(csv_file.readlines())
-            if daten is None:
+            data = csv.reader(csv_file.readlines())
+            if data is None:
                 logger.debug("File {} is NOT supported by HandleCSV module".format(filepath))
                 return False
             else:
@@ -39,6 +38,7 @@ def checkFileSupported(filepath):
                 return True
     else:
         return False
+
 
 def getBoundingBox(filePath):
     '''
@@ -49,32 +49,32 @@ def getBoundingBox(filePath):
 
     with open(filePath) as csv_file:
         # To get delimiter either comma or simecolon
-        daten = hf.getDelimiter(csv_file)
+        date = hf.getDelimiter(csv_file)
 
         elements = []
-        for x in daten:
+        for x in date:
             elements.append(x)
 
-        spatialLatExtent = hf.searchForParameters(elements, search['latitude'], exp_data='numeric')
+        spatial_lat_extent = hf.searchForParameters(elements, search['latitude'], exp_data='numeric')
 
-        minlat = None
-        maxlat = None
+        min_lat = None
+        max_lat = None
 
-        if spatialLatExtent is None:
+        if spatial_lat_extent is None:
             pass
         else:
-            minlat = (min(spatialLatExtent))
-            maxlat = (max(spatialLatExtent))
+            min_lat = (min(spatial_lat_extent))
+            max_lat = (max(spatial_lat_extent))
 
-        spatialLonExtent = hf.searchForParameters(elements, search['longitude'], exp_data='numeric')
+        spatial_lon_extent = hf.searchForParameters(elements, search['longitude'], exp_data='numeric')
 
-        if spatialLonExtent is None:
+        if spatial_lon_extent is None:
             raise Exception('The csv file from ' + filePath + ' has no BoundingBox')
         else:
-            minlon = (min(spatialLonExtent))
-            maxlon = (max(spatialLonExtent))
+            min_lon = (min(spatial_lon_extent))
+            max_lon = (max(spatial_lon_extent))
 
-        bbox = [minlon, minlat, maxlon, maxlat]
+        bbox = [min_lon, min_lat, max_lon, max_lat]
         logger.debug("Extracted Bounding box (without projection): {}".format(bbox))
         crs = getCRS(filePath)
         logger.debug("Extracted CRS: {}".format(crs))
@@ -84,53 +84,59 @@ def getBoundingBox(filePath):
 
     return spatialExtent
 
-def getTemporalExtent(filePath, num_sample):
-    ''' extract time extent from csv string \n
+
+def getTemporalExtent(filepath, num_sample):
+    """ extract time extent from csv string \n
     input "filePath": type string, file path to csv File \n
     returns temporal extent of the file: type list, length = 2, both entries have the type str, temporalExtent[0] <= temporalExtent[1]
-    '''
+    """
 
-    with open(filePath) as csv_file:
-        # To get delimiter either comma or simecolon
-        daten = hf.getDelimiter(csv_file)
+    with open(filepath) as csv_file:
+        # To get delimiter either comma or semicolon
+        data = hf.getDelimiter(csv_file)
 
         elements = []
-        for x in daten:
+        for x in data:
             elements.append(x)
 
         all_temporal_extent = hf.searchForParameters(elements, search['time'], exp_data="time")
         if all_temporal_extent is None:
-            raise Exception('The csv file from ' + filePath + ' has no TemporalExtent')
+            raise Exception('The csv file from ' + filepath + ' has no TemporalExtent')
         else:
             tbox = []
-            parsed_time = hf.date_parser(all_temporal_extent, num_sample = num_sample)
+            parsed_time = hf.date_parser(all_temporal_extent, num_sample=num_sample)
 
             if parsed_time is not None:
                 # Min and max into ISO8601 format ('%Y-%m-%d')
                 tbox.append(min(parsed_time).strftime('%Y-%m-%d'))
                 tbox.append(max(parsed_time).strftime('%Y-%m-%d'))
             else:
-                raise Exception('The csv file from ' + filePath + ' has no recognizable TemporalExtent')
+                raise Exception('The csv file from ' + filepath + ' has no recognizable TemporalExtent')
             return tbox
 
-def getCRS(filePath):
+
+def getCRS(filepath):
     '''extracts coordinatesystem from csv File \n
     input "filepath": type string, file path to csv file \n
     returns the epsg code of the used coordinate reference system, type list, contains extracted coordinate system of content from csv file
     '''
 
-    with open(filePath) as csv_file:
-        daten = csv.reader(csv_file.readlines())
+    with open(filepath) as csv_file:
+        data = hf.getDelimiter(csv_file)
         elements = []
-        for x in daten:
+        for x in data:
             elements.append(x)
 
-        if hf.searchForParameters(elements, search['latitude'] + search['longitude']) is None:
-            if hf.searchForParameters(elements, ["crs","srsID"]) is None:
-                raise Exception('The csv file from ' + filePath + ' has no CRS')
-            if hf.searchForParameters(elements, ["crs","srsID"]) == "WGS84":
-                return "4326"
-            else:
-                raise Exception('The csv file from ' + filePath + ' has no WGS84 CRS')
+        param = hf.searchForParameters(elements, ["crs", "srsID", "EPSG"])
+
+        if param is None:
+            logger.debug("{} : There is no identifiable coordinate reference system. We will try to use EPSG: 4236".format(filepath))
+            crs = "4326"
+
+        elif len(list(set(param))) > 1:
+            logger.debug("{} : Coordinate reference system of the file is ambiguous. Extraction is not possible.".format(filepath))
+            raise Exception('The csv file from ' + filepath + ' has no CRS')
         else:
-            return "4326"
+            crs = str(list(set(param))[0])
+
+        return crs

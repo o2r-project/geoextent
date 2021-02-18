@@ -34,10 +34,10 @@ def checkFileSupported(filepath):
 
 
 def getBoundingBox(filePath):
-    ''' extracts bounding box from raster \n
+    """ extracts bounding box from raster \n
     input "filepath": type string, file path to raster file \n
-    returns bounding box of the file: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)] 
-    '''
+    returns bounding box of the file: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)]
+    """
     # Enable exceptions
 
     crs_output = hf.WGS84_EPSG_ID
@@ -59,21 +59,21 @@ def getBoundingBox(filePath):
     height = geotiffContent.RasterYSize
     gt = geotiffContent.GetGeoTransform()
 
-    minx = gt[0]
-    miny = gt[3] + width * gt[4] + height * gt[5]
-    maxx = gt[0] + width * gt[1] + height * gt[2]
-    maxy = gt[3]
+    min_x = gt[0]
+    min_y = gt[3] + width * gt[4] + height * gt[5]
+    max_x = gt[0] + width * gt[1] + height * gt[2]
+    max_y = gt[3]
 
     transform = osr.CoordinateTransformation(old_crs, new_crs)
     # get the coordinates in lat long
-    latlongmin = transform.TransformPoint(minx, miny)
-    latlongmax = transform.TransformPoint(maxx, maxy)
+    lat_long_min = transform.TransformPoint(min_x, min_y)
+    lat_long_max = transform.TransformPoint(max_x, max_y)
 
-    bbox = [latlongmin[0], latlongmin[1], latlongmax[0], latlongmax[1]]
+    bbox = [lat_long_min[0], lat_long_min[1], lat_long_max[0], lat_long_max[1]]
 
     if int(osgeo.__version__[0]) >= 3:
         if old_crs.GetAxisMappingStrategy() == 1:
-            bbox = [latlongmin[1], latlongmin[0], latlongmax[1], latlongmax[0]]
+            bbox = [lat_long_min[1], lat_long_min[0], lat_long_max[1], lat_long_max[0]]
 
     spatialExtent = {"bbox": bbox, "crs": str(crs_output)}
 

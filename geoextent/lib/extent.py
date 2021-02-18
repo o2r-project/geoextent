@@ -34,6 +34,18 @@ def compute_bbox_wgs84(module, path):
         raise Exception("The bounding box could not be transformed to the target CRS epsg:{} \n error {}"
                         .format(hf.WGS84_EPSG_ID, e))
 
+    validate = hf.validate_bbox_wgs84(spatial_extent['bbox'])
+    logger.debug("Validate: {}".format(validate))
+
+    if not hf.validate_bbox_wgs84(spatial_extent['bbox']):
+        try:
+            flip_bbox = hf.flip_bbox(spatial_extent['bbox'])
+            spatial_extent['bbox'] = flip_bbox
+
+        except Exception as e:
+            raise Exception("The bounding box could not be transformed to the target CRS epsg:{} \n error {}"
+                            .format(hf.WGS84_EPSG_ID, e))
+
     return spatial_extent
 
 
