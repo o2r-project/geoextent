@@ -33,7 +33,7 @@ def checkFileSupported(filepath):
         return False
 
 
-def getBoundingBox(filePath):
+def getBoundingBox(filepath):
     """ extracts bounding box from raster \n
     input "filepath": type string, file path to raster file \n
     returns bounding box of the file: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)]
@@ -43,7 +43,7 @@ def getBoundingBox(filePath):
     crs_output = hf.WGS84_EPSG_ID
     gdal.UseExceptions()
 
-    geotiffContent = gdal.Open(filePath)
+    geotiffContent = gdal.Open(filepath)
 
     # get the existing coordinate system
     old_crs = osr.SpatialReference()
@@ -65,9 +65,15 @@ def getBoundingBox(filePath):
     max_y = gt[3]
 
     transform = osr.CoordinateTransformation(old_crs, new_crs)
-    # get the coordinates in lat long
-    lat_long_min = transform.TransformPoint(min_x, min_y)
-    lat_long_max = transform.TransformPoint(max_x, max_y)
+    try:
+        # get the coordinates in lat long
+        lat_long_min = transform.TransformPoint(min_x, min_y)
+        lat_long_max = transform.TransformPoint(max_x, max_y)
+    except:
+        # Assume that coordinates are in EPSG:4236
+        logger.debug("{}: There is no identifiable coordinate reference system. We will try to use EPSG: 4236 ".format(filepath))
+        lat_long_min = [min_y, min_x]
+        lat_long_max = [max_y, max_x]
 
     bbox = [lat_long_min[0], lat_long_min[1], lat_long_max[0], lat_long_max[1]]
 
