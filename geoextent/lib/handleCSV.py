@@ -130,7 +130,7 @@ def getCRS(filepath):
         param = hf.searchForParameters(elements, ["crs", "srsID", "EPSG"])
 
         if param is None:
-            logger.debug("{} : There is no identifiable coordinate reference system. We will try to use EPSG: 4236".format(filepath))
+            logger.debug("{} : There is no identifiable coordinate reference system. We will try to use EPSG: 4326".format(filepath))
             crs = "4326"
 
         elif len(list(set(param))) > 1:

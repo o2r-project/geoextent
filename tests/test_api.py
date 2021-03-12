@@ -25,9 +25,10 @@ def test_defaults():
     assert "crs" not in result
 
 
-@pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_extract_bbox():
-    assert geoextent.fromFile("tests/testdata/nc/ECMWF_ERA-40_subset.nc") == [-90.0, 0.0, 90.0, 357.5]
+    result = geoextent.fromFile("tests/testdata/nc/zeroes.nc")
+    assert result["bbox"] == pytest.approx([19.86842, -52.63157, 25.13157, 52.63157], abs=tolerance)
+    assert result["crs"] == "4326"
 
 
 def test_kml_extract_bbox():

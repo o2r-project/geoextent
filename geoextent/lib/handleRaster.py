@@ -71,7 +71,8 @@ def getBoundingBox(filepath):
         lat_long_max = transform.TransformPoint(max_x, max_y)
     except:
         # Assume that coordinates are in EPSG:4236
-        logger.debug("{}: There is no identifiable coordinate reference system. We will try to use EPSG: 4236 ".format(filepath))
+        logger.debug("{}: There is no identifiable coordinate reference system. We will try to use EPSG: 4326 "
+                     .format(filepath))
         lat_long_min = [min_y, min_x]
         lat_long_max = [max_y, max_x]
 
