@@ -20,6 +20,7 @@
 | [Tkrajina]        | gpx1.1_with_all_fields.gpx                         | gpx   | Apache License 2.0                             |
 | [geoextent]        | ifgi_to_denkpause.shp                        | shp   | PDDL    |
 | [geoextent]        | wandelroute_maastricht.gpkg                        | gpkg   | PDDL    |
+| [geoextent]        | zeroes.nc                        | netcdf   | PDDL    |
 | [Copernicus]        | MSK_SNWPRB_60m                        | jp2   | [Copernicus Sentinel Data]    |
 | [Zenodo](https://zenodo.org/record/4323616)        | Churfirsten_30m                      | asc  | CC-BY 4.0    |
 
