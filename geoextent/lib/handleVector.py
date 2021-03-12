@@ -110,7 +110,6 @@ def getBoundingBox(filepath):
     """
     datasource = ogr.Open(filepath)
     geo_dict = {}
-    crs_output = hf.WGS84_EPSG_ID
 
     for layer in datasource:
         layer_name = layer.GetDescription()
@@ -118,7 +117,9 @@ def getBoundingBox(filepath):
         bbox = [ext[0], ext[2], ext[1], ext[3]]
 
         try:
-            crs = layer.GetSpatialRef().GetAttrValue("GEOGCS|AUTHORITY", 1)
+            spatial_ref = layer.GetSpatialRef()
+            spatial_ref.AutoIdentifyEPSG()
+            crs = spatial_ref.GetAuthorityCode(None)
         except Exception as e:
             logger.debug("Error extracting EPSG CODE from layer {}: \n {}".format(layer_name, e))
             crs = None

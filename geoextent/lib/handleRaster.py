@@ -33,17 +33,17 @@ def checkFileSupported(filepath):
         return False
 
 
-def getBoundingBox(filePath):
-    ''' extracts bounding box from geotiff \n
-    input "filepath": type string, file path to geotiff file \n
-    returns bounding box of the file: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)] 
-    '''
+def getBoundingBox(filepath):
+    """ extracts bounding box from raster \n
+    input "filepath": type string, file path to raster file \n
+    returns bounding box of the file: type list, length = 4 , type = float, schema = [min(longs), min(lats), max(longs), max(lats)]
+    """
     # Enable exceptions
 
     crs_output = hf.WGS84_EPSG_ID
     gdal.UseExceptions()
 
-    geotiffContent = gdal.Open(filePath)
+    geotiffContent = gdal.Open(filepath)
 
     # get the existing coordinate system
     old_crs = osr.SpatialReference()
@@ -59,33 +59,38 @@ def getBoundingBox(filePath):
     height = geotiffContent.RasterYSize
     gt = geotiffContent.GetGeoTransform()
 
-    minx = gt[0]
-    miny = gt[3] + width * gt[4] + height * gt[5]
-    maxx = gt[0] + width * gt[1] + height * gt[2]
-    maxy = gt[3]
+    min_x = gt[0]
+    min_y = gt[3] + width * gt[4] + height * gt[5]
+    max_x = gt[0] + width * gt[1] + height * gt[2]
+    max_y = gt[3]
 
     transform = osr.CoordinateTransformation(old_crs, new_crs)
-    # get the coordinates in lat long
-    latlongmin = transform.TransformPoint(minx, miny)
-    latlongmax = transform.TransformPoint(maxx, maxy)
+    try:
+        # get the coordinates in lat long
+        lat_long_min = transform.TransformPoint(min_x, min_y)
+        lat_long_max = transform.TransformPoint(max_x, max_y)
+    except:
+        # Assume that coordinates are in EPSG:4236
+        logger.debug("{}: There is no identifiable coordinate reference system. We will try to use EPSG: 4326 "
+                     .format(filepath))
+        lat_long_min = [min_y, min_x]
+        lat_long_max = [max_y, max_x]
 
-    bbox = [latlongmin[0], latlongmin[1], latlongmax[0], latlongmax[1]]
+    bbox = [lat_long_min[0], lat_long_min[1], lat_long_max[0], lat_long_max[1]]
 
     if int(osgeo.__version__[0]) >= 3:
         if old_crs.GetAxisMappingStrategy() == 1:
-            bbox = [latlongmin[1], latlongmin[0], latlongmax[1], latlongmax[0]]
+            bbox = [lat_long_min[1], lat_long_min[0], lat_long_max[1], lat_long_max[0]]
 
     spatialExtent = {"bbox": bbox, "crs": str(crs_output)}
 
     return spatialExtent
 
 
-def getTemporalExtent(filePath):
-    ''' extracts temporal extent of the geotiff \n
+def getTemporalExtent(filepath):
+    """ extracts temporal extent of the geotiff \n
     input "filepath": type string, file path to geotiff file \n
-    returns None as There is no time value for GeoTIFF files 
-    '''
-
-    print('There is no time value for GeoTIFF files')
+    returns None as There is no time value for GeoTIFF files
+    """
+    logger.debug('{} There is no time value for raster files'.format(filepath))
     return None
-

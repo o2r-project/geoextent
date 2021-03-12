@@ -138,15 +138,14 @@ def test_print_supported_formats(script_runner):
     assert "Supported formats:" in ret.stdout, "list of supported formats is printed to console"
 
 
-@pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_bbox(script_runner):
     ret = script_runner.run('geoextent',
-                            '-b', 'tests/testdata/nc/ECMWF_ERA-40_subset.nc')
+                            '-b', 'tests/testdata/nc/zeroes.nc')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     result = ret.stdout
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([-90.0, 0.0, 90.0, 357.5], abs=tolerance)
+    assert bboxList == pytest.approx([19.86842, -52.63157, 25.13157, 52.63157], abs=tolerance)
     assert "4326" in result
 
 

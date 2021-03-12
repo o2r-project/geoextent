@@ -15,12 +15,14 @@
 | [Geosoftware2]      | wf_100m_klas                      | geotif    | MIT                                |
 | [geoextent]         | onePoint                          | geojson   | PDDL                               |
 | [geoextent]         | invalid_coordinate                | geojson   | PDDL                               |
-| [geoextent]         | onePoint                          | geojson   | PDDL                               |
 | [Carto BCN / martgnz]         | Barcelona districts                          | geojson   | CC-BY 4.0                              |
 | [Google]         | abstractviews_timeprimitive_example                         | kml   | CC-BY 4.0                              |
 | [Tkrajina]        | gpx1.1_with_all_fields.gpx                         | gpx   | Apache License 2.0                             |
 | [geoextent]        | ifgi_to_denkpause.shp                        | shp   | PDDL    |
 | [geoextent]        | wandelroute_maastricht.gpkg                        | gpkg   | PDDL    |
+| [geoextent]        | zeroes.nc                        | netcdf   | PDDL    |
+| [Copernicus]        | MSK_SNWPRB_60m                        | jp2   | [Copernicus Sentinel Data]    |
+| [Zenodo](https://zenodo.org/record/4323616)        | Churfirsten_30m                      | asc  | CC-BY 4.0    |
 
 [sf]: https://github.com/r-spatial/sf
 [geoextent]: https://github.com/o2r-project/geoextent
@@ -32,3 +34,5 @@
 [Carto BCN / martgnz]: https://github.com/martgnz/bcn-geodata/tree/master/districtes
 [Google]: https://developers.google.com/kml/documentation/time#gps
 [Tkrajina]: https://github.com/tkrajina/gpxpy/blob/dev/test_files/gpx1.1_with_all_fields.gpx
+[Copernicus]: https://scihub.copernicus.eu/dhus/odata/v1/Products('e6b0b515-cc16-4e70-94ba-12e80db73d19')/$value
+[Copernicus Sentinel Data]: https://sentinel.esa.int/documents/247904/690755/Sentinel_Data_Legal_Notice

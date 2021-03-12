@@ -87,7 +87,7 @@ def searchForParameters(elements, paramArray, exp_data=None):
 
 def transformingIntoWGS84(crs, coordinate):
     '''
-    Function purpose: transforming SRS into WGS84 (EPSG:4978; used by the GPS satellite navigation system) \n
+    Function purpose: transforming SRS into WGS84 (EPSG:4326) \n
     Input: crs, point \n
     Output: retPoint constisting of x2, y2 (transformed points)
     '''
@@ -112,7 +112,7 @@ def transformingIntoWGS84(crs, coordinate):
 
 def transformingArrayIntoWGS84(crs, pointArray):
     '''
-    Function purpose: transforming SRS into WGS84 (EPSG:4978; used by the GPS satellite navigation system) from an array \n
+    Function purpose: transforming SRS into WGS84 (EPSG 4326; used by the GPS satellite navigation system) from an array \n
     Input: crs, pointArray \n
     Output: array array
     '''
@@ -128,6 +128,40 @@ def transformingArrayIntoWGS84(crs, pointArray):
         bbox = [[pointArray[0], pointArray[1]], [pointArray[2], pointArray[3]]]
         transf_bbox = transformingArrayIntoWGS84(crs, bbox)
         return [transf_bbox[0][0], transf_bbox[0][1], transf_bbox[1][0], transf_bbox[1][1]]
+
+
+def validate_bbox_wgs84(bbox):
+    """
+    :param bbox:
+    :return:
+    """
+    valid = True
+    lon_values = bbox[0:3:2]
+    lat_values = bbox[1:4:2]
+
+    if sum(list(map(lambda x: x < -90 or x > 90, lat_values))) + sum(
+            list(map(lambda x: x < -180 or x > 180, lon_values))) > 0:
+        valid = False
+
+    return valid
+
+
+def flip_bbox(bbox):
+    """
+    :param bbox:
+    :return:
+    """
+    # Flip values
+    lon_values = bbox[1:4:2]
+    lat_values = bbox[0:3:2]
+
+    bbox_flip = [lon_values[0], lat_values[0], lon_values[1], lat_values[1]]
+    if validate_bbox_wgs84(bbox_flip):
+        logger.warning("Longitude and latitude values flipped")
+        return bbox_flip
+    else:
+        raise Exception("Latitude and longitude values extracted do not seem to be correctly transformed. We tried "
+                        "flipping latitude and longitude values but both bbox are incorrect")
 
 
 def validate(date_text):

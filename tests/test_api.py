@@ -1,6 +1,7 @@
 import os  # used to get the location of the testdata
 import sys
 import tempfile
+import urllib.request
 import pytest
 import geoextent.lib.extent as geoextent
 from help_functions_test import create_zip, tolerance
@@ -24,9 +25,10 @@ def test_defaults():
     assert "crs" not in result
 
 
-@pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_extract_bbox():
-    assert geoextent.fromFile("tests/testdata/nc/ECMWF_ERA-40_subset.nc") == [-90.0, 0.0, 90.0, 357.5]
+    result = geoextent.fromFile("tests/testdata/nc/zeroes.nc")
+    assert result["bbox"] == pytest.approx([19.86842, -52.63157, 25.13157, 52.63157], abs=tolerance)
+    assert result["crs"] == "4326"
 
 
 def test_kml_extract_bbox():
@@ -169,6 +171,17 @@ def test_zipfile_nested_folders():
         assert result["tbox"] == ['2017-04-08', '2020-02-06']
 
 
+def test_png_file_extract_bbox():
+    with tempfile.TemporaryDirectory() as tmp:
+        url = 'https://zenodo.org/record/820562/files/20160100_Hpakan_20151123_PRE.png?download=1'
+        url2 = 'https://zenodo.org/record/820562/files/20160100_Hpakan_20151123_PRE.pngw?download=1'
+        urllib.request.urlretrieve(url, os.path.join(tmp, "20160100_Hpakan_20151123_PRE.png"))
+        urllib.request.urlretrieve(url2, os.path.join(tmp, "20160100_Hpakan_20151123_PRE.pngw"))
+        result = geoextent.fromFile(os.path.join(tmp, "20160100_Hpakan_20151123_PRE.png"), bbox=True)
+        assert result["bbox"] == pytest.approx([96.21146, 25.55834, 96.35490, 25.63293], abs=tolerance)
+        assert result["crs"] == "4326"
+
+
 @pytest.mark.skip(reason="file format not implemented yet")
 def test_netcdf_extract_time():
     assert geoextent.fromFile("tests/testdata/nc/ECMWF_ERA-40_subset.nc", tbox=True) == ['2002-07-01', '2002-07-31']
@@ -199,6 +212,18 @@ def test_gml_extract_bbox_time():
     assert result['tbox'] == ['2005-12-31', '2013-11-30']
 
 
+def test_jpge_2000_extract_bbox():
+    result = geoextent.fromFile("tests/testdata/jpge2000/MSK_SNWPRB_60m.jp2", bbox=True)
+    assert result['bbox'] == pytest.approx([-74.09868, 4.434354, -73.10649, 5.425259], abs=tolerance)
+    assert result['crs'] == "4326"
+
+
+def test_esri_ascii_extract_bbox():
+    result = geoextent.fromFile("tests/testdata/asc/Churfirsten_30m.asc", bbox=True)
+    assert result['bbox'] == pytest.approx([8.85620, 46.93996, 8.85699, 46.94050], abs=tolerance)
+    assert result['crs'] == "4326"
+
+
 def test_not_found_file():
     result = geoextent.fromFile('tests/testdata/empt.geojson', bbox=True)
     assert result is None
@@ -213,3 +238,9 @@ def test_bbox_and_tbox_both_false():
     with pytest.raises(Exception) as excinfo:
         geoextent.fromFile('tests/path_does_not_matter', bbox=False, tbox=False)
     assert "No extraction options" in str(excinfo.value)
+
+
+def test_invalid_bbox_and_flip():
+    result = geoextent.fromFile('tests/testdata/csv/cities_NL_case_flip.csv', bbox=True)
+    assert result['bbox'] == pytest.approx([4.3175, 5.0, 95.0, 53.217222], abs=tolerance)
+    assert result['crs'] == "4326"
