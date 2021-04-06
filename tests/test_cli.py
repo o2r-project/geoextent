@@ -1,6 +1,7 @@
 import os  # used to get the location of the testdata
 import sys
 import pytest
+import requests
 import tempfile
 from help_functions_test import create_zip, parse_coordinates, tolerance
 from osgeo import gdal
@@ -250,7 +251,7 @@ def test_gml_bbox(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     result = ret.stdout
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([-17.542069, 32.39669, -6.959389, 39.301139])
+    assert bboxList == pytest.approx([-17.542069, 32.39669, -6.959389, 39.301139], abs=tolerance)
     assert "4326" in result
 
 
@@ -302,7 +303,7 @@ def test_folder(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     result = ret.stdout
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([2.052333, 41.317038, 7.647256, 51.974624])
+    assert bboxList == pytest.approx([2.052333, 41.317038, 7.647256, 51.974624], abs=tolerance)
     assert "['2018-11-14', '2019-09-11']" in result, "merge time value of folder files, is printed to console"
     assert "4326" in result
 
@@ -315,7 +316,7 @@ def test_zipfile(script_runner):
         assert ret.success, "process should return success"
         result = ret.stdout
         bboxList = parse_coordinates(result)
-        assert bboxList == pytest.approx([7.601680, 51.948814, 7.647256, 51.974624])
+        assert bboxList == pytest.approx([7.601680, 51.948814, 7.647256, 51.974624], abs=tolerance)
         assert "['2018-11-14', '2018-11-14']" in result
         assert "4326" in result
 
@@ -327,3 +328,57 @@ def test_multiple_folders(script_runner):
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "full bbox" in ret.stdout, "joined bboxes of all files inside folder are printed to console"
+
+
+def test_zenodo_valid_link_repository(script_runner):
+    ret = script_runner.run('geoextent',
+                            '-b', '-t', 'https://zenodo.org/record/820562')
+    assert ret.success, "process should return success"
+    assert 'has no identifiable time extent' in ret.stderr
+    result = ret.stdout
+    bboxList = parse_coordinates(result)
+    assert bboxList == pytest.approx([96.21146, 25.55834, 96.35495, 25.63293], abs=tolerance)
+    assert "4326" in result
+
+
+def test_zenodo_valid_doi_repository(script_runner):
+    ret = script_runner.run('geoextent',
+                            '-b', '-t', 'https://doi.org/10.5281/zenodo.820562')
+    assert ret.success, "process should return success"
+    assert 'has no identifiable time extent' in ret.stderr
+    result = ret.stdout
+    bboxList = parse_coordinates(result)
+    assert bboxList == pytest.approx([96.21146, 25.55834, 96.35495, 25.63293], abs=tolerance)
+    assert "4326" in result
+
+
+def test_zenodo_valid_link_repository_with_no_geoextent(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', 'https://zenodo.org/record/1810558')
+    result = ret.stdout
+    assert "bbox" not in result, "This repository contains a PDF file, it should not return a bbox"
+    assert "tbox" not in result, "This repository contains a PDF file, it should not return a tbox"
+
+
+def test_zenodo_invalid_link_repository(script_runner):
+    ret = script_runner.run('geoextent',
+                            '-b', '-t', 'https://zenado.org/record/820562')
+    assert not ret.success, 'Typo in URL'
+    assert "is not a valid" in ret.stderr, 'Typo in URL'
+
+
+def test_zenodo_valid_but_removed_repository(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', 'https://zenodo.org/record/1')
+    assert not ret.success
+    assert "does not exist" in ret.stderr
+
+
+def test_zenodo_valid_but_no_extraction_options(script_runner):
+    ret = script_runner.run('geoextent', 'https://zenodo.org/record/1')
+    assert not ret.success, 'No extractions options, geoextent should fail'
+    assert "Require at least one of extraction options, but bbox is False and tbox is False" in ret.stderr
+
+
+def test_zenodo_valid_but_not_open_access(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', 'https://zenodo.org/record/51746')
+    assert not ret.success, 'The repository exists but it is not accessible. Geoextent should fail'
+    assert "This record does not have Open Access files. Verify the Access rights of the record" in ret.stderr

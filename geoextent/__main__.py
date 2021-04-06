@@ -3,9 +3,12 @@ import logging
 import os
 import sys
 import zipfile
+from pyproj import CRS
+import geopandas as gpd
 
 from . import __version__ as current_version
 from .lib import extent
+from .lib import helpfunctions as hf
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger("geoextent")
@@ -42,15 +45,22 @@ Supported formats:
 
 
 # custom action, see e.g. https://stackoverflow.com/questions/11415570/directory-path-types-with-argparse
+
+
 class readable_file_or_dir(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         for candidate in values:
-            if not (os.path.isdir(candidate) or os.path.isfile(candidate) or zipfile.is_zipfile(candidate)):
-                raise argparse.ArgumentTypeError("{0} is not a valid directory or file".format(candidate))
-            if os.access(candidate, os.R_OK):
+            if (hf.doi_regexp.match(candidate) is not None) or (hf.zenodo_regexp.match(candidate) is not None):
+                logger.debug("The format of the URL or DOI is correct. Geoextent is going to try to download "
+                             "this repository ")
                 setattr(namespace, self.dest, candidate)
             else:
-                raise argparse.ArgumentTypeError("{0} is not a readable directory or file".format(candidate))
+                if not (os.path.isdir(candidate) or os.path.isfile(candidate) or zipfile.is_zipfile(candidate)):
+                    raise argparse.ArgumentTypeError("{0} is not a valid directory or file".format(candidate))
+                if os.access(candidate, os.R_OK):
+                    setattr(namespace, self.dest, candidate)
+                else:
+                    raise argparse.ArgumentTypeError("{0} is not a readable directory or file".format(candidate))
 
 
 def get_arg_parser():
@@ -59,7 +69,8 @@ def get_arg_parser():
         add_help=False,
         prog='geoextent',
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        usage="geoextent [-h] [--formats] [--version] [--debug] [--details] [-b] [-t] [input file]']"
+        usage="geoextent [-h] [--formats] [--version] [--debug] [--details] [--output] [output file] [-b] [-t] [input "
+              "file]'] "
     )
 
     parser.add_argument(
@@ -94,6 +105,13 @@ def get_arg_parser():
     )
 
     parser.add_argument(
+        '--output',
+        action='store',
+        default=None,
+        help="Creates geopackage with geoextent output",
+    )
+
+    parser.add_argument(
         '-b', '--bounding-box',
         action='store_true',
         default=False,
@@ -110,7 +128,6 @@ def get_arg_parser():
     parser.add_argument(
         'files',
         action=readable_file_or_dir,
-        default=os.getcwd(),
         nargs=argparse.REMAINDER,
         help="input file or path"
     )
@@ -144,7 +161,7 @@ def main():
 
     # version, help, and formats must be checked before parse, as otherwise files are required 
     # but arg parser gives an error if allowed to be parsed first
-    if "--help" in sys.argv:
+    if "--help" in sys.argv or "-h" in sys.argv:
         print_help()
         arg_parser.exit()
     if "--version" in sys.argv:
@@ -156,24 +173,36 @@ def main():
 
     args = vars(arg_parser.parse_args())
     files = args['files']
-    logger.debug('Extracting from inputs %s', files)
 
+    if files is None:
+        raise Exception("Invalid command, input file missing")
+
+    multiple_files = True
+    logger.debug('Extracting from inputs %s', files)
     # Set logging level
     if args['debug']:
         logging.getLogger('geoextent').setLevel(logging.DEBUG)
     if os.environ.get('GEOEXTENT_DEBUG', None) == "1":
         logging.getLogger('geoextent').setLevel(logging.DEBUG)
 
+    # Identify local file source
+    is_file = os.path.isfile(os.path.join(os.getcwd(), files))
+    is_zipfile = zipfile.is_zipfile(os.path.join(os.getcwd(), files))
+    is_directory = os.path.isdir(os.path.join(os.getcwd(), files))
+
+    # Identify
+    is_url = hf.https_regexp.match(files) is not None
+
     output = None
-    # Check if file is exists happens in parser validation, see readable_file_or_dir
     try:
-        if os.path.isfile(os.path.join(os.getcwd(), files)) and not zipfile.is_zipfile(
-                os.path.join(os.getcwd(), files)):
+
+        if is_file and not is_zipfile:
             output = extent.fromFile(files, bbox=args['bounding_box'], tbox=args['time_box'])
-        if os.path.isdir(os.path.join(os.getcwd(), files)) or zipfile.is_zipfile(os.path.join(os.getcwd(), files)):
+            multiple_files = False
+        if is_directory or is_zipfile:
             output = extent.fromDirectory(files, bbox=args['bounding_box'], tbox=args['time_box'], details=True)
-            if not args['details']:
-                output.pop('details', None)
+        if is_url:
+            output = extent.from_repository(files, bbox=args['bounding_box'], tbox=args['time_box'], details=True)
 
     except Exception as e:
         if logger.getEffectiveLevel() >= logging.DEBUG:
@@ -183,7 +212,19 @@ def main():
     if output is None:
         raise Exception("Did not find supported files at {}".format(files))
     else:
-        logger.info("Output{}:".format(output))
+        export = args['output'] is not None
+
+        if export and not multiple_files:
+            logger.warning("Exporting result does not apply to single files")
+        elif export and multiple_files:
+            logger.warning("Exporting result into: {}".format(args['output']))
+            filename = args['output']
+            df = hf.extract_output(output, files, current_version)
+            gdf_files = gpd.GeoDataFrame(df, geometry='bbox', crs=CRS("EPSG:4326"))
+            gdf_files.to_file(filename, layer="files", driver="GPKG")
+
+        if not args['details']:
+            output.pop('details', None)
 
     if type(output) == list:
         print(str(output))

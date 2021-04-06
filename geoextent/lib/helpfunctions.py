@@ -1,36 +1,50 @@
-import sys, os, platform, datetime, math, random
-import zipfile, re
-from os.path import basename
-import pandas as pd
+import csv
+import datetime
+import itertools
+import logging
+import os
+import random
 import re
-from pandas.core.tools.datetimes import _guess_datetime_format_for_array as time_format
+import zipfile
 import numpy as np
+import pandas as pd
+import shapely
 from osgeo import ogr
 from osgeo import osr
-import logging
-from pyproj import Proj, transform
-import csv
+from pandas.core.tools.datetimes import _guess_datetime_format_for_array as time_format
 
 output_time_format = '%Y-%m-%d'
 PREFERRED_SAMPLE_SIZE = 30
 WGS84_EPSG_ID = 4326
 logger = logging.getLogger("geoextent")
 
+https_regexp = re.compile('https://(.*)')
 
-def getAllRowElements(rowname, elements, exp_data=None):
-    '''
+# doi_regexp, is_doi, and normalize_doi are from idutils (https://github.com/inveniosoftware/idutils)
+# Copyright (C) 2015-2018 CERN.
+# Copyright (C) 2018 Alan Rubin.
+# Licensed under BSD-3-Clause license
+doi_regexp = re.compile(
+    r"(doi:\s*|(?:https?://)?(?:dx\.)?doi\.org/)?(10\.\d+(.\d+)*/.+)$", flags=re.I)
+
+zenodo_regexp = re.compile(
+    r"(https://zenodo.org/record/)?(.\d*)$", flags=re.I
+)
+
+
+def getAllRowElements(row_name, elements, exp_data=None):
+    """
     Function purpose: help-function to get all row elements for a specific string \n
-    Input: rowname, elements, exp_format \n
+    Input: row name, elements, exp_format \n
     Output: array values
-    '''
-
+    """
+    values = []
     for idx, val in enumerate(elements[0]):
-        if rowname in val:
+        if row_name in val:
             indexOf = idx
-            values = []
             for x in elements:
                 try:
-                    if x[indexOf] != rowname:
+                    if x[indexOf] != row_name:
                         values.append(x[indexOf].replace(" ", ""))
                 except IndexError as e:
                     logger.info("Row skipped,file might be corrupted. Error {}".format(e))
@@ -62,15 +76,15 @@ def float_convert(val):
         pass
 
 
-def searchForParameters(elements, paramArray, exp_data=None):
-    '''
+def searchForParameters(elements, param_array, exp_data=None):
+    """
     Function purpose: return all attributes of a elements in the first row of a file \n
     Function purpose: return all attributes of a elements in the first row of a file \n
     Input: paramArray, elements \n
     Output: getAllRowElements(x,elements)
-    '''
+    """
     matching_elements = []
-    for x in paramArray:
+    for x in param_array:
         for row in elements[0]:
             p = re.compile(x, re.IGNORECASE)
             if p.search(row) is not None:
@@ -229,11 +243,11 @@ def get_time_format(time_list, num_sample):
 
 
 def date_parser(datetime_list, num_sample=None):
-    '''
+    """
     Function purpose: transform list of strings into date-time format
     datetime_list: list of date-times (strings) \n
     Output: list of DatetimeIndex
-    '''
+    """
 
     datetime_format = get_time_format(datetime_list, num_sample)
 
@@ -247,10 +261,10 @@ def date_parser(datetime_list, num_sample=None):
 
 
 def extract_zip(zippedFile):
-    '''
+    """
     Function purpose: unzip file (always inside a new folder)
     Input: filepath
-    '''
+    """
 
     abs_path = os.path.abspath(zippedFile)
     root_folder = os.path.split(abs_path)[0]
@@ -262,7 +276,7 @@ def extract_zip(zippedFile):
 
 
 def bbox_merge(metadata, origin):
-    logger.debug("medatada {}".format(metadata))
+    logger.debug("metadata {}".format(metadata))
     boxes_extent = []
     metadata_merge = {}
     num_files = len(metadata.items())
@@ -307,7 +321,7 @@ def bbox_merge(metadata, origin):
 
             except Exception as e:
                 logger.debug(
-                    "Error extracting geographic extent of {}. CRS {} may be invalid. Error: {}".format(x, bbox[1], e))
+                    "Error extracting geographic extent. CRS {} may be invalid. Error: {}".format(int(bbox[1]), e))
                 continue
 
         num_geo_files = multipolygon.GetGeometryCount() / 4
@@ -350,3 +364,118 @@ def tbox_merge(metadata, path):
         time_ext = [min_date, max_date]
 
     return time_ext
+
+
+def transform_bbox(x):
+
+    try:
+        bbox = shapely.geometry.box(*x)
+    except:
+        bbox = None
+
+    return bbox
+
+
+def transform_tbox(x):
+    if x is None:
+        return None
+    elif isinstance(x, list):
+        return str(x[0]) + '/' + str(x[1])
+
+
+def extract_details(details):
+    """ Extracts details from geoextent extraction
+    Keyword arguments:
+    details -- dictionary with geoextent extraction
+    """
+
+    filename = []
+    file_format = []
+    handler = []
+    bbox = []
+    tbox = []
+    crs = []
+
+    for i in details:
+
+        file = details[i]
+
+        if file is None:
+            filename.append([i])
+            file_format_v = os.path.splitext(i)[1][1:]
+            if file_format_v == '':
+                file_format_v = 'undetected'
+            file_format.append([file_format_v])
+            handler.append([None])
+            bbox.append([None])
+            tbox.append([None])
+            crs.append([None])
+        else:
+            filename.append([i])
+            file_format.append([file.get('format')])
+            handler_v = file.get('geoextent_handler')
+            bbox_v = file.get('bbox')
+            tbox_v = file.get('tbox')
+            crs_v = file.get('crs')
+            handler.append([handler_v])
+            bbox.append([bbox_v])
+            tbox.append([tbox_v])
+            crs.append([crs_v])
+
+            if file.get('format') == 'folder':
+                details_folder = extract_details(file['details'])
+                filename.append(details_folder['filename'])
+                file_format.append(details_folder['format'])
+                handler.append(details_folder['handler'])
+                bbox.append(details_folder['bbox'])
+                tbox.append(details_folder['tbox'])
+                crs.append(details_folder['crs'])
+
+    if any(isinstance(i, list) for i in filename):
+        filename = list(itertools.chain.from_iterable(filename))
+        file_format = list(itertools.chain.from_iterable(file_format))
+        handler = list(itertools.chain.from_iterable(handler))
+        bbox = list(itertools.chain.from_iterable(bbox))
+        tbox = list(itertools.chain.from_iterable(tbox))
+        crs = list(itertools.chain.from_iterable(crs))
+
+    d = {'filename': filename, 'format': file_format,   'handler': handler,
+         'bbox': bbox,
+         'tbox': tbox, 'crs': crs}
+    files = pd.DataFrame(d)
+
+    return files
+
+
+def extract_output(output, files, current_version):
+
+    filename = files
+    file_format = output.get('format')
+    handler = "geoextent:" + current_version
+    bbox = output.get('bbox')
+    tbox = output.get('tbox')
+    crs = output.get('crs')
+
+    new_row = {'filename': filename, 'format': file_format,   'handler': handler,
+         'bbox': bbox,
+         'tbox': tbox, 'crs': crs}
+
+    df = extract_details(output['details'])
+    df = df.append(new_row, ignore_index=True)
+    df['bbox'] = df['bbox'].apply(transform_bbox)
+    df['tbox'] = df['tbox'].apply(transform_tbox)
+    return df
+
+
+def is_doi(val):
+    """Returns None if val doesn't match pattern of a DOI.
+    http://en.wikipedia.org/wiki/Digital_object_identifier."""
+    return doi_regexp.match(val)
+
+
+def normalize_doi(val):
+    """Return just the DOI (e.g. 10.1234/jshd123)
+    from a val that could include a url or doi
+    (e.g. https://doi.org/10.1234/jshd123)"""
+    m = doi_regexp.match(val)
+    return m.group(2)
