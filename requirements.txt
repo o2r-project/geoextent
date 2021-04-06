@@ -4,6 +4,7 @@ pygeoj
 pyshp
 python-dateutil
 pandas
+geopandas
 numpy
 requests
 shapely
