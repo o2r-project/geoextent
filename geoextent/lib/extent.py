@@ -5,7 +5,7 @@ import zipfile
 import tempfile
 from traitlets import List
 from traitlets.config import Application
-from . import content_providers
+from .content_providers import Zenodo
 from . import handleCSV
 from . import handleRaster
 from . import handleVector
@@ -219,7 +219,7 @@ def from_repository(repository_identifier, bbox=False, tbox=False, details=False
 
 
 class geoextent_from_repository(Application):
-    content_providers = List([content_providers.Zenodo.Zenodo],
+    my_content_providers = List([Zenodo.Zenodo],
                         config=True,
                         help="""
         Ordered list by priority of ContentProviders to try in turn to fetch
@@ -233,7 +233,7 @@ class geoextent_from_repository(Application):
             logger.error("Require at least one of extraction options, but bbox is {} and tbox is {}".format(bbox, tbox))
             raise Exception("No extraction options enabled!")
 
-        for h in self.content_providers:
+        for h in self.my_content_providers:
             repository = h()
             if repository.validate_provider(reference=repository_identifier):
                 try:
