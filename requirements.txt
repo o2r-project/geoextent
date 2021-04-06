@@ -8,5 +8,5 @@ numpy
 requests
 shapely
 traitlets
-
+wheel
 
