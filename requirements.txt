@@ -7,4 +7,6 @@ pandas
 numpy
 requests
 shapely
+traitlets
+
 
