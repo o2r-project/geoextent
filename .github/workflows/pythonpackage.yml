@@ -26,8 +26,10 @@ jobs:
         gdal-config --version
     - name: Install system dependencies (macOS)
       if: runner.os == 'macOS'
+      # GDAL 3.2.1
+      # See https://stackoverflow.com/a/7787703
       run: |
-        brew install gdal@3.2.1
+        brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/fbc46dfc4ae17c28d647d8d85a2695e7a06dda81/Formula/gdal.rb
         brew install pkg-config proj geos
         gdal-config --version
     - name: Install system dependencies (Windows)
