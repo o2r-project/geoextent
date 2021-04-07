@@ -27,7 +27,8 @@ jobs:
     - name: Install system dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install pkg-config gdal proj geos
+	brew install gdal@3.2.1
+        brew install pkg-config proj geos
         gdal-config --version
     - name: Install system dependencies (Windows)
       if: runner.os == 'Windows'
