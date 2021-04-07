@@ -27,9 +27,9 @@ jobs:
     - name: Install system dependencies (macOS)
       if: runner.os == 'macOS'
       # GDAL 3.2.1
-      # See https://stackoverflow.com/a/7787703
+      # See https://cmichel.io/how-to-install-an-old-package-version-with-brew/
       run: |
-        brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/fbc46dfc4ae17c28d647d8d85a2695e7a06dda81/Formula/gdal.rb
+        brew extract --version=3.2.1 gdal
         brew install pkg-config proj geos
         gdal-config --version
     - name: Install system dependencies (Windows)
