@@ -125,7 +125,8 @@ Output:
 Zenodo repositories
 -------------------
 
-**Geoextent** also supports queries for **Zenodo repositories**. Geoextent creates a *temporal* copy of the repository and extracts the temporal or geographical extent.
+**Geoextent** also supports queries for **Zenodo repositories**.
+Geoextent creates a *temporal* copy of the repository and extracts the temporal or geographical extent.
 Geoextent only allows to query **Open** Zenodo repositories.
 
 ::
@@ -133,12 +134,12 @@ Geoextent only allows to query **Open** Zenodo repositories.
    geoextent.from_repository(repository_identifier, bbox, time, details)
 
 **Parameters:**
-   - ``repository_identifier``: a string value with a Zenodo link or DOI (e.g https://zenodo.org/record/3528062 or https://doi.org/10.5281/zenodo.3528062)
+   - ``repository_identifier``: a string value with a Zenodo link (e.g., https://zenodo.org/record/3528062) or DOI (e.g., https://doi.org/10.5281/zenodo.3528062)
    - ``bbox``: a boolean value to extract spatial extent (bounding box)
-   - ``time``: a boolean value to extract temporal extent ( at "day" precision '%Y-%m-%d')
+   - ``time``: a boolean value to extract temporal extent (at "day" precision '%Y-%m-%d')
    - ``details``: a boolean value to return details (geoextent) of individual files (default **False**)
 
-The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: :doc:`../supportedformats/index_supportedformats`) inside the folder or zipfile. The resulting coordinate reference system  ``CRS`` of the combined bbox is always in the `EPSG: 4326 <https://epsg.io/4326>`_ system.
+The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: :doc:`../supportedformats/index_supportedformats`) inside the repository. The resulting coordinate reference system  ``CRS`` of the combined bbox is always in the `EPSG: 4326 <https://epsg.io/4326>`_ system.
 
 Code:
 
@@ -154,4 +155,3 @@ Output:
 
    import geoextent.lib.extent as geoextent
    geoextent.from_repository('https://zenodo.org/record/820562', True, True)
-
