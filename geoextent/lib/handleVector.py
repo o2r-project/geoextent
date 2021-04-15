@@ -4,7 +4,6 @@ from osgeo import ogr
 from osgeo import gdal
 from . import helpfunctions as hf
 import re
-from osgeo import osr
 
 null_island = [0] * 4
 search = {"time": ["(.)*timestamp(.)*", "(.)*datetime(.)*", "(.)*time(.)*", "date$", "^date", "^begin"]}

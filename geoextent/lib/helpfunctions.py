@@ -8,7 +8,6 @@ import re
 import zipfile
 import numpy as np
 import pandas as pd
-import shapely
 from osgeo import ogr
 from osgeo import osr
 from pandas.core.tools.datetimes import _guess_datetime_format_for_array as time_format
@@ -100,11 +99,11 @@ def searchForParameters(elements, param_array, exp_data=None):
 
 
 def transformingIntoWGS84(crs, coordinate):
-    '''
+    """
     Function purpose: transforming SRS into WGS84 (EPSG:4326) \n
     Input: crs, point \n
     Output: retPoint constisting of x2, y2 (transformed points)
-    '''
+    """
     # TODO: check whether current src is 4326
     source = osr.SpatialReference()
     source.ImportFromEPSG(int(crs))
@@ -125,11 +124,11 @@ def transformingIntoWGS84(crs, coordinate):
 
 
 def transformingArrayIntoWGS84(crs, pointArray):
-    '''
-    Function purpose: transforming SRS into WGS84 (EPSG 4326; used by the GPS satellite navigation system) from an array \n
+    """
+    Function purpose: transforming SRS into WGS84 (EPSG 4326) from an array
     Input: crs, pointArray \n
     Output: array array
-    '''
+    """
     # print("----<>", pointArray)#
     array = []
     # vector_rep
@@ -146,8 +145,9 @@ def transformingArrayIntoWGS84(crs, pointArray):
 
 def validate_bbox_wgs84(bbox):
     """
-    :param bbox:
-    :return:
+    Function purpose: Validate if bbox is correct for WGS84
+    bbox: bounding box (list)
+    Output: True if bbox is correct for WGS84
     """
     valid = True
     lon_values = bbox[0:3:2]
@@ -162,8 +162,8 @@ def validate_bbox_wgs84(bbox):
 
 def flip_bbox(bbox):
     """
-    :param bbox:
-    :return:
+    bbox: Bounding box (list)
+    Output: bbox flipped (Latitude to longitude if possible)
     """
     # Flip values
     lon_values = bbox[1:4:2]
@@ -194,12 +194,12 @@ def getDelimiter(csv_file):
 
 
 def get_time_format(time_list, num_sample):
-    '''
+    """
     Function purpose: 'Guess' time format of a list of 'strings' by taking a representative sample
     time_list:  list of strings \n
     num_sample: size of the sample to determine time format \n
     Output: time format in string format (e.g '%Y.%M.d')
-    '''
+    """
 
     date_time_format = None
 
@@ -260,22 +260,28 @@ def date_parser(datetime_list, num_sample=None):
     return parse_time
 
 
-def extract_zip(zippedFile):
+def extract_zip(filepath):
     """
     Function purpose: unzip file (always inside a new folder)
-    Input: filepath
+    filepath: filepath to zipfile
     """
 
-    abs_path = os.path.abspath(zippedFile)
+    abs_path = os.path.abspath(filepath)
     root_folder = os.path.split(abs_path)[0]
     zip_name = os.path.split(abs_path)[1][:-4]
     zip_folder_path = os.path.join(root_folder, zip_name)
 
-    with zipfile.ZipFile(abs_path) as zipf:
-        zipf.extractall(zip_folder_path)
+    with zipfile.ZipFile(abs_path) as zip_file:
+        zip_file.extractall(zip_folder_path)
 
 
 def bbox_merge(metadata, origin):
+    """
+    Function purpose: merge bounding boxes
+    metadata: metadata with geoextent extraction from multiple files (dict)
+    origin: folder path or filepath (str)
+    Output: Merged bbox (dict)
+    """
     logger.debug("metadata {}".format(metadata))
     boxes_extent = []
     metadata_merge = {}
@@ -339,6 +345,12 @@ def bbox_merge(metadata, origin):
 
 
 def tbox_merge(metadata, path):
+    """
+    Function purpose: Merge time boxes
+    metadata: metadata with geoextent extraction from multiple files (dict)
+    path: path of directory being merged
+    Output: Merged tbox
+    """
     boxes = []
     num_files = len(metadata.items())
     for x, y in metadata.items():
@@ -367,16 +379,37 @@ def tbox_merge(metadata, path):
 
 
 def transform_bbox(x):
+    """
+    Function purpose: Transform bounding box (str) into geometry
+    x: bounding box (str)
+    """
 
     try:
-        bbox = shapely.geometry.box(*x)
+        ring = ogr.Geometry(ogr.wkbLinearRing)
+        ring.AddPoint(x[0], x[1])
+        ring.AddPoint(x[2], x[1])
+        ring.AddPoint(x[0], x[3])
+        ring.AddPoint(x[2], x[3])
+        ring.CloseRings()
+    # Create polygon
+        poly = ogr.Geometry(ogr.wkbPolygon)
+        poly.AddGeometry(ring)
+        poly.FlattenTo2D()
+        bbox = poly.ExportToWkt()
+
     except:
+
         bbox = None
 
     return bbox
 
 
 def transform_tbox(x):
+    """
+    Function purpose: Transform time box (list) into int
+    x: time box (list)
+    """
+
     if x is None:
         return None
     elif isinstance(x, list):
@@ -384,9 +417,10 @@ def transform_tbox(x):
 
 
 def extract_details(details):
-    """ Extracts details from geoextent extraction
-    Keyword arguments:
-    details -- dictionary with geoextent extraction
+    """
+    Function purpose: Extracts details from geoextent extraction
+    details: dictionary with geoextent extraction
+    Output: dataframe organized by filename, file format, handler, bbox, tbox and crs by file.
     """
 
     filename = []
@@ -443,24 +477,28 @@ def extract_details(details):
          'bbox': bbox,
          'tbox': tbox, 'crs': crs}
     files = pd.DataFrame(d)
-
     return files
 
 
-def extract_output(output, files, current_version):
-
+def extract_output(result, files, current_version):
+    """
+    Function purpose: Extracts final output from geoextent including all files and containing folder
+    result: geoextent output from extraction
+    files: user input for initial extraction (e.g name of the main folder)
+    current_version: Current geoextent version
+    Output: Dataframe with geoextent of all files AND final output (merge) of user request
+    """
     filename = files
-    file_format = output.get('format')
+    file_format = result.get('format')
     handler = "geoextent:" + current_version
-    bbox = output.get('bbox')
-    tbox = output.get('tbox')
-    crs = output.get('crs')
+    bbox = result.get('bbox')
+    tbox = result.get('tbox')
+    crs = result.get('crs')
 
-    new_row = {'filename': filename, 'format': file_format,   'handler': handler,
-         'bbox': bbox,
-         'tbox': tbox, 'crs': crs}
+    new_row = {'filename': filename, 'format': file_format,   'handler': handler, 'bbox': bbox, 'tbox': tbox, 'crs': crs
+               }
 
-    df = extract_details(output['details'])
+    df = extract_details(result['details'])
     df = df.append(new_row, ignore_index=True)
     df['bbox'] = df['bbox'].apply(transform_bbox)
     df['tbox'] = df['tbox'].apply(transform_tbox)
@@ -468,14 +506,51 @@ def extract_output(output, files, current_version):
 
 
 def is_doi(val):
-    """Returns None if val doesn't match pattern of a DOI.
-    http://en.wikipedia.org/wiki/Digital_object_identifier."""
+    """
+    Function purpose: Returns None if val doesn't match pattern of a DOI.
+    http://en.wikipedia.org/wiki/Digital_object_identifier.
+    """
     return doi_regexp.match(val)
 
 
 def normalize_doi(val):
-    """Return just the DOI (e.g. 10.1234/jshd123)
+    """
+    Function purpose: Return just the DOI (e.g. 10.1234/jshd123)
     from a val that could include a url or doi
-    (e.g. https://doi.org/10.1234/jshd123)"""
+    (e.g. https://doi.org/10.1234/jshd123)
+    val: DOI or URL (str)
+    """
     m = doi_regexp.match(val)
     return m.group(2)
+
+
+def create_geopackage(df, filename):
+    """
+    Function purpose: Creates a geopackage file
+    df: dataframe from extract_output result
+    filename: Name for the Geopackage file
+    """
+    sr4326 = osr.SpatialReference()
+    sr4326.ImportFromEPSG(WGS84_EPSG_ID)
+    logger.warning(df)
+
+    ds = ogr.GetDriverByName('GPKG').CreateDataSource(filename)
+    lyr = ds.CreateLayer('files', geom_type=ogr.wkbPolygon, srs=sr4326)
+    lyr.CreateField(ogr.FieldDefn('filename', ogr.OFTString))
+    lyr.CreateField(ogr.FieldDefn('handler', ogr.OFTString))
+    lyr.CreateField(ogr.FieldDefn('format', ogr.OFTString))
+    lyr.CreateField(ogr.FieldDefn('tbox', ogr.OFTString))
+    lyr.CreateField(ogr.FieldDefn('crs', ogr.OFTString))
+
+    for i in range(len(df)):
+        feat = ogr.Feature(lyr.GetLayerDefn())
+        feat['filename'] = df.loc[i, "filename"]
+        feat['format'] = df.loc[i, "format"]
+        feat['tbox'] = df.loc[i, "tbox"]
+        feat['handler'] = df.loc[i, "handler"]
+        feat['crs'] = df.loc[i, "crs"]
+        if df.loc[i, "bbox"] is not None:
+            feat.SetGeometry(ogr.CreateGeometryFromWkt(df.loc[i, "bbox"]))
+        lyr.CreateFeature(feat)
+
+    ds = None

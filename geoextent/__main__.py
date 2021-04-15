@@ -3,9 +3,6 @@ import logging
 import os
 import sys
 import zipfile
-from pyproj import CRS
-import geopandas as gpd
-
 from . import __version__ as current_version
 from .lib import extent
 from .lib import helpfunctions as hf
@@ -19,11 +16,9 @@ geoextent is a Python library for extracting geospatial and temporal extents of 
 '''
 
 help_epilog = '''
-By default, both bounding box and temporal extent are extracted.
 
 Examples:
 
-geoextent path/to/geo_file.ext
 geoextent -b path/to/directory_with_geospatial_data
 geoextent -t path/to/file_with_temporal_extent
 geoextent -b -t path/to/geospatial_files
@@ -220,9 +215,7 @@ def main():
             logger.warning("Exporting result into: {}".format(args['output']))
             filename = args['output']
             df = hf.extract_output(output, files, current_version)
-            gdf_files = gpd.GeoDataFrame(df, geometry='bbox', crs=CRS("EPSG:4326"))
-            gdf_files.to_file(filename, layer="files", driver="GPKG")
-
+            hf.create_geopackage(df, filename)
         if not args['details']:
             output.pop('details', None)
 

@@ -1,8 +1,10 @@
 import os  # used to get the location of the testdata
 import sys
 import pytest
-import requests
 import tempfile
+import geopandas as gpd
+from geoextent import __version__ as current_version
+
 from help_functions_test import create_zip, parse_coordinates, tolerance
 from osgeo import gdal
 
@@ -262,6 +264,7 @@ def test_gml_time(script_runner):
     assert "['2005-12-31', '2013-11-30']" in ret.stdout, "time value is printed to console"
 
 
+@pytest.mark.skip(reason="multiple input directories not implemented yet")
 def test_gml_only_one_time_feature_valid(script_runner):
     ret = script_runner.run('geoextent', '-t', 'tests/testdata/gml/mypolygon_px6_error_time_one_feature.gml')
     assert ret.stdout
@@ -382,3 +385,23 @@ def test_zenodo_valid_but_not_open_access(script_runner):
     ret = script_runner.run('geoextent', '-b', '-t', 'https://zenodo.org/record/51746')
     assert not ret.success, 'The repository exists but it is not accessible. Geoextent should fail'
     assert "This record does not have Open Access files. Verify the Access rights of the record" in ret.stderr
+
+
+def test_export(script_runner):
+    with tempfile.TemporaryDirectory() as tmp:
+        gpkg_file = os.path.join(tmp, "export_file.gpkg")
+        script_runner.run('geoextent', '-b', '-t', '--output', gpkg_file, 'tests/testdata/folders/folder_two_files')
+        assert os.path.exists(gpkg_file)
+        files_gdf = gpd.read_file(gpkg_file, layer="files")
+        geo_version = "geoextent:" + current_version
+        output = files_gdf.loc[lambda df: files_gdf['handler'] == geo_version, ]
+        tbox = list(output['tbox'])
+        bounds = output.bounds
+        bbox = list(bounds.iloc[0])
+    assert tbox[0] == "2018-11-14/2019-09-11"
+    assert bbox == pytest.approx([2.05233, 41.31703, 7.64725, 51.97462], abs=tolerance)
+
+
+def test_export_no_output_file(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', '--output', 'tests/testdata/folders/folder_two_files')
+    assert "Exception: Invalid command, input file missing" in ret.stderr
