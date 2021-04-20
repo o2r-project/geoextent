@@ -47,7 +47,7 @@ class readable_file_or_dir(argparse.Action):
         for candidate in values:
             if (hf.doi_regexp.match(candidate) is not None) or (hf.zenodo_regexp.match(candidate) is not None):
                 logger.debug("The format of the URL or DOI is correct. Geoextent is going to try to download "
-                             "this repository ")
+                             "this repository from {} ".format(candidate))
                 setattr(namespace, self.dest, candidate)
             else:
                 if not (os.path.isdir(candidate) or os.path.isfile(candidate) or zipfile.is_zipfile(candidate)):
@@ -185,8 +185,17 @@ def main():
     is_zipfile = zipfile.is_zipfile(os.path.join(os.getcwd(), files))
     is_directory = os.path.isdir(os.path.join(os.getcwd(), files))
 
-    # Identify
+    # Identify URL
     is_url = hf.https_regexp.match(files) is not None
+
+    # Check output path
+    export = args['output'] is not None
+
+    try:
+        if export:
+            filename = hf.path_output(args['output'])
+    except ValueError as e:
+        raise ValueError(e)
 
     output = None
     try:
@@ -207,13 +216,11 @@ def main():
     if output is None:
         raise Exception("Did not find supported files at {}".format(files))
     else:
-        export = args['output'] is not None
 
         if export and not multiple_files:
             logger.warning("Exporting result does not apply to single files")
         elif export and multiple_files:
             logger.warning("Exporting result into: {}".format(args['output']))
-            filename = args['output']
             df = hf.extract_output(output, files, current_version)
             hf.create_geopackage(df, filename)
         if not args['details']:

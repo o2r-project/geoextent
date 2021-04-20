@@ -291,7 +291,7 @@ def test_multiple_files(script_runner):
                             'tests/testdata/geojson/ausgleichsflaechen_moers.geojson')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout,\
+    assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout, \
         "bboxes and time values of all files inside folder, are printed to console"
     assert "[6.574722, 51.434444, 4.3175, 53.217222]" in ret.stdout, \
         "bboxes and time values of all files inside folder, are printed to console"
@@ -375,7 +375,13 @@ def test_zenodo_valid_but_removed_repository(script_runner):
     assert "does not exist" in ret.stderr
 
 
-def test_zenodo_valid_but_no_extraction_options(script_runner):
+def test_zenodo_invalid_DOI_but_removed_repository(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', 'https://doi.org/10.5281/zenodo.not.exist')
+    assert not ret.success
+    assert "Geoextent can not handle this repository identifier" in ret.stderr
+
+
+def test_zenodo_invalid_but_no_extraction_options(script_runner):
     ret = script_runner.run('geoextent', 'https://zenodo.org/record/1')
     assert not ret.success, 'No extractions options, geoextent should fail'
     assert "Require at least one of extraction options, but bbox is False and tbox is False" in ret.stderr
@@ -387,21 +393,69 @@ def test_zenodo_valid_but_not_open_access(script_runner):
     assert "This record does not have Open Access files. Verify the Access rights of the record" in ret.stderr
 
 
-def test_export(script_runner):
+def test_export_relative_path(script_runner):
     with tempfile.TemporaryDirectory() as tmp:
         gpkg_file = os.path.join(tmp, "export_file.gpkg")
         script_runner.run('geoextent', '-b', '-t', '--output', gpkg_file, 'tests/testdata/folders/folder_two_files')
         assert os.path.exists(gpkg_file)
         files_gdf = gpd.read_file(gpkg_file, layer="files")
         geo_version = "geoextent:" + current_version
-        output = files_gdf.loc[lambda df: files_gdf['handler'] == geo_version, ]
+        output = files_gdf.loc[lambda df: files_gdf['handler'] == geo_version,]
         tbox = list(output['tbox'])
         bounds = output.bounds
         bbox = list(bounds.iloc[0])
     assert tbox[0] == "2018-11-14/2019-09-11"
-    #assert bbox == pytest.approx([2.05233, 41.31703, 7.64725, 51.97462], abs=tolerance)
+    # assert bbox == pytest.approx([2.05233, 41.31703, 7.64725, 51.97462], abs=tolerance)
 
 
 def test_export_no_output_file(script_runner):
     ret = script_runner.run('geoextent', '-b', '-t', '--output', 'tests/testdata/folders/folder_two_files')
     assert "Exception: Invalid command, input file missing" in ret.stderr
+
+
+def test_invalid_order_no_input_file(script_runner):
+    ret = script_runner.run('geoextent', '-b', '--output', '-t', 'tests/testdata/folders/folder_two_files')
+    assert "error: argument --output: expected one argument" in ret.stderr
+
+
+def test_zenodo_valid_doi_repository_wrong_geopackage_extension(script_runner):
+    with pytest.warns(ResourceWarning):
+        ret = script_runner.run('geoextent', '-b', '-t', '--output', 'wrong_extension.abc',
+                                'https://doi.org/10.5281/zenodo.820562'
+                                )
+    assert ret.success, "process should return success"
+
+
+def test_export_absolute_path(script_runner):
+    with tempfile.TemporaryDirectory() as tmp:
+        out_path = tmp + "geoextent_output.gpkg"
+        ret = script_runner.run('geoextent', '-b', '-t', '--output', out_path,
+                                'tests/testdata/folders/folder_two_files'
+                                )
+        assert os.path.exists(out_path)
+        files_gdf = gpd.read_file(out_path, layer="files")
+        geo_version = "geoextent:" + current_version
+        output = files_gdf.loc[lambda df: files_gdf['handler'] == geo_version,]
+        tbox = list(output['tbox'])
+        bounds = output.bounds
+    assert tbox[0] == "2018-11-14/2019-09-11"
+
+
+def test_export_invalid_folder_path(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', '--output', "tests/testdata/folders",
+                            'tests/testdata/folders/folder_two_files'
+                            )
+    assert not ret.success, "Output should be a file not a directory"
+    assert "Output must be a file, not a directory:" in ret.stderr
+
+
+def test_export_overwrite_file(script_runner):
+    with tempfile.TemporaryDirectory() as tmp:
+        filepath = tmp + "/geoextent_output.gpkg"
+        file = open(filepath, "w+")
+        file.close()
+        ret = script_runner.run('geoextent', '-b', '-t', '--output', filepath,
+                                'tests/testdata/folders/folder_two_files'
+                                )
+        assert ret.success
+        assert "Overwriting " + tmp in ret.stderr

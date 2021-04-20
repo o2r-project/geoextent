@@ -211,18 +211,23 @@ def fromFile(filepath, bbox=True, tbox=True, num_sample=None):
 
 
 def from_repository(repository_identifier, bbox=False, tbox=False, details=False):
-    geoextent = geoextent_from_repository()
-    metadata = geoextent.from_repository(repository_identifier, bbox, tbox, details)
-    metadata['format'] = 'repository'
+    try:
+        geoextent = geoextent_from_repository()
+        metadata = geoextent.from_repository(repository_identifier, bbox, tbox, details)
+        metadata['format'] = 'repository'
+    except ValueError as e:
+        logger.debug("Error while inspecting repository {}: {}".format(repository_identifier, e))
+        raise Exception(e)
+
     return metadata
 
 
 class geoextent_from_repository(Application):
-    my_content_providers = List([Zenodo.Zenodo], config=True, help="""
+    content_providers = List([Zenodo.Zenodo], config=True, help="""
         Ordered list by priority of ContentProviders to try in turn to fetch
         the contents specified by the user.
         """
-                                )
+                             )
 
     def from_repository(self, repository_identifier, bbox=False, tbox=False, details=False):
 
@@ -230,9 +235,12 @@ class geoextent_from_repository(Application):
             logger.error("Require at least one of extraction options, but bbox is {} and tbox is {}".format(bbox, tbox))
             raise Exception("No extraction options enabled!")
 
-        for h in self.my_content_providers:
+        for h in self.content_providers:
             repository = h()
+            supported_by_geoextent = False
             if repository.validate_provider(reference=repository_identifier):
+                logger.debug("Using {} to extract {}".format(repository.name, repository_identifier))
+                supported_by_geoextent = True
                 try:
                     with tempfile.TemporaryDirectory() as tmp:
                         repository.download(tmp)
@@ -240,3 +248,7 @@ class geoextent_from_repository(Application):
                     return metadata
                 except ValueError as e:
                     raise Exception(e)
+            if supported_by_geoextent is False:
+                logger.error("Geoextent can not handle this repository identifier {}. "
+                                 "\n Check for typos or if the repository exists. ".format(repository_identifier)
+                            )

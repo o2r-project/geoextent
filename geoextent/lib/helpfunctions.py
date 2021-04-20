@@ -11,6 +11,7 @@ import pandas as pd
 from osgeo import ogr
 from osgeo import osr
 from pandas.core.tools.datetimes import _guess_datetime_format_for_array as time_format
+from pathlib import Path
 
 output_time_format = '%Y-%m-%d'
 PREFERRED_SAMPLE_SIZE = 30
@@ -532,7 +533,10 @@ def create_geopackage(df, filename):
     """
     sr4326 = osr.SpatialReference()
     sr4326.ImportFromEPSG(WGS84_EPSG_ID)
-    logger.warning(df)
+
+    if os.path.exists(filename):
+        os.remove(filename)
+        logger.warning("Overwriting {} ".format(filename))
 
     ds = ogr.GetDriverByName('GPKG').CreateDataSource(filename)
     lyr = ds.CreateLayer('files', geom_type=ogr.wkbPolygon, srs=sr4326)
@@ -554,3 +558,21 @@ def create_geopackage(df, filename):
         lyr.CreateFeature(feat)
 
     ds = None
+
+
+def path_output(path):
+
+    if os.path.isdir(path):
+        logger.error("Output must be a file, not a directory ")
+        raise ValueError("Output must be a file, not a directory: {}".format(path))
+
+    folder_path = os.path.split(path)[0]
+    user_path = Path(folder_path)
+    if user_path.exists():
+        absolute_file_path = user_path.as_posix() + "/" + os.path.split(path)[1]
+    else:
+        logger.error("Output target directory does not exist: {}".format(path))
+        raise ValueError("Output target directory does not exist: {}".format(path))
+    return absolute_file_path
+
+

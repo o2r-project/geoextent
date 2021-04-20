@@ -1,8 +1,7 @@
 from requests import HTTPError
-import os
-import tempfile
 from .providers import DoiProvider
 from ..extent import *
+
 
 class Zenodo(DoiProvider):
     def __init__(self):
@@ -11,6 +10,9 @@ class Zenodo(DoiProvider):
         self.host = {"hostname": ["https://zenodo.org/record/", "http://zenodo.org/record/"],
                      "api": "https://zenodo.org/api/records/"
                      }
+        self.reference = None
+        self.record_id = None
+        self.name = "Zenodo"
 
     def validate_provider(self, reference):
         self.reference = reference
@@ -60,8 +62,10 @@ class Zenodo(DoiProvider):
         return file_list
 
     def download(self, folder):
+        self.log.debug("Downloading Zenodo record id: {} ".format(self.record_id))
         try:
             download_links = self._get_file_links
+            counter = 1
             for file_link in download_links:
                 resp = self.session.get(file_link, stream=True)
                 filename = os.path.split(resp.url)[1]
@@ -69,5 +73,7 @@ class Zenodo(DoiProvider):
                 with open(filepath, "wb") as dst:
                     for chunk in resp.iter_content(chunk_size=None):
                         dst.write(chunk)
+                self.log.debug("{} out of {} files downloaded.".format(counter, len(download_links)))
+                counter += 1
         except ValueError as e:
             raise Exception(e)
