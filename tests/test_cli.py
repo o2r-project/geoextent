@@ -405,7 +405,7 @@ def test_export_relative_path(script_runner):
         bounds = output.bounds
         bbox = list(bounds.iloc[0])
     assert tbox[0] == "2018-11-14/2019-09-11"
-    # assert bbox == pytest.approx([2.05233, 41.31703, 7.64725, 51.97462], abs=tolerance)
+    assert bbox == pytest.approx([2.05233, 41.31703, 7.64725, 51.97462], abs=tolerance)
 
 
 def test_export_no_output_file(script_runner):
@@ -433,12 +433,6 @@ def test_export_absolute_path(script_runner):
                                 'tests/testdata/folders/folder_two_files'
                                 )
         assert os.path.exists(out_path)
-        files_gdf = gpd.read_file(out_path, layer="files")
-        geo_version = "geoextent:" + current_version
-        output = files_gdf.loc[lambda df: files_gdf['handler'] == geo_version,]
-        tbox = list(output['tbox'])
-        bounds = output.bounds
-    assert tbox[0] == "2018-11-14/2019-09-11"
 
 
 def test_export_invalid_folder_path(script_runner):
