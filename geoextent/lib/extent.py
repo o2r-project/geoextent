@@ -2,10 +2,13 @@ import logging
 import os
 import threading
 import zipfile
-
+import tempfile
+from traitlets import List
+from traitlets.config import Application
+from .content_providers import Zenodo
 from . import handleCSV
-from . import handleVector
 from . import handleRaster
+from . import handleVector
 from . import helpfunctions as hf
 
 logger = logging.getLogger("geoextent")
@@ -203,4 +206,49 @@ def fromFile(filepath, bbox=True, tbox=True, num_sample=None):
     thread_temp_except.join()
 
     logger.debug("Extraction finished: {}".format(str(metadata)))
+
     return metadata
+
+
+def from_repository(repository_identifier, bbox=False, tbox=False, details=False):
+    try:
+        geoextent = geoextent_from_repository()
+        metadata = geoextent.from_repository(repository_identifier, bbox, tbox, details)
+        metadata['format'] = 'repository'
+    except ValueError as e:
+        logger.debug("Error while inspecting repository {}: {}".format(repository_identifier, e))
+        raise Exception(e)
+
+    return metadata
+
+
+class geoextent_from_repository(Application):
+    content_providers = List([Zenodo.Zenodo], config=True, help="""
+        Ordered list by priority of ContentProviders to try in turn to fetch
+        the contents specified by the user.
+        """
+                             )
+
+    def from_repository(self, repository_identifier, bbox=False, tbox=False, details=False):
+
+        if bbox + tbox == 0:
+            logger.error("Require at least one of extraction options, but bbox is {} and tbox is {}".format(bbox, tbox))
+            raise Exception("No extraction options enabled!")
+
+        for h in self.content_providers:
+            repository = h()
+            supported_by_geoextent = False
+            if repository.validate_provider(reference=repository_identifier):
+                logger.debug("Using {} to extract {}".format(repository.name, repository_identifier))
+                supported_by_geoextent = True
+                try:
+                    with tempfile.TemporaryDirectory() as tmp:
+                        repository.download(tmp)
+                        metadata = fromDirectory(tmp, bbox, tbox, details)
+                    return metadata
+                except ValueError as e:
+                    raise Exception(e)
+            if supported_by_geoextent is False:
+                logger.error("Geoextent can not handle this repository identifier {}"
+                                 "\n Check for typos or if the repository exists. ".format(repository_identifier)
+                            )

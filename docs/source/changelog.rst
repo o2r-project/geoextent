@@ -1,6 +1,10 @@
 
 Changelog
 =========
+0.7.0
+^^^^^
+- Add DOI-based retrieval functions for Zenodo (:pr:`100`)
+- Add export function ``--output`` for folders, ZIP files and repositories (:pr:`124`)
 
 0.6.0
 ^^^^^

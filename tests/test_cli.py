@@ -1,7 +1,9 @@
 import os  # used to get the location of the testdata
+from osgeo import ogr
 import sys
 import pytest
 import tempfile
+
 from help_functions_test import create_zip, parse_coordinates, tolerance
 from osgeo import gdal
 
@@ -250,7 +252,7 @@ def test_gml_bbox(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     result = ret.stdout
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([-17.542069, 32.39669, -6.959389, 39.301139])
+    assert bboxList == pytest.approx([-17.542069, 32.39669, -6.959389, 39.301139], abs=tolerance)
     assert "4326" in result
 
 
@@ -261,6 +263,7 @@ def test_gml_time(script_runner):
     assert "['2005-12-31', '2013-11-30']" in ret.stdout, "time value is printed to console"
 
 
+@pytest.mark.skip(reason="multiple input directories not implemented yet")
 def test_gml_only_one_time_feature_valid(script_runner):
     ret = script_runner.run('geoextent', '-t', 'tests/testdata/gml/mypolygon_px6_error_time_one_feature.gml')
     assert ret.stdout
@@ -287,7 +290,7 @@ def test_multiple_files(script_runner):
                             'tests/testdata/geojson/ausgleichsflaechen_moers.geojson')
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
-    assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout,\
+    assert "[7.6016807556152335, 51.94881477206191, 7.647256851196289, 51.974624029877454]" in ret.stdout, \
         "bboxes and time values of all files inside folder, are printed to console"
     assert "[6.574722, 51.434444, 4.3175, 53.217222]" in ret.stdout, \
         "bboxes and time values of all files inside folder, are printed to console"
@@ -302,20 +305,21 @@ def test_folder(script_runner):
     assert ret.stderr == '', "stderr should be empty"
     result = ret.stdout
     bboxList = parse_coordinates(result)
-    assert bboxList == pytest.approx([2.052333, 41.317038, 7.647256, 51.974624])
+    assert bboxList == pytest.approx([2.052333, 41.317038, 7.647256, 51.974624], abs=tolerance)
     assert "['2018-11-14', '2019-09-11']" in result, "merge time value of folder files, is printed to console"
     assert "4326" in result
 
 
 def test_zipfile(script_runner):
     folder_name = "tests/testdata/folders/folder_one_file"
-    with tempfile.NamedTemporaryFile(suffix=".zip") as tmp:
-        create_zip(folder_name, tmp)
-        ret = script_runner.run('geoextent', '-b', '-t', tmp.name)
+    with tempfile.TemporaryDirectory() as tmp:
+        zip_path = os.path.join(tmp, "zipfile.zip")
+        create_zip(folder_name, zip_path)
+        ret = script_runner.run('geoextent', '-b', '-t', zip_path)
         assert ret.success, "process should return success"
         result = ret.stdout
         bboxList = parse_coordinates(result)
-        assert bboxList == pytest.approx([7.601680, 51.948814, 7.647256, 51.974624])
+        assert bboxList == pytest.approx([7.601680, 51.948814, 7.647256, 51.974624], abs=tolerance)
         assert "['2018-11-14', '2018-11-14']" in result
         assert "4326" in result
 
@@ -327,3 +331,124 @@ def test_multiple_folders(script_runner):
     assert ret.success, "process should return success"
     assert ret.stderr == '', "stderr should be empty"
     assert "full bbox" in ret.stdout, "joined bboxes of all files inside folder are printed to console"
+
+
+def test_zenodo_valid_link_repository(script_runner):
+    ret = script_runner.run('geoextent',
+                            '-b', '-t', 'https://zenodo.org/record/820562')
+    assert ret.success, "process should return success"
+    assert 'has no identifiable time extent' in ret.stderr
+    result = ret.stdout
+    bboxList = parse_coordinates(result)
+    assert bboxList == pytest.approx([96.21146, 25.55834, 96.35495, 25.63293], abs=tolerance)
+    assert "4326" in result
+
+
+def test_zenodo_valid_doi_repository(script_runner):
+    ret = script_runner.run('geoextent',
+                            '-b', '-t', 'https://doi.org/10.5281/zenodo.820562')
+    assert ret.success, "process should return success"
+    assert 'has no identifiable time extent' in ret.stderr
+    result = ret.stdout
+    bboxList = parse_coordinates(result)
+    assert bboxList == pytest.approx([96.21146, 25.55834, 96.35495, 25.63293], abs=tolerance)
+    assert "4326" in result
+
+
+def test_zenodo_valid_link_repository_with_no_geoextent(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', 'https://zenodo.org/record/1810558')
+    result = ret.stdout
+    assert "bbox" not in result, "This repository contains a PDF file, it should not return a bbox"
+    assert "tbox" not in result, "This repository contains a PDF file, it should not return a tbox"
+
+
+def test_zenodo_invalid_link_repository(script_runner):
+    ret = script_runner.run('geoextent',
+                            '-b', '-t', 'https://zenado.org/record/820562')
+    assert not ret.success, 'Typo in URL'
+    assert "is not a valid" in ret.stderr, 'Typo in URL'
+
+
+def test_zenodo_valid_but_removed_repository(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', 'https://zenodo.org/record/1')
+    assert not ret.success
+    assert "does not exist" in ret.stderr
+
+
+def test_zenodo_invalid_DOI_but_removed_repository(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', 'https://doi.org/10.5281/zenodo.not.exist')
+    assert not ret.success
+    assert "Geoextent can not handle this repository identifier" in ret.stderr
+
+
+def test_zenodo_invalid_but_no_extraction_options(script_runner):
+    ret = script_runner.run('geoextent', 'https://zenodo.org/record/1')
+    assert not ret.success, 'No extractions options, geoextent should fail'
+    assert "Require at least one of extraction options, but bbox is False and tbox is False" in ret.stderr
+
+
+def test_zenodo_valid_but_not_open_access(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', 'https://zenodo.org/record/51746')
+    assert not ret.success, 'The repository exists but it is not accessible. Geoextent should fail'
+    assert "This record does not have Open Access files. Verify the Access rights of the record" in ret.stderr
+
+
+def test_export_relative_path(script_runner):
+    with tempfile.TemporaryDirectory() as tmp:
+        relative = "geoextent_output.gpkg"
+        script_runner.run('geoextent', '-b', '-t', '--output', relative, 'tests/testdata/folders/folder_two_files')
+        datasource = ogr.Open(relative)
+        layer = datasource.GetLayer(0)
+        ext = layer.GetExtent()
+        bbox = [ext[0], ext[2], ext[1], ext[3]]
+        os.remove(relative)
+    assert bbox == pytest.approx([2.052333, 41.317038, 7.647256, 51.974624], abs=tolerance)
+
+
+def test_export_no_output_file(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', '--output', 'tests/testdata/folders/folder_two_files')
+    assert "Exception: Invalid command, input file missing" in ret.stderr
+
+
+def test_invalid_order_no_input_file(script_runner):
+    ret = script_runner.run('geoextent', '-b', '--output', '-t', 'tests/testdata/folders/folder_two_files')
+    assert "error: argument --output: expected one argument" in ret.stderr
+
+
+def test_zenodo_valid_doi_repository_wrong_geopackage_extension(script_runner):
+    with pytest.warns(ResourceWarning):
+        with tempfile.NamedTemporaryFile(suffix=".abc") as tmp:
+            ret = script_runner.run('geoextent', '-b', '-t', '--output', tmp.name,
+                                'https://doi.org/10.5281/zenodo.820562'
+                                    )
+    assert ret.success, "process should return success"
+
+
+def test_export_absolute_path(script_runner):
+    with tempfile.TemporaryDirectory() as tmp:
+        out_path = os.path.join(tmp, "geoextent_output.gpkg")
+        ret = script_runner.run('geoextent', '-b', '-t', '--output', out_path,
+                                'tests/testdata/folders/folder_two_files'
+                                )
+        assert ret.success
+        assert os.path.exists(out_path)
+
+
+def test_export_invalid_folder_path(script_runner):
+    ret = script_runner.run('geoextent', '-b', '-t', '--output', "tests/testdata/folders",
+                            'tests/testdata/folders/folder_two_files'
+                            )
+    assert not ret.success, "Output should be a file not a directory"
+    assert "Output must be a file, not a directory:" in ret.stderr
+
+
+def test_export_overwrite_file(script_runner):
+    with tempfile.TemporaryDirectory() as tmp:
+        filepath = os.path.join(tmp, "geoextent_output.gpkg")
+        file = open(filepath, "w+")
+        file.close()
+        ret = script_runner.run('geoextent', '-b', '-t', '--output', filepath,
+                                'tests/testdata/folders/folder_two_files'
+                                )
+        assert ret.success
+        assert "Overwriting " + tmp in ret.stderr
