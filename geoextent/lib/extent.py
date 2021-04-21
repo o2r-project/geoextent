@@ -249,6 +249,6 @@ class geoextent_from_repository(Application):
                 except ValueError as e:
                     raise Exception(e)
             if supported_by_geoextent is False:
-                logger.error("Geoextent can not handle this repository identifier {}. "
+                logger.error("Geoextent can not handle this repository identifier {}"
                                  "\n Check for typos or if the repository exists. ".format(repository_identifier)
                             )

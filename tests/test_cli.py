@@ -395,7 +395,6 @@ def test_zenodo_valid_but_not_open_access(script_runner):
 def test_export_relative_path(script_runner):
     with tempfile.TemporaryDirectory() as tmp:
         relative = "geoextent_output.gpkg"
-        filepath = tmp + relative
         script_runner.run('geoextent', '-b', '-t', '--output', relative, 'tests/testdata/folders/folder_two_files')
         datasource = ogr.Open(relative)
         layer = datasource.GetLayer(0)
