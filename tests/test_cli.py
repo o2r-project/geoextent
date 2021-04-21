@@ -313,7 +313,7 @@ def test_folder(script_runner):
 def test_zipfile(script_runner):
     folder_name = "tests/testdata/folders/folder_one_file"
     with tempfile.TemporaryDirectory() as tmp:
-        zip_path = tmp + "/zipfile.zip"
+        zip_path = os.path.join(tmp, "zipfile.zip")
         create_zip(folder_name, zip_path)
         ret = script_runner.run('geoextent', '-b', '-t', zip_path)
         assert ret.success, "process should return success"
@@ -426,7 +426,7 @@ def test_zenodo_valid_doi_repository_wrong_geopackage_extension(script_runner):
 
 def test_export_absolute_path(script_runner):
     with tempfile.TemporaryDirectory() as tmp:
-        out_path = tmp + "/geoextent_output.gpkg"
+        out_path = os.path.join(tmp, "geoextent_output.gpkg")
         ret = script_runner.run('geoextent', '-b', '-t', '--output', out_path,
                                 'tests/testdata/folders/folder_two_files'
                                 )
@@ -444,7 +444,7 @@ def test_export_invalid_folder_path(script_runner):
 
 def test_export_overwrite_file(script_runner):
     with tempfile.TemporaryDirectory() as tmp:
-        filepath = tmp + "/geoextent_output.gpkg"
+        filepath = os.path.join(tmp, "geoextent_output.gpkg")
         file = open(filepath, "w+")
         file.close()
         ret = script_runner.run('geoextent', '-b', '-t', '--output', filepath,

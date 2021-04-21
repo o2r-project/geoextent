@@ -141,10 +141,11 @@ def test_folder_nested_files():
 
 def test_zipfile_unsupported_file():
     with tempfile.TemporaryDirectory() as tmp:
-        f = open(tmp + "/unsupported_file.txt", "a")
+        filepath = os.path.join(tmp, "unsupported_file.txt")
+        f = open(filepath, "a")
         f.write("No geographical data")
         f.close()
-        zip_path = tmp + "/zipfile.zip"
+        zip_path = os.path.join(tmp, "zipfile.zip")
         create_zip(tmp, zip_path)
         result = geoextent.fromDirectory(zip_path, bbox=True, tbox=True)
         assert "bbox" not in result
@@ -154,7 +155,7 @@ def test_zipfile_unsupported_file():
 def test_zipfile_one_file():
     folder_name = "tests/testdata/folders/folder_one_file"
     with tempfile.TemporaryDirectory() as tmp:
-        zip_path = tmp + "/zipfile.zip"
+        zip_path = os.path.join(tmp, "zipfile.zip")
         create_zip(folder_name, zip_path)
         result = geoextent.fromDirectory(zip_path, bbox=True, tbox=True)
         assert result["bbox"] == pytest.approx([7.601680, 51.948814, 7.647256, 51.974624], abs=tolerance)
@@ -165,7 +166,7 @@ def test_zipfile_one_file():
 def test_zipfile_nested_folders():
     folder_name = "tests/testdata/folders/nested_folder"
     with tempfile.TemporaryDirectory() as tmp:
-        zip_path = tmp+"/zipfile.zip"
+        zip_path = os.path.join(tmp, "zipfile.zip")
         create_zip(folder_name, zip_path)
         result = geoextent.fromDirectory(zip_path, bbox=True, tbox=True)
     assert result["bbox"] == pytest.approx([7.601680, 34.7, 142.0, 51.974624], abs=tolerance)
