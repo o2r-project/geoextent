@@ -395,12 +395,14 @@ def test_zenodo_valid_but_not_open_access(script_runner):
 
 def test_export_relative_path(script_runner):
     with tempfile.TemporaryDirectory() as tmp:
-        gpkg_file = os.path.join(tmp, "export_file.gpkg")
-        script_runner.run('geoextent', '-b', '-t', '--output', gpkg_file, 'tests/testdata/folders/folder_two_files')
-        assert os.path.exists(gpkg_file)
-        files_gdf = gpd.read_file(gpkg_file, layer="files")
+        relative = "geoextent_output.gpkg"
+        filepath = tmp + relative
+        file = open(filepath, "w+")
+        file.close()
+        script_runner.run('geoextent', '-b', '-t', '--output', relative, 'tests/testdata/folders/folder_two_files')
+        files_gdf = gpd.read_file(relative, layer="files")
         geo_version = "geoextent:" + current_version
-        output = files_gdf.loc[lambda df: files_gdf['handler'] == geo_version,]
+        output = files_gdf.loc[lambda df: files_gdf['handler'] == geo_version, ]
         tbox = list(output['tbox'])
     assert tbox[0] == "2018-11-14/2019-09-11"
 
