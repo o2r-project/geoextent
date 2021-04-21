@@ -1,9 +1,8 @@
 import os  # used to get the location of the testdata
+import ogr
 import sys
 import pytest
 import tempfile
-import geopandas as gpd
-from geoextent import __version__ as current_version
 
 from help_functions_test import create_zip, parse_coordinates, tolerance
 from osgeo import gdal
@@ -397,14 +396,12 @@ def test_export_relative_path(script_runner):
     with tempfile.TemporaryDirectory() as tmp:
         relative = "geoextent_output.gpkg"
         filepath = tmp + relative
-        file = open(filepath, "w+")
-        file.close()
         script_runner.run('geoextent', '-b', '-t', '--output', relative, 'tests/testdata/folders/folder_two_files')
-        files_gdf = gpd.read_file(relative, layer="files")
-        geo_version = "geoextent:" + current_version
-        output = files_gdf.loc[lambda df: files_gdf['handler'] == geo_version, ]
-        tbox = list(output['tbox'])
-    assert tbox[0] == "2018-11-14/2019-09-11"
+        datasource = ogr.Open(relative)
+        layer = datasource.GetLayer(0)
+        ext = layer.GetExtent()
+        bbox = [ext[0], ext[2], ext[1], ext[3]]
+    assert bbox == pytest.approx([2.052333, 41.317038, 7.647256, 51.974624], abs=tolerance)
 
 
 def test_export_no_output_file(script_runner):
