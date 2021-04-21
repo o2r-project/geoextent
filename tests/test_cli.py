@@ -312,9 +312,10 @@ def test_folder(script_runner):
 
 def test_zipfile(script_runner):
     folder_name = "tests/testdata/folders/folder_one_file"
-    with tempfile.NamedTemporaryFile(suffix=".zip") as tmp:
-        create_zip(folder_name, tmp)
-        ret = script_runner.run('geoextent', '-b', '-t', tmp.name)
+    with tempfile.TemporaryDirectory() as tmp:
+        zip_path = tmp + "/zipfile.zip"
+        create_zip(folder_name, zip_path)
+        ret = script_runner.run('geoextent', '-b', '-t', zip_path)
         assert ret.success, "process should return success"
         result = ret.stdout
         bboxList = parse_coordinates(result)
@@ -400,6 +401,7 @@ def test_export_relative_path(script_runner):
         layer = datasource.GetLayer(0)
         ext = layer.GetExtent()
         bbox = [ext[0], ext[2], ext[1], ext[3]]
+        os.remove(relative)
     assert bbox == pytest.approx([2.052333, 41.317038, 7.647256, 51.974624], abs=tolerance)
 
 
@@ -415,15 +417,16 @@ def test_invalid_order_no_input_file(script_runner):
 
 def test_zenodo_valid_doi_repository_wrong_geopackage_extension(script_runner):
     with pytest.warns(ResourceWarning):
-        ret = script_runner.run('geoextent', '-b', '-t', '--output', 'wrong_extension.abc',
+        with tempfile.NamedTemporaryFile(suffix=".abc") as tmp:
+            ret = script_runner.run('geoextent', '-b', '-t', '--output', tmp.name,
                                 'https://doi.org/10.5281/zenodo.820562'
-                                )
+                                    )
     assert ret.success, "process should return success"
 
 
 def test_export_absolute_path(script_runner):
     with tempfile.TemporaryDirectory() as tmp:
-        out_path = tmp + "geoextent_output.gpkg"
+        out_path = tmp + "/geoextent_output.gpkg"
         ret = script_runner.run('geoextent', '-b', '-t', '--output', out_path,
                                 'tests/testdata/folders/folder_two_files'
                                 )
