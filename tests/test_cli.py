@@ -1,5 +1,5 @@
 import os  # used to get the location of the testdata
-import ogr
+from osgeo import ogr
 import sys
 import pytest
 import tempfile
