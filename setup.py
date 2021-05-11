@@ -28,6 +28,7 @@ setuptools.setup(
         'pygdal',
         'python-dateutil',
 	'pandas',
+	'requests',
 	'numpy',
 	'traitlets',
 	'wheel'
