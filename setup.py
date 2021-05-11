@@ -29,7 +29,6 @@ setuptools.setup(
         'python-dateutil',
 	'pandas',
 	'numpy',
-	'request',
 	'traitlets',
 	'wheel'
     ],

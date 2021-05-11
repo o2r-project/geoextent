@@ -5,6 +5,5 @@ pyshp
 python-dateutil
 pandas
 numpy
-requests
 traitlets
 wheel
