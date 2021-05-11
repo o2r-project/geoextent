@@ -53,10 +53,18 @@ to see usage instructions.
 To run the showcase notebooks, install [JupyterLab](https://jupyter.org/) or the classic Jupyter Notebook and then start a local server as shown below.
 If your IDE has support for the Jupyter format, installing `ipykernel` might be enough.
 We recommend running the below commands in a virtual environment as described [here](https://jupyter-tutorial.readthedocs.io/en/latest/first-steps/install.html).
+The notebook must be [trusted](https://jupyter-notebook.readthedocs.io/en/stable/security.html#notebook-security) and [python-markdown extension](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html) must be installed so that variables within Markdown text can be shown.
 
 ```bash
 cd showcase
 pip install -r requirements.txt
+pip install -r showcase/requirements.txt
+pip install -e .
+
+jupyter contrib nbextension install --user
+jupyter nbextension enable python-markdown/main
+
+jupyter trust showcase/SG_01_Exploring_Research_Data_Repositories_with_geoextent.ipynb
 jupyter lab
 ```
 
