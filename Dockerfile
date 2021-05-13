@@ -36,8 +36,6 @@ COPY showcase/requirements.txt /requirements2.txt
 
 RUN pip3 install -r requirements2.txt
 
-RUN pip install -e .
-
 # Create a user
 ARG NB_USER=jovyan
 ARG NB_UID=1000
@@ -58,3 +56,5 @@ RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
 
 WORKDIR ${HOME}
+
+RUN pip install -e .
