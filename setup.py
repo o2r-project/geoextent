@@ -25,7 +25,7 @@ setuptools.setup(
         'geojson>=2.4.1',
         'pygeoj',
         'pyshp',
-        'pygdal==3.2.1.6',
+        'pygdal',
         'python-dateutil',
 	'pandas>=1.0.0',
 	'numpy',
