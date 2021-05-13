@@ -25,8 +25,13 @@ setuptools.setup(
         'geojson>=2.4.1',
         'pygeoj',
         'pyshp',
-        'pygdal',
-        'python-dateutil'
+        'pygdal==3.2.1',
+        'python-dateutil',
+	'pandas>=1.0.0',
+	'numpy',
+	'requests',
+	'wheel',
+	'traitlets<=4.3.3'
     ],
     entry_points={
         "console_scripts": [
