@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 RUN apt-get update && apt-get install -y \
 	software-properties-common
@@ -6,25 +6,26 @@ RUN apt-get update && apt-get install -y \
 # To get necessary dependencies for gdal-bin
 RUN add-apt-repository ppa:ubuntugis/ppa 
 
+RUN apt-get update
+
 # Install required libraryes including GDAL development libraries
 RUN apt-get update && apt-get install -y \
 	sudo\
 	python3.6\
 	python3-pip\
-	python3.6-dev\
+  	python3-gdal \
 	gdal-bin\
 	libgdal-dev
-	
-RUN pip3 install --upgrade pip
 
-RUN pip3 install --upgrade cython
+RUN ogrinfo --version
 
 COPY requirements.txt /requirements.txt
+
+RUN pip3 install --upgrade setuptools pip
 
 # Install required libraryes including geoextent and GDAL
 RUN pip3 install gdal==$(gdal-config --version) \
 	-r requirements.txt \
-	geoextent \
 	--no-cache-dir notebook==6.0.3 \
 	bash_kernel
 
