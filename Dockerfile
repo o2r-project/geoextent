@@ -32,6 +32,10 @@ RUN pip3 install gdal==$(gdal-config --version) \
 # Install Jupyter kernel for bash
 RUN python3 -m bash_kernel.install 
 
+COPY showcase/requirements.txt /requirements2.txt
+
+RUN pip3 install -r requirements2.txt
+
 # Create a user
 ARG NB_USER=jovyan
 ARG NB_UID=1000
