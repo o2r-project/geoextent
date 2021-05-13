@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y \
 	gdal-bin\
 	libgdal-dev
 
+RUN pip3 install --upgrade cython
+
 COPY requirements.txt /requirements.txt
 
 # Install required libraryes including geoextent and GDAL
