@@ -9,9 +9,9 @@ RUN add-apt-repository ppa:ubuntugis/ppa
 # Install required libraryes including GDAL development libraries
 RUN apt-get update && apt-get install -y \
 	sudo\
-	python3.6\
+	python3.7\
 	python3-pip\
-	python3.6-dev\
+	python3.7-dev\
 	gdal-bin\
 	libgdal-dev
 
