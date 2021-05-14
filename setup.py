@@ -26,7 +26,12 @@ setuptools.setup(
         'pygeoj',
         'pyshp',
         'pygdal',
-        'python-dateutil'
+        'python-dateutil',
+	'pandas',
+	'requests',
+	'numpy',
+	'traitlets',
+	'wheel'
     ],
     entry_points={
         "console_scripts": [

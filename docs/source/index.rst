@@ -26,7 +26,7 @@ How to cite
 
 ::
 
-    Nüst, Daniel and Qamaz, Yousef. (2020, July 1). o2r-project/geoextent (Version v0.3.0). Zenodo. https://doi.org/10.5281/zenodo.3925693
+    Nüst, Daniel; Garzón, Sebastian and Qamaz, Yousef. (2021, May 11). o2r-project/geoextent (Version v0.7.1). Zenodo. https://doi.org/10.5281/zenodo.3925693
 
 ------
 
