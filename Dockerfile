@@ -24,17 +24,19 @@ COPY requirements.txt /requirements.txt
 RUN pip3 install --upgrade setuptools pip
 
 # Install required libraryes including geoextent and GDAL
-RUN pip3 install gdal==$(gdal-config --version) \
+RUN pip3 install pygdal==$(gdal-config --version).* \
 	-r requirements.txt \
 	--no-cache-dir notebook==6.0.3 \
 	bash_kernel
 
 # Install Jupyter kernel for bash
-RUN python3 -m bash_kernel.install 
+RUN python3 -m bash_kernel.install
 
-COPY showcase/requirements.txt /requirements2.txt
+COPY showcase/requirements.txt /requirements-showcase.txt
 
-RUN pip3 install -r requirements2.txt
+RUN pip3 install -r requirements-showcase.txt
+
+RUN pip3 install geoextent
 
 # Create a user
 ARG NB_USER=jovyan
