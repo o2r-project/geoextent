@@ -3,7 +3,7 @@ from osgeo import ogr
 import sys
 import pytest
 import tempfile
-
+import geoextent
 from help_functions_test import create_zip, parse_coordinates, tolerance
 from osgeo import gdal
 
@@ -375,7 +375,7 @@ def test_zenodo_valid_but_removed_repository(script_runner):
     assert "does not exist" in ret.stderr
 
 
-def test_zenodo_invalid_DOI_but_removed_repository(script_runner):
+def test_zenodo_invalid_doi_but_removed_repository(script_runner):
     ret = script_runner.run('geoextent', '-b', '-t', 'https://doi.org/10.5281/zenodo.not.exist')
     assert not ret.success
     assert "Geoextent can not handle this repository identifier" in ret.stderr
@@ -394,14 +394,22 @@ def test_zenodo_valid_but_not_open_access(script_runner):
 
 
 def test_export_relative_path(script_runner):
-    with tempfile.TemporaryDirectory() as tmp:
-        relative = "geoextent_output.gpkg"
-        script_runner.run('geoextent', '-b', '-t', '--output', relative, 'tests/testdata/folders/folder_two_files')
-        datasource = ogr.Open(relative)
-        layer = datasource.GetLayer(0)
-        ext = layer.GetExtent()
-        bbox = [ext[0], ext[2], ext[1], ext[3]]
-        os.remove(relative)
+    relative = "geoextent_output.gpkg"
+    geo_version = geoextent.__version__
+    script_runner.run('geoextent', '-b', '-t', '--output', relative, 'tests/testdata/folders/folder_two_files')
+    datasource = ogr.Open(relative)
+    layer = datasource.GetLayer(0)
+
+    for feature in layer:
+        if feature.GetField("handler") == "geoextent:" + geo_version:
+            bbox_geom = feature.geometry()
+
+    ext = bbox_geom.GetEnvelope()
+    is_valid = bbox_geom.IsValid()
+    bbox = [ext[0], ext[2], ext[1], ext[3]]
+    os.remove(relative)
+
+    assert is_valid, 'Check that the figure is valid ()'
     assert bbox == pytest.approx([2.052333, 41.317038, 7.647256, 51.974624], abs=tolerance)
 
 
@@ -419,7 +427,7 @@ def test_zenodo_valid_doi_repository_wrong_geopackage_extension(script_runner):
     with pytest.warns(ResourceWarning):
         with tempfile.NamedTemporaryFile(suffix=".abc") as tmp:
             ret = script_runner.run('geoextent', '-b', '-t', '--output', tmp.name,
-                                'https://doi.org/10.5281/zenodo.820562'
+                                    'https://doi.org/10.5281/zenodo.820562'
                                     )
     assert ret.success, "process should return success"
 
