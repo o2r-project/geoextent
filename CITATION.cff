@@ -21,10 +21,10 @@ doi: 10.5281/zenodo.3925693
 date-released: 2020-05-11
 license: MIT
 url: https://o2r.info/geoextent/
-commit: #todo
+commit: 7edce80ba937796ea6563d2e7ab6d800ec48bc7c
 abstract: "Python library for extracting geospatial extent of files and directories with multiple data formats. This project is developed as part of the DFG-funded research project Opening Reproducible Research (o2r, https://o2r.info)."
 repository-artifact: https://pypi.org/project/geoextent/0.3.0/
 repository-code: https://github.com/o2r-project/geoextent/releases/tag/v0.3.0
 identifiers:
   - type: "swh"
-    value: "swh:1:rev:#todo"
+    value: "swh:1:rev:7edce80ba937796ea6563d2e7ab6d800ec48bc7c"
