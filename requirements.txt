@@ -7,4 +7,3 @@ pandas
 numpy
 requests
 traitlets
-wheel

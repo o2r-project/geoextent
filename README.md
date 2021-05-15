@@ -24,7 +24,7 @@ You must install a suitable version of `pygdal` manually first, see [instruction
 We use `pygdal` for better compatibility with virtual environments.
 
 ```bash
-# pip install pygdal=="`gdal-config --version`.*"
+pip install pygdal=="`gdal-config --version`.*"
 pip install geoextent
 ```
 
@@ -48,6 +48,26 @@ geoextent --help
 
 to see usage instructions.
 
+## Showcases
+
+To run the showcase notebooks, install [JupyterLab](https://jupyter.org/) or the classic Jupyter Notebook and then start a local server as shown below.
+If your IDE has support for the Jupyter format, installing `ipykernel` might be enough.
+We recommend running the below commands in a virtual environment as described [here](https://jupyter-tutorial.readthedocs.io/en/latest/first-steps/install.html).
+The notebook must be [trusted](https://jupyter-notebook.readthedocs.io/en/stable/security.html#notebook-security) and [python-markdown extension](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html) must be installed so that variables within Markdown text can be shown.
+
+```bash
+cd showcase
+pip install -r requirements.txt
+pip install -r showcase/requirements.txt
+pip install -e .
+
+jupyter trust showcase/SG_01_Exploring_Research_Data_Repositories_with_geoextent.ipynb
+jupyter lab
+```
+
+Then open the local Jupyter Notebook server using the displayed link and open the notebook (`*.ipynb` files) in the `showcase/` directory.
+Consult the documentation on [paired notebooks based on Jupytext](https://github.com/mwouts/jupytext/blob/master/docs/paired-notebooks.md) before editing selected notebooks.
+
 ## Supported data formats
 
 - GeoJSON (.geojson)
@@ -66,7 +86,7 @@ See [CONTRIBUTING.md](https://github.com/o2r-project/geoextent/blob/master/CONTR
 
 ## How to cite
 
-> Nüst, Daniel; Garzón, Sebastian and Qamaz, Yousef. (2021, May 11). o2r-project/geoextent (Version v0.7.1). Zenodo. https://doi.org/10.5281/zenodo.3925693
+> Nüst, Daniel; Garzón, Sebastian and Qamaz, Yousef. (2021, May 14). o2r-project/geoextent (Version v0.7.1). Zenodo. [https://zenodo.org/record/4762205](https://zenodo.org/record/4762205)
 
 See also the `CITATION.cff` and `codemeta.json` files in this repository, which can possibly be imported in the reference manager of your choice.
 

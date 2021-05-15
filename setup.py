@@ -27,11 +27,11 @@ setuptools.setup(
         'pyshp',
         'pygdal',
         'python-dateutil',
-	'pandas',
-	'requests',
-	'numpy',
-	'traitlets',
-	'wheel'
+      'pandas',
+      'requests',
+      'numpy',
+      'traitlets',
+      'wheel'
     ],
     entry_points={
         "console_scripts": [
