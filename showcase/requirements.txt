@@ -1,6 +1,5 @@
 bash_kernel
 jupyterlab
-jupyter_contrib_nbextensions
 shapely==1.7.1
 pandas==1.1.2
 geopandas==0.8.1

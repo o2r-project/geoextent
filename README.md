@@ -61,9 +61,6 @@ pip install -r requirements.txt
 pip install -r showcase/requirements.txt
 pip install -e .
 
-jupyter contrib nbextension install --user
-jupyter nbextension enable python-markdown/main
-
 jupyter trust showcase/SG_01_Exploring_Research_Data_Repositories_with_geoextent.ipynb
 jupyter lab
 ```
