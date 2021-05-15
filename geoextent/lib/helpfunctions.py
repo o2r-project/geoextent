@@ -389,8 +389,8 @@ def transform_bbox(x):
         ring = ogr.Geometry(ogr.wkbLinearRing)
         ring.AddPoint(x[0], x[1])
         ring.AddPoint(x[2], x[1])
-        ring.AddPoint(x[0], x[3])
         ring.AddPoint(x[2], x[3])
+        ring.AddPoint(x[0], x[3])
         ring.CloseRings()
     # Create polygon
         poly = ogr.Geometry(ogr.wkbPolygon)

@@ -6,11 +6,11 @@
     "contIntegration": "https://travis-ci.org/github/o2r-project/geoextent",
     "dateCreated": "2019-08-16",
     "datePublished": "2020-03-25",
-    "dateModified": "2020-07-01",
-    "downloadUrl": "https://pypi.org/project/geoextent/0.3.0/",
+    "dateModified": "2020-05-11",
+    "downloadUrl": "https://pypi.org/project/geoextent/0.7.1/",
     "issueTracker": "https://github.com/o2r-project/geoextent/issues",
     "name": "geoextent",
-    "version": "0.3.0",
+    "version": "0.7.1",
     "identifier": "https://doi.org/10.5281/zenodo.3925693",
     "description": "Python library for extracting geospatial extent of files and directories with multiple data formats. This project is developed as part of the DFG-funded research project Opening Reproducible Research (o2r, https://o2r.info).",
     "applicationCategory": "Geoinformatics",
@@ -42,6 +42,17 @@
             "givenName": "Daniel",
             "familyName": "Nüst",
             "email": "daniel.nuest@uni-muenster.de",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Opening Reproducible Research, University of Münster, Münster, Germany"
+            }
+        },
+        {
+            "@type": "Person",
+            "@id": "https://orcid.org/0000-0002-8335-9312",
+            "givenName": "Sebastian",
+            "familyName": "Garzón",
+            "email": "jgarzon@uni-muenster.de",
             "affiliation": {
                 "@type": "Organization",
                 "name": "Opening Reproducible Research, University of Münster, Münster, Germany"

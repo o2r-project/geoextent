@@ -89,7 +89,7 @@ See [CONTRIBUTING.md](https://github.com/o2r-project/geoextent/blob/master/CONTR
 
 ## How to cite
 
-> Nüst, Daniel, Garzón, Sebastian, and Qamaz, Yousef. (2020, July 1). o2r-project/geoextent (Version v0.3.0). Zenodo. [https://doi.org/10.5281/zenodo.3925693](https://doi.org/10.5281/zenodo.3925693)
+> Nüst, Daniel; Garzón, Sebastian and Qamaz, Yousef. (2021, May 14). o2r-project/geoextent (Version v0.7.1). Zenodo. [https://zenodo.org/record/4762205](https://zenodo.org/record/4762205)
 
 See also the `CITATION.cff` and `codemeta.json` files in this repository, which can possibly be imported in the reference manager of your choice.
 
