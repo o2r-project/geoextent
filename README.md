@@ -49,6 +49,7 @@ geoextent --help
 to see usage instructions.
 
 ## Showcases
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/o2r-project/geoextent/master?filepath=showcase%2FSG_01_Exploring_Research_Data_Repositories_with_geoextent.ipynb)
 
 To run the showcase notebooks, install [JupyterLab](https://jupyter.org/) or the classic Jupyter Notebook and then start a local server as shown below.
 If your IDE has support for the Jupyter format, installing `ipykernel` might be enough.
