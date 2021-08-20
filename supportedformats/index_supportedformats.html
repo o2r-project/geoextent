@@ -4,19 +4,20 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Supported file formats &#8212; geoextent 0.5.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Supported file formats &#8212; geoextent 0.7.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/thebelab-helper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -38,7 +39,7 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="supported-file-formats">
+  <section id="supported-file-formats">
 <h1>Supported file formats<a class="headerlink" href="#supported-file-formats" title="Permalink to this headline">¶</a></h1>
 <p>The library supports the following file formats.
 Please see the <a class="reference external" href="https://github.com/o2r-project/geoextent/issues">project issues</a> for upcoming formats and feature requests.</p>
@@ -65,9 +66,9 @@ Supported formats:
 </div>
 </div>
 <hr class="docutils" />
-<div class="section" id="examples">
+<section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="geojson">
+<section id="geojson">
 <h3>GeoJSON<a class="headerlink" href="#geojson" title="Permalink to this headline">¶</a></h3>
 <p>The file used in the example can be in the code repository: <a class="reference external" href="https://raw.githubusercontent.com/o2r-project/geoextent/master/tests/testdata/geojson/muenster_ring_zeit.geojson">muenster_ring_zeit.geojson</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">t</span> <span class="n">muenster_ring_zeit</span><span class="o">.</span><span class="n">geojson</span>
@@ -75,19 +76,20 @@ Supported formats:
 </div>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;geojson&#39;,
+ &#39;geoextent_handler&#39;: &#39;handleVector&#39;,
+ &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;],
  &#39;bbox&#39;: [7.6016807556152335,
   51.94881477206191,
   7.647256851196289,
   51.974624029877454],
- &#39;crs&#39;: &#39;4326&#39;,
- &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
+ &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="csv">
+</section>
+<section id="csv">
 <h3>CSV<a class="headerlink" href="#csv" title="Permalink to this headline">¶</a></h3>
 <p>Different CSV delimiters (<code class="docutils literal notranslate"><span class="pre">;</span></code>, <code class="docutils literal notranslate"><span class="pre">,</span></code>) are automatically detected.
 Supported column names, by using <a class="reference external" href="https://docs.python.org/3/library/re.html">Regular expressions operations</a>, are as follows:</p>
@@ -119,16 +121,17 @@ Supported column names, by using <a class="reference external" href="https://doc
 </div>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;text/csv&#39;,
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;csv&#39;,
+ &#39;geoextent_handler&#39;: &#39;handleCSV&#39;,
  &#39;bbox&#39;: [4.3175, 51.434444, 6.574722, 53.217222],
- &#39;tbox&#39;: [&#39;2018-09-30&#39;, &#39;2018-09-30&#39;],
- &#39;crs&#39;: &#39;4326&#39;}
+ &#39;crs&#39;: &#39;4326&#39;,
+ &#39;tbox&#39;: [&#39;2018-09-30&#39;, &#39;2018-09-30&#39;]}
 </pre></div>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="geotiff">
+</section>
+<section id="geotiff">
 <h3>GeoTIFF<a class="headerlink" href="#geotiff" title="Permalink to this headline">¶</a></h3>
 <p>The file used in the example is available online: <a class="reference external" href="https://github.com/o2r-project/geoextent/blob/master/tests/testdata/tif/wf_100m_klas.tif">wf_100m_klas.tif</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="n">wf_100m_klas</span><span class="o">.</span><span class="n">tif</span>
@@ -136,18 +139,19 @@ Supported column names, by using <a class="reference external" href="https://doc
 </div>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;image/tiff&#39;,
- &#39;bbox&#39;: [5.91530075648462,
-  50.310251974013,
-  9.46839871248396,
-  52.5307755328569],
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;tif&#39;,
+ &#39;geoextent_handler&#39;: &#39;handleRaster&#39;,
+ &#39;bbox&#39;: [5.915300756475311,
+  50.310251974108326,
+  9.468398712484138,
+  52.530775532873264],
  &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="shapefile">
+</section>
+<section id="shapefile">
 <h3>Shapefile<a class="headerlink" href="#shapefile" title="Permalink to this headline">¶</a></h3>
 <p>The file used in the example can be found at Geofabrik: <a class="reference external" href="https://www.geofabrik.de/data/shapefiles_toulouse.zip">shapefiles_toulouse.zip</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="n">gis_osm_buildings_a_07_1</span><span class="o">.</span><span class="n">shp</span>
@@ -155,15 +159,173 @@ Supported column names, by using <a class="reference external" href="https://doc
 </div>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
- &#39;crs&#39;: &#39;4326&#39;,
- &#39;bbox&#39;: [1.24951, 43.4682, 1.695996, 43.74498]}
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Archive:  shapefiles_toulouse.zip
+ extracting: gis_osm_adminareas_a_07_1.cpg  
+  inflating: gis_osm_adminareas_a_07_1.dbf  
+  inflating: gis_osm_adminareas_a_07_1.prj  
+  inflating: gis_osm_adminareas_a_07_1.shp  
+  inflating: gis_osm_adminareas_a_07_1.shx  
+ extracting: gis_osm_barriers_07_1.cpg  
+  inflating: gis_osm_barriers_07_1.dbf  
+  inflating: gis_osm_barriers_07_1.prj  
+  inflating: gis_osm_barriers_07_1.shp  
+  inflating: gis_osm_barriers_07_1.shx  
+ extracting: gis_osm_boundaries_07_1.cpg  
+  inflating: gis_osm_boundaries_07_1.dbf  
+  inflating: gis_osm_boundaries_07_1.prj  
+  inflating: gis_osm_boundaries_07_1.shp  
+  inflating: gis_osm_boundaries_07_1.shx  
+ extracting: gis_osm_buildings_a_07_1.cpg  
+  inflating: gis_osm_buildings_a_07_1.dbf  
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>
+  inflating: gis_osm_buildings_a_07_1.prj  
+  inflating: gis_osm_buildings_a_07_1.shp  
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>
+  inflating: gis_osm_buildings_a_07_1.shx  
+ extracting: gis_osm_coastline_07_1.cpg  
+  inflating: gis_osm_coastline_07_1.dbf  
+  inflating: gis_osm_coastline_07_1.prj  
+  inflating: gis_osm_coastline_07_1.shp  
+  inflating: gis_osm_coastline_07_1.shx  
+ extracting: gis_osm_landuse_a_07_1.cpg  
+  inflating: gis_osm_landuse_a_07_1.dbf  
+  inflating: gis_osm_landuse_a_07_1.prj  
+  inflating: gis_osm_landuse_a_07_1.shp  
+  inflating: gis_osm_landuse_a_07_1.shx  
+ extracting: gis_osm_natural_07_1.cpg  
+  inflating: gis_osm_natural_07_1.dbf  
+  inflating: gis_osm_natural_07_1.prj  
+  inflating: gis_osm_natural_07_1.shp  
+  inflating: gis_osm_natural_07_1.shx  
+ extracting: gis_osm_natural_a_07_1.cpg  
+  inflating: gis_osm_natural_a_07_1.dbf  
+  inflating: gis_osm_natural_a_07_1.prj  
+  inflating: gis_osm_natural_a_07_1.shp  
+  inflating: gis_osm_natural_a_07_1.shx  
+ extracting: gis_osm_nonop_07_1.cpg  
+  inflating: gis_osm_nonop_07_1.dbf  
+  inflating: gis_osm_nonop_07_1.prj  
+  inflating: gis_osm_nonop_07_1.shp  
+  inflating: gis_osm_nonop_07_1.shx  
+ extracting: gis_osm_places_07_1.cpg  
+  inflating: gis_osm_places_07_1.dbf  
+  inflating: gis_osm_places_07_1.prj  
+  inflating: gis_osm_places_07_1.shp  
+  inflating: gis_osm_places_07_1.shx  
+ extracting: gis_osm_places_a_07_1.cpg  
+  inflating: gis_osm_places_a_07_1.dbf  
+  inflating: gis_osm_places_a_07_1.prj  
+  inflating: gis_osm_places_a_07_1.shp  
+  inflating: gis_osm_places_a_07_1.shx  
+ extracting: gis_osm_pofw_07_1.cpg   
+  inflating: gis_osm_pofw_07_1.dbf   
+  inflating: gis_osm_pofw_07_1.prj   
+  inflating: gis_osm_pofw_07_1.shp   
+  inflating: gis_osm_pofw_07_1.shx   
+ extracting: gis_osm_pofw_a_07_1.cpg  
+  inflating: gis_osm_pofw_a_07_1.dbf  
+  inflating: gis_osm_pofw_a_07_1.prj  
+  inflating: gis_osm_pofw_a_07_1.shp  
+  inflating: gis_osm_pofw_a_07_1.shx  
+ extracting: gis_osm_pois_07_1.cpg   
+  inflating: gis_osm_pois_07_1.dbf   
+  inflating: gis_osm_pois_07_1.prj   
+  inflating: gis_osm_pois_07_1.shp   
+  inflating: gis_osm_pois_07_1.shx   
+ extracting: gis_osm_pois_a_07_1.cpg  
+  inflating: gis_osm_pois_a_07_1.dbf  
+  inflating: gis_osm_pois_a_07_1.prj  
+  inflating: gis_osm_pois_a_07_1.shp  
+  inflating: gis_osm_pois_a_07_1.shx  
+ extracting: gis_osm_power_07_1.cpg  
+  inflating: gis_osm_power_07_1.dbf  
+  inflating: gis_osm_power_07_1.prj  
+  inflating: gis_osm_power_07_1.shp  
+  inflating: gis_osm_power_07_1.shx  
+ extracting: gis_osm_power_a_07_1.cpg  
+  inflating: gis_osm_power_a_07_1.dbf  
+  inflating: gis_osm_power_a_07_1.prj  
+  inflating: gis_osm_power_a_07_1.shp  
+  inflating: gis_osm_power_a_07_1.shx  
+ extracting: gis_osm_powerlines_07_1.cpg  
+  inflating: gis_osm_powerlines_07_1.dbf  
+  inflating: gis_osm_powerlines_07_1.prj  
+  inflating: gis_osm_powerlines_07_1.shp  
+  inflating: gis_osm_powerlines_07_1.shx  
+ extracting: gis_osm_railways_07_1.cpg  
+  inflating: gis_osm_railways_07_1.dbf  
+  inflating: gis_osm_railways_07_1.prj  
+  inflating: gis_osm_railways_07_1.shp  
+  inflating: gis_osm_railways_07_1.shx  
+ extracting: gis_osm_roads_07_1.cpg  
+  inflating: gis_osm_roads_07_1.dbf  
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>
+  inflating: gis_osm_roads_07_1.prj  
+  inflating: gis_osm_roads_07_1.shp  
+  inflating: gis_osm_roads_07_1.shx  
+ extracting: gis_osm_routes_07_1.cpg  
+  inflating: gis_osm_routes_07_1.dbf  
+  inflating: gis_osm_routes_07_1.prj  
+  inflating: gis_osm_routes_07_1.shp  
+  inflating: gis_osm_routes_07_1.shx  
+ extracting: gis_osm_runways_07_1.cpg  
+  inflating: gis_osm_runways_07_1.dbf  
+  inflating: gis_osm_runways_07_1.prj  
+  inflating: gis_osm_runways_07_1.shp  
+  inflating: gis_osm_runways_07_1.shx  
+ extracting: gis_osm_runways_a_07_1.cpg  
+  inflating: gis_osm_runways_a_07_1.dbf  
+  inflating: gis_osm_runways_a_07_1.prj  
+  inflating: gis_osm_runways_a_07_1.shp  
+  inflating: gis_osm_runways_a_07_1.shx  
+ extracting: gis_osm_traffic_07_1.cpg  
+  inflating: gis_osm_traffic_07_1.dbf  
+  inflating: gis_osm_traffic_07_1.prj  
+  inflating: gis_osm_traffic_07_1.shp  
+  inflating: gis_osm_traffic_07_1.shx  
+ extracting: gis_osm_traffic_a_07_1.cpg  
+  inflating: gis_osm_traffic_a_07_1.dbf  
+  inflating: gis_osm_traffic_a_07_1.prj  
+  inflating: gis_osm_traffic_a_07_1.shp  
+  inflating: gis_osm_traffic_a_07_1.shx  
+ extracting: gis_osm_transport_07_1.cpg  
+  inflating: gis_osm_transport_07_1.dbf  
+  inflating: gis_osm_transport_07_1.prj  
+  inflating: gis_osm_transport_07_1.shp  
+  inflating: gis_osm_transport_07_1.shx  
+ extracting: gis_osm_transport_a_07_1.cpg  
+  inflating: gis_osm_transport_a_07_1.dbf  
+  inflating: gis_osm_transport_a_07_1.prj  
+  inflating: gis_osm_transport_a_07_1.shp  
+  inflating: gis_osm_transport_a_07_1.shx  
+ extracting: gis_osm_water_a_07_1.cpg  
+  inflating: gis_osm_water_a_07_1.dbf  
+  inflating: gis_osm_water_a_07_1.prj  
+  inflating: gis_osm_water_a_07_1.shp  
+  inflating: gis_osm_water_a_07_1.shx  
+ extracting: gis_osm_waterways_07_1.cpg  
+  inflating: gis_osm_waterways_07_1.dbf  
+  inflating: gis_osm_waterways_07_1.prj  
+  inflating: gis_osm_waterways_07_1.shp  
+  inflating: gis_osm_waterways_07_1.shx  
+</pre></div>
+</div>
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;shp&#39;,
+ &#39;geoextent_handler&#39;: &#39;handleVector&#39;,
+ &#39;bbox&#39;: [1.24951, 43.4682, 1.695996, 43.74498],
+ &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="geopackage">
+</section>
+<section id="geopackage">
 <h3>GeoPackage<a class="headerlink" href="#geopackage" title="Permalink to this headline">¶</a></h3>
 <p>The file used in the example is available online: <a class="reference external" href="http://www.geopackage.org/guide/implementation_guide.html#_level_1_4">sample1_2.gpkg</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="n">sample1_2</span><span class="o">.</span><span class="n">gpkg</span>
@@ -171,15 +333,19 @@ Supported column names, by using <a class="reference external" href="https://doc
 </div>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
- &#39;crs&#39;: &#39;4269&#39;,
- &#39;bbox&#39;: [-178.217598362, 18.921786345, -66.969271036, 71.4062353530001]}
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;gpkg&#39;,
+ &#39;geoextent_handler&#39;: &#39;handleVector&#39;,
+ &#39;bbox&#39;: [-178.2176055908203,
+  18.921783447265625,
+  -66.96926879882812,
+  71.40624237060547],
+ &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="gps-exchange-format">
+</section>
+<section id="gps-exchange-format">
 <h3>GPS Exchange Format<a class="headerlink" href="#gps-exchange-format" title="Permalink to this headline">¶</a></h3>
 <p>The file used in the example is available online: <a class="reference external" href="https://docs.mapbox.com/help/data/run.gpx">run.gpx</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="n">run</span><span class="o">.</span><span class="n">gpx</span>
@@ -187,18 +353,19 @@ Supported column names, by using <a class="reference external" href="https://doc
 </div>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
- &#39;crs&#39;: &#39;4326&#39;,
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;gpx&#39;,
+ &#39;geoextent_handler&#39;: &#39;handleVector&#39;,
  &#39;bbox&#39;: [-77.02575484290719,
   38.920014034956694,
   -77.01215906068683,
-  38.92795957624912]}
+  38.92795957624912],
+ &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="geography-markup-language">
+</section>
+<section id="geography-markup-language">
 <h3>Geography Markup Language<a class="headerlink" href="#geography-markup-language" title="Permalink to this headline">¶</a></h3>
 <p>The file used in the example is available online: <a class="reference external" href="https://github.com/o2r-project/geoextent/blob/master/tests/testdata/gml/clc_1000_PT.gml">clc_1000_PT.gml</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="n">clc_1000_PT</span><span class="o">.</span><span class="n">gml</span>
@@ -206,15 +373,16 @@ Supported column names, by using <a class="reference external" href="https://doc
 </div>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
- &#39;crs&#39;: &#39;4258&#39;,
- &#39;bbox&#39;: [-17.54207, 32.39669, -6.95939, 39.30113999999999]}
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;gml&#39;,
+ &#39;geoextent_handler&#39;: &#39;handleVector&#39;,
+ &#39;bbox&#39;: [-17.54207, 32.39669, -6.95939, 39.30114],
+ &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="keyhole-markup-language">
+</section>
+<section id="keyhole-markup-language">
 <h3>Keyhole Markup Language<a class="headerlink" href="#keyhole-markup-language" title="Permalink to this headline">¶</a></h3>
 <p>The file used in the example is available online: <a class="reference external" href="https://developers.google.com/kml/documentation/KML_Samples.kml">KML_Samples.kml</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span> <span class="o">-</span><span class="n">b</span> <span class="n">KML_Samples</span><span class="o">.</span><span class="n">kml</span>
@@ -222,12 +390,13 @@ Supported column names, by using <a class="reference external" href="https://doc
 </div>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
- &#39;crs&#39;: &#39;4326&#39;,
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;kml&#39;,
+ &#39;geoextent_handler&#39;: &#39;handleVector&#39;,
  &#39;bbox&#39;: [-122.0860162273783,
   36.07954952145647,
   15.35832653742206,
-  38.87291016281703]}
+  38.87291016281703],
+ &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
@@ -236,9 +405,9 @@ Supported column names, by using <a class="reference external" href="https://doc
 <div class="cell_output docutils container">
 </div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
           </div>
@@ -284,7 +453,7 @@ Supported column names, by using <a class="reference external" href="https://doc
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -306,7 +475,7 @@ Supported column names, by using <a class="reference external" href="https://doc
       &copy;2020, o2r-project.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

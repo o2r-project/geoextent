@@ -186,8 +186,9 @@ Install geoextent from TestPyPI and ensure the package is functional:
     apt-get update
     apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev libspatialite-dev netcdf-bin
 
-    # in the container, first install packages not on TestPyPI or where we need a specific version (you might have to manually identify the closest matching pygdal version
-    pip install geojson pyproj pygdal==`gdal-config --version`
+    # # Package dependencies (from regular PyPI), not all are on TestPyPI
+    pip install -r requirements.txt
+    pip install pygdal==`gdal-config --version`.*
 
     pip install -i https://test.pypi.org/simple/ geoextent
     geoextent --help
@@ -208,8 +209,10 @@ Alternatively, use Debian Testing container to try out a more recent version of 
 
     # System dependencies
     apt-get install gdal-bin libgdal-dev libproj-dev libgeos-dev
-
-    pip install geojson pyproj pygdal==`gdal-config --version`
+    
+    # Package dependencies (from regular PyPI)
+    pip install -r requirements.txt
+    pip install pygdal==`gdal-config --version`.*
 
     pip install -i https://test.pypi.org/simple/ geoextent
     geoextent --help

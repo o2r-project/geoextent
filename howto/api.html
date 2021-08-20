@@ -4,19 +4,20 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>API Docs &#8212; geoextent 0.5.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>API Docs &#8212; geoextent 0.7.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/thebelab-helper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -38,10 +39,10 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="api-docs">
+  <section id="api-docs">
 <h1>API Docs<a class="headerlink" href="#api-docs" title="Permalink to this headline">¶</a></h1>
 <p>Documentation for the package’s Python API for usage as a library.</p>
-<div class="section" id="individual-files">
+<section id="individual-files">
 <h2>Individual files<a class="headerlink" href="#individual-files" title="Permalink to this headline">¶</a></h2>
 <p>The main function is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span><span class="o">.</span><span class="n">fromFile</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
@@ -56,10 +57,10 @@
 </dd>
 </dl>
 <p>The output of this function is the bbox and/or the tbox for individual files (see: <a class="reference internal" href="../supportedformats/index_supportedformats.html"><span class="doc">Supported file formats</span></a>). The resulting coordinate reference system  <code class="docutils literal notranslate"><span class="pre">CRS</span></code> of the bounding box is the one resulting from the extraction (i.e no transformation to other coordinate reference system).</p>
-</div>
-<div class="section" id="examples">
+</section>
+<section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="extract-bounding-box-from-a-single-file">
+<section id="extract-bounding-box-from-a-single-file">
 <h3>Extract bounding box from a single file<a class="headerlink" href="#extract-bounding-box-from-a-single-file" title="Permalink to this headline">¶</a></h3>
 <p>Code:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span><span class="o">.</span><span class="n">fromFile</span><span class="p">(</span><span class="s1">&#39;muenster_ring_zeit.geojson&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
@@ -68,19 +69,20 @@
 <p>Output:</p>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
- &#39;crs&#39;: &#39;4326&#39;,
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;geojson&#39;,
+ &#39;geoextent_handler&#39;: &#39;handleVector&#39;,
  &#39;bbox&#39;: [7.6016807556152335,
   51.94881477206191,
   7.647256851196289,
-  51.974624029877454]}
+  51.974624029877454],
+ &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
 </div>
 <p>(<a class="reference external" href="https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson">source of file muenster_ring_zeit.geojson</a>)</p>
-</div>
-<div class="section" id="extracting-time-interval-from-a-single-file">
+</section>
+<section id="extracting-time-interval-from-a-single-file">
 <h3>Extracting time interval from a single file<a class="headerlink" href="#extracting-time-interval-from-a-single-file" title="Permalink to this headline">¶</a></h3>
 <p>Code:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span><span class="o">.</span><span class="n">fromFile</span><span class="p">(</span><span class="s1">&#39;muenster_ring_zeit.geojson&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
@@ -89,16 +91,16 @@
 <p>Output:</p>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
- &#39;crs&#39;: &#39;4326&#39;,
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;geojson&#39;,
+ &#39;geoextent_handler&#39;: &#39;handleVector&#39;,
  &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
 </pre></div>
 </div>
 </div>
 </div>
 <p>(<a class="reference external" href="https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson">source of file muenster_ring_zeit.geojson</a>)</p>
-</div>
-<div class="section" id="extracting-both-bounding-box-and-time-interval-from-a-single-file">
+</section>
+<section id="extracting-both-bounding-box-and-time-interval-from-a-single-file">
 <h3>Extracting both bounding box and time interval from a single file<a class="headerlink" href="#extracting-both-bounding-box-and-time-interval-from-a-single-file" title="Permalink to this headline">¶</a></h3>
 <p>Code:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span><span class="o">.</span><span class="n">fromFile</span><span class="p">(</span><span class="s1">&#39;muenster_ring_zeit.geojson&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
@@ -107,24 +109,25 @@
 <p>Output:</p>
 <div class="jupyter_cell docutils container">
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;application/shp&#39;,
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;geojson&#39;,
+ &#39;geoextent_handler&#39;: &#39;handleVector&#39;,
+ &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;],
  &#39;bbox&#39;: [7.6016807556152335,
   51.94881477206191,
   7.647256851196289,
   51.974624029877454],
- &#39;crs&#39;: &#39;4326&#39;,
- &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}
+ &#39;crs&#39;: &#39;4326&#39;}
 </pre></div>
 </div>
 </div>
 </div>
 <p>(<a class="reference external" href="https://github.com/o2r-project/geoextent/blob/master/tests/testdata/geojson/muenster_ring_zeit.geojson">source of file muenster_ring_zeit.geojson</a>)</p>
-</div>
-</div>
-<div class="section" id="folders-or-zip-file-s">
+</section>
+</section>
+<section id="folders-or-zip-file-s">
 <h2>Folders or ZIP file(s)<a class="headerlink" href="#folders-or-zip-file-s" title="Permalink to this headline">¶</a></h2>
 <p><strong>Geoextent</strong> also supports queries for multiple files inside <strong>folders</strong> or <strong>ZIP files</strong>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span><span class="o">.</span><span class="n">fromDirectory</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span><span class="o">.</span><span class="n">fromDirectory</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">details</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="simple">
@@ -132,14 +135,15 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">input</span></code>: a string value of directory of zipfile path</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">bbox</span></code>: a boolean value to extract spatial extent (bounding box)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">time</span></code>: a boolean value to extract temporal extent ( at “day” precision ‘%Y-%m-%d’)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">details</span></code>: a boolean value to return details (geoextent) of individual files (default <strong>False</strong>)</p></li>
 </ul>
 </dd>
 </dl>
 <p>The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: <a class="reference internal" href="../supportedformats/index_supportedformats.html"><span class="doc">Supported file formats</span></a>) inside the folder or zipfile. The resulting coordinate reference system  <code class="docutils literal notranslate"><span class="pre">CRS</span></code> of the combined bbox is always in the <a class="reference external" href="https://epsg.io/4326">EPSG: 4326</a> system.</p>
-<div class="section" id="extracting-both-bounding-box-and-time-interval-from-a-folder">
-<h3>Extracting both bounding box and time interval from a folder<a class="headerlink" href="#extracting-both-bounding-box-and-time-interval-from-a-folder" title="Permalink to this headline">¶</a></h3>
+<section id="extracting-both-bounding-box-and-time-interval-from-a-folder-with-details">
+<h3>Extracting both bounding box and time interval from a folder (with details)<a class="headerlink" href="#extracting-both-bounding-box-and-time-interval-from-a-folder-with-details" title="Permalink to this headline">¶</a></h3>
 <p>Code:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span><span class="o">.</span><span class="n">fromDirectory</span><span class="p">(</span><span class="s1">&#39;folder_two_files&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span><span class="o">.</span><span class="n">fromDirectory</span><span class="p">(</span><span class="s1">&#39;folder_one_file&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Output:</p>
@@ -147,19 +151,67 @@
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;folder&#39;,
  &#39;crs&#39;: &#39;4326&#39;,
- &#39;bbox&#39;: [2.052333387639205,
-  41.31703852240476,
+ &#39;bbox&#39;: [7.6016807556152335,
+  51.94881477206191,
   7.647256851196289,
   51.974624029877454],
- &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2019-09-11&#39;]}
+ &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;],
+ &#39;details&#39;: {&#39;muenster_ring_zeit.geojson&#39;: {&#39;format&#39;: &#39;geojson&#39;,
+   &#39;geoextent_handler&#39;: &#39;handleVector&#39;,
+   &#39;bbox&#39;: [7.6016807556152335,
+    51.94881477206191,
+    7.647256851196289,
+    51.974624029877454],
+   &#39;crs&#39;: &#39;4326&#39;,
+   &#39;tbox&#39;: [&#39;2018-11-14&#39;, &#39;2018-11-14&#39;]}}}
 </pre></div>
 </div>
 </div>
 </div>
 <p><a class="reference external" href="https://github.com/o2r-project/geoextent/blob/master/tests/testdata/folders/folder_two_files">folder_two_files</a></p>
+</section>
+</section>
+<section id="zenodo-repositories">
+<h2>Zenodo repositories<a class="headerlink" href="#zenodo-repositories" title="Permalink to this headline">¶</a></h2>
+<p><strong>Geoextent</strong> also supports queries for <strong>Zenodo repositories</strong>.
+Geoextent creates a <em>temporal</em> copy of the repository and extracts the temporal or geographical extent.
+Geoextent only allows to query <strong>Open</strong> Zenodo repositories.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span><span class="o">.</span><span class="n">from_repository</span><span class="p">(</span><span class="n">repository_identifier</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">details</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">repository_identifier</span></code>: a string value with a Zenodo link (e.g., <a class="reference external" href="https://zenodo.org/record/3528062">https://zenodo.org/record/3528062</a>) or DOI (e.g., <a class="reference external" href="https://doi.org/10.5281/zenodo.3528062">https://doi.org/10.5281/zenodo.3528062</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bbox</span></code>: a boolean value to extract spatial extent (bounding box)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time</span></code>: a boolean value to extract temporal extent (at “day” precision ‘%Y-%m-%d’)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">details</span></code>: a boolean value to return details (geoextent) of individual files (default <strong>False</strong>)</p></li>
+</ul>
+</dd>
+</dl>
+<p>The output of this function is the combined bbox or tbox resulting from merging all results of individual files (see: <a class="reference internal" href="../supportedformats/index_supportedformats.html"><span class="doc">Supported file formats</span></a>) inside the repository. The resulting coordinate reference system  <code class="docutils literal notranslate"><span class="pre">CRS</span></code> of the combined bbox is always in the <a class="reference external" href="https://epsg.io/4326">EPSG: 4326</a> system.</p>
+<p>Code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoextent</span><span class="o">.</span><span class="n">from_repository</span><span class="p">(</span><span class="s1">&#39;https://zenodo.org/record/820562&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
+<div class="stderr docutils container">
+<pre class="stderr literal-block">The folder /tmp/tmp88fbyv84 has no identifiable time extent
+</pre>
+</div>
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;format&#39;: &#39;repository&#39;,
+ &#39;crs&#39;: &#39;4326&#39;,
+ &#39;bbox&#39;: [96.21146318274846,
+  25.558346194400002,
+  96.35495081696702,
+  25.632931128800003]}
+</pre></div>
 </div>
 </div>
 </div>
+</section>
+</section>
 
 
           </div>
@@ -208,7 +260,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -230,7 +282,7 @@
       &copy;2020, o2r-project.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
