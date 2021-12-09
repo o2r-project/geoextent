@@ -24,7 +24,7 @@ jobs:
       run: |
         sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
         sudo apt-get install -y libproj-dev libgeos-dev libspatialite-dev libgdal-dev netcdf-bin
-        sudo apt-get install gdal-bin==${{matrix.gdal}}
+        sudo apt-get install gdal-bin=${{matrix.gdal}}
         gdal-config --version
     - name: Install system dependencies (macOS)
       if: runner.os == 'macOS'
